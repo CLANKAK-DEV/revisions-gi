@@ -1,0 +1,442 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Test 1 corrigé NoSQL</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="shell">
+<aside class="side" id="side"></aside>
+<main>
+<h1>Test 1 corrigé : collection joueurs</h1>
+<p class="lead">Le test de 4ème GI donné par votre enseignant, en 31 questions : l'énoncé, la réponse à copier dans mongosh, ce qu'elle renvoie et pourquoi. Répondez d'abord, puis ouvrez la réponse.</p>
+
+<div class="box retenir">
+<p class="t">Ce que je n'ai pas, et ce que j'ai choisi</p>
+<ul>
+<li>Je n'ai pas le fichier <code>Collection_Joueurs.pdf</code>, seulement la photo d'un écran. J'y vois en entier Mbappé, Amrabat et deux matchs de Haaland. Les autres joueurs sont absents de la photo.</li>
+<li>Pour tester, j'ai donc ajouté deux joueurs d'<strong>exemple</strong> (Hakimi, dont les statistiques sont inventées, et un joueur d'Al-Hilal). Les résultats ci-dessous sont ceux de ce jeu d'essai, pas ceux de la vraie collection. <strong>Les requêtes, elles, ne dépendent pas des données.</strong></li>
+<li>L'introduction de l'énoncé parle d'un tableau <code>statistiques</code> (tacle, tir, centre), mais les documents et les questions utilisent un tableau <code>matchs</code>. Je suis les documents et les questions.</li>
+<li>L'énoncé ne dit pas où est <code>minutes_jouees</code> : dans les documents, c'est <code>performance.minutes_jouees</code>.</li>
+<li>Toutes les réponses ont été exécutées sur un vrai MongoDB (version 9.0) avec ce jeu d'essai.</li>
+</ul>
+</div>
+
+<div class="bar">
+<button class="btn" data-toggle-all="open">Tout ouvrir</button>
+<button class="btn" data-toggle-all="close">Tout fermer</button>
+</div>
+
+<div class="box">
+<p class="t">Sommaire</p>
+<ul>
+<li><a href="#jeu">Jeu d'essai à copier dans mongosh</a></li>
+<li><a href="#p1">Partie 1 : requêtes de lecture (13 questions)</a></li>
+<li><a href="#p2">Partie 2 : agrégation (8 questions)</a></li>
+<li><a href="#p3">Partie 3 : mises à jour (10 questions)</a></li>
+<li><a href="#aide">Aide-mémoire : quel opérateur pour quoi</a></li>
+</ul>
+</div>
+
+<h2 id="jeu">Jeu d'essai</h2>
+<p>Dans mongosh : <code>use test1</code>, puis collez l'<code>insertMany</code>. Les documents 2 et 3 sont ceux de la photo ; le 4 est incomplet (deux matchs visibles) ; les 1 et 5 sont des exemples.</p>
+<div class="exo"><details class="sol"><summary>Afficher le jeu d'essai (5 joueurs)</summary><div class="in">
+<pre><code>use test1
+db.joueurs.insertMany([
+  {
+    "_id": 1,
+    "nom": "Achraf Hakimi",
+    "club": "Paris Saint-Germain",
+    "age": 25,
+    "nationalite": "Maroc",
+    "performance": {
+      "saison": "2023/2024",
+      "buts": 4,
+      "passes": 9,
+      "minutes_jouees": 2800
+    },
+    "matchs": [
+      {
+        "adversaire": "Marseille",
+        "competition": "Ligue 1",
+        "buts": 1,
+        "passes": 1,
+        "note": 8.2
+      },
+      {
+        "adversaire": "Lens",
+        "competition": "Ligue 1",
+        "buts": 0,
+        "passes": 1,
+        "note": 7.6
+      }
+    ]
+  },
+  {
+    "_id": 2,
+    "nom": "Kylian Mbappé",
+    "club": "Paris Saint-Germain",
+    "age": 26,
+    "nationalite": "France",
+    "performance": {
+      "saison": "2023/2024",
+      "buts": 32,
+      "passes": 8,
+      "minutes_jouees": 2700
+    },
+    "matchs": [
+      {
+        "adversaire": "Marseille",
+        "competition": "Ligue 1",
+        "buts": 2,
+        "passes": 0,
+        "note": 9.1
+      },
+      {
+        "adversaire": "Lens",
+        "competition": "Ligue 1",
+        "buts": 1,
+        "passes": 1,
+        "note": 8.7
+      },
+      {
+        "adversaire": "Newcastle",
+        "competition": "Ligue des Champions",
+        "buts": 1,
+        "passes": 1,
+        "note": 9
+      }
+    ]
+  },
+  {
+    "_id": 3,
+    "nom": "Sofyan Amrabat",
+    "club": "Manchester United",
+    "age": 27,
+    "nationalite": "Maroc",
+    "performance": {
+      "saison": "2023/2024",
+      "buts": 1,
+      "passes": 2,
+      "minutes_jouees": 2100
+    },
+    "matchs": [
+      {
+        "adversaire": "Liverpool",
+        "competition": "Premier League",
+        "buts": 0,
+        "passes": 0,
+        "note": 7.3
+      },
+      {
+        "adversaire": "Chelsea",
+        "competition": "Premier League",
+        "buts": 1,
+        "passes": 0,
+        "note": 7.9
+      }
+    ]
+  },
+  {
+    "_id": 4,
+    "nom": "Erling Haaland",
+    "club": "Manchester City",
+    "age": 24,
+    "nationalite": "Norvège",
+    "performance": {
+      "saison": "2023/2024",
+      "buts": 36,
+      "passes": 5,
+      "minutes_jouees": 2600
+    },
+    "matchs": [
+      {
+        "adversaire": "Liverpool",
+        "competition": "Premier League",
+        "buts": 2,
+        "passes": 0,
+        "note": 9
+      },
+      {
+        "adversaire": "Arsenal",
+        "competition": "Premier League",
+        "buts": 1,
+        "passes": 0,
+        "note": 8.5
+      }
+    ]
+  },
+  {
+    "_id": 5,
+    "nom": "Joueur Al-Hilal (exemple)",
+    "club": "Al-Hilal",
+    "age": 30,
+    "nationalite": "Arabie saoudite",
+    "performance": {
+      "saison": "2023/2024",
+      "buts": 10,
+      "minutes_jouees": 2500
+    },
+    "matchs": [
+      {
+        "adversaire": "Al-Nassr",
+        "competition": "Saudi Pro League",
+        "buts": 1,
+        "passes": 0,
+        "note": 7.8
+      }
+    ]
+  }
+])</code></pre></div></details></div>
+<h2 id="p1">Partie 1 : requêtes de lecture (find)</h2>
+<div class="exo"><h4>Question 1</h4><p>Afficher tous les joueurs.</p><details class="sol"><summary>Réponse</summary><div class="in"><pre><code>db.joueurs.find()</code></pre><p class="q">Résultat sur le jeu d'essai</p><pre><code>5 documents (un par joueur)</code></pre><p><code>find()</code> sans argument renvoie toute la collection.</p></div></details></div>
+<div class="exo"><h4>Question 2</h4><p>Afficher uniquement le nom, le club et la nationalité.</p><details class="sol"><summary>Réponse</summary><div class="in"><pre><code>db.joueurs.find({}, { nom: 1, club: 1, nationalite: 1, _id: 0 })</code></pre><p class="q">Résultat sur le jeu d'essai</p><pre><code>{"nom": "Achraf Hakimi", "club": "Paris Saint-Germain", "nationalite": "Maroc"}
+{"nom": "Kylian Mbappé", "club": "Paris Saint-Germain", "nationalite": "France"}
+{"nom": "Sofyan Amrabat", "club": "Manchester United", "nationalite": "Maroc"}
+{"nom": "Erling Haaland", "club": "Manchester City", "nationalite": "Norvège"}
+{"nom": "Joueur Al-Hilal (exemple)", "club": "Al-Hilal", "nationalite": "Arabie saoudite"}</code></pre><p>Second argument de <code>find</code> : la projection. <code>1</code> inclut un champ. <code>_id</code> s'affiche toujours, sauf avec <code>_id: 0</code>.</p></div></details></div>
+<div class="exo"><h4>Question 3</h4><p>Afficher les joueurs dont la nationalité est « Maroc ».</p><details class="sol"><summary>Réponse</summary><div class="in"><pre><code>db.joueurs.find({ nationalite: "Maroc" }, { nom: 1, _id: 0 })</code></pre><p class="q">Résultat sur le jeu d'essai</p><pre><code>{"nom": "Achraf Hakimi"}
+{"nom": "Sofyan Amrabat"}</code></pre><p>Filtre d'égalité simple : <code>{ champ: valeur }</code>.</p></div></details></div>
+<div class="exo"><h4>Question 4</h4><p>Afficher les joueurs dont l'âge est supérieur à 25 ans.</p><details class="sol"><summary>Réponse</summary><div class="in"><pre><code>db.joueurs.find({ age: { $gt: 25 } }, { nom: 1, age: 1, _id: 0 })</code></pre><p class="q">Résultat sur le jeu d'essai</p><pre><code>{"nom": "Kylian Mbappé", "age": 26}
+{"nom": "Sofyan Amrabat", "age": 27}
+{"nom": "Joueur Al-Hilal (exemple)", "age": 30}</code></pre><p><code>$gt</code> est strict : 25 ans est exclu (Hakimi n'apparaît pas). Pour inclure 25, il faudrait <code>$gte</code>.</p></div></details></div>
+<div class="exo"><h4>Question 5</h4><p>Utiliser l'opérateur $in pour afficher les joueurs dont le club est « Paris Saint-Germain » ou « Manchester City ».</p><details class="sol"><summary>Réponse</summary><div class="in"><pre><code>db.joueurs.find({ club: { $in: ["Paris Saint-Germain", "Manchester City"] } }, { nom: 1, club: 1, _id: 0 })</code></pre><p class="q">Résultat sur le jeu d'essai</p><pre><code>{"nom": "Achraf Hakimi", "club": "Paris Saint-Germain"}
+{"nom": "Kylian Mbappé", "club": "Paris Saint-Germain"}
+{"nom": "Erling Haaland", "club": "Manchester City"}</code></pre><p><code>$in</code> est un OU sur un même champ : le club vaut l'une des valeurs de la liste.</p></div></details></div>
+<div class="exo"><h4>Question 6</h4><p>Utiliser l'opérateur $all pour afficher les joueurs ayant affronté à la fois « Marseille » et « Lens ».</p><details class="sol"><summary>Réponse</summary><div class="in"><pre><code>db.joueurs.find({ "matchs.adversaire": { $all: ["Marseille", "Lens"] } }, { nom: 1, _id: 0 })</code></pre><p class="q">Résultat sur le jeu d'essai</p><pre><code>{"nom": "Achraf Hakimi"}
+{"nom": "Kylian Mbappé"}</code></pre><p><code>$all</code> sur <code>matchs.adversaire</code> : le tableau des adversaires doit contenir les deux valeurs, qui peuvent venir de deux matchs différents.</p></div></details></div>
+<div class="exo"><h4>Question 7</h4><p>Utiliser l'opérateur $size pour afficher les joueurs ayant exactement trois matchs enregistrés.</p><details class="sol"><summary>Réponse</summary><div class="in"><pre><code>db.joueurs.find({ matchs: { $size: 3 } }, { nom: 1, _id: 0 })</code></pre><p class="q">Résultat sur le jeu d'essai</p><pre><code>{"nom": "Kylian Mbappé"}</code></pre><p><code>$size</code> n'accepte qu'un nombre exact. Il ne sait pas faire « au moins 3 ».</p></div></details></div>
+<div class="exo"><h4>Question 8</h4><p>Utiliser l'opérateur $elemMatch pour afficher les joueurs ayant obtenu une note supérieure ou égale à 8 dans un match où ils ont marqué au moins un but.</p><details class="sol"><summary>Réponse</summary><div class="in"><pre><code>db.joueurs.find({ matchs: { $elemMatch: { note: { $gte: 8 }, buts: { $gte: 1 } } } }, { nom: 1, _id: 0 })</code></pre><p class="q">Résultat sur le jeu d'essai</p><pre><code>{"nom": "Achraf Hakimi"}
+{"nom": "Kylian Mbappé"}
+{"nom": "Erling Haaland"}</code></pre><p><code>$elemMatch</code> impose que les deux conditions soient vraies <strong>dans le même match</strong>. Sans lui, la note de 8 et le but pourraient venir de deux matchs différents.</p></div></details></div>
+<div class="exo"><h4>Question 9</h4><p>Utiliser l'opérateur $exists pour afficher les joueurs pour lesquels le champ performance.passes existe.</p><details class="sol"><summary>Réponse</summary><div class="in"><pre><code>db.joueurs.find({ "performance.passes": { $exists: true } }, { nom: 1, _id: 0 })</code></pre><p class="q">Résultat sur le jeu d'essai</p><pre><code>{"nom": "Achraf Hakimi"}
+{"nom": "Kylian Mbappé"}
+{"nom": "Sofyan Amrabat"}
+{"nom": "Erling Haaland"}</code></pre><p><code>$exists: true</code> garde les documents où le champ existe, même s'il vaut 0. Le joueur d'exemple d'Al-Hilal n'a pas de <code>passes</code> : il est exclu.</p></div></details></div>
+<div class="exo"><h4>Question 10</h4><p>Combiner $all et $elemMatch pour afficher les joueurs ayant affronté « Marseille » et « Lens » et ayant obtenu une note supérieure ou égale à 8 dans au moins un de ces matchs.</p><details class="sol"><summary>Réponse</summary><div class="in"><pre><code>db.joueurs.find({
+  matchs: {
+    $all: [
+      { $elemMatch: { adversaire: "Marseille" } },
+      { $elemMatch: { adversaire: "Lens" } }
+    ],
+    $elemMatch: { adversaire: { $in: ["Marseille", "Lens"] }, note: { $gte: 8 } }
+  }
+}, { nom: 1, _id: 0 })</code></pre><p class="q">Résultat sur le jeu d'essai</p><pre><code>{"nom": "Achraf Hakimi"}
+{"nom": "Kylian Mbappé"}</code></pre><p><code>$all</code> avec deux <code>$elemMatch</code> exige les deux adversaires. Le second <code>$elemMatch</code> exige, dans <em>un</em> match contre Marseille ou Lens, une note d'au moins 8. Si l'énoncé voulait 8 dans <em>les deux</em> matchs, il faudrait deux <code>$elemMatch</code> avec <code>note</code> chacun.</p></div></details></div>
+<div class="exo"><h4>Question 11</h4><p>Combiner $in et $elemMatch pour afficher les joueurs dont la nationalité est parmi [« Maroc », « France »] et ayant obtenu une note supérieure ou égale à 8.5 dans un match.</p><details class="sol"><summary>Réponse</summary><div class="in"><pre><code>db.joueurs.find({
+  nationalite: { $in: ["Maroc", "France"] },
+  matchs: { $elemMatch: { note: { $gte: 8.5 } } }
+}, { nom: 1, _id: 0 })</code></pre><p class="q">Résultat sur le jeu d'essai</p><pre><code>{"nom": "Kylian Mbappé"}</code></pre><p>Deux conditions sur deux champs différents : elles se combinent avec un ET implicite dans le même document de filtre.</p></div></details></div>
+<div class="exo"><h4>Question 12</h4><p>Afficher tous les joueurs classés par âge décroissant. (pensez à utiliser sort)</p><details class="sol"><summary>Réponse</summary><div class="in"><pre><code>db.joueurs.find({}, { nom: 1, age: 1, _id: 0 }).sort({ age: -1 })</code></pre><p class="q">Résultat sur le jeu d'essai</p><pre><code>{"nom": "Joueur Al-Hilal (exemple)", "age": 30}
+{"nom": "Sofyan Amrabat", "age": 27}
+{"nom": "Kylian Mbappé", "age": 26}
+{"nom": "Achraf Hakimi", "age": 25}
+{"nom": "Erling Haaland", "age": 24}</code></pre><p><code>sort({ age: -1 })</code> : -1 décroissant, 1 croissant.</p></div></details></div>
+<div class="exo"><h4>Question 13</h4><p>Afficher uniquement les deux premiers joueurs après avoir ignoré le premier dans la liste triée par âge croissant. (pensez à utiliser sort, skip et limit)</p><details class="sol"><summary>Réponse</summary><div class="in"><pre><code>db.joueurs.find({}, { nom: 1, age: 1, _id: 0 }).sort({ age: 1 }).skip(1).limit(2)</code></pre><p class="q">Résultat sur le jeu d'essai</p><pre><code>{"nom": "Achraf Hakimi", "age": 25}
+{"nom": "Kylian Mbappé", "age": 26}</code></pre><p>MongoDB applique toujours le tri, puis <code>skip</code>, puis <code>limit</code>, quel que soit l'ordre d'écriture. Ici : 24 ans ignoré, puis 25 et 26.</p></div></details></div>
+<h2 id="p2">Partie 2 : pipeline d'agrégation ($project)</h2>
+<div class="exo"><h4>Question 1</h4><p>Afficher le nom du joueur et uniquement les matchs dont la note est supérieure ou égale à 8. (pensez à utiliser $filter)</p><details class="sol"><summary>Réponse</summary><div class="in"><pre><code>db.joueurs.aggregate([
+  { $project: {
+      _id: 0,
+      nom: 1,
+      matchs: { $filter: { input: "$matchs", as: "m", cond: { $gte: ["$$m.note", 8] } } }
+  } }
+])</code></pre><p class="q">Résultat sur le jeu d'essai</p><pre><code>{"nom": "Achraf Hakimi", "matchs": [{"adversaire": "Marseille", "competition": "Ligue 1", "buts": 1, "passes": 1, "note": 8.2}]}
+{"nom": "Kylian Mbappé", "matchs": [{"adversaire": "Marseille", "competition": "Ligue 1", "buts": 2, "passes": 0, "note": 9.1}, {"adversaire": "Lens", "competition": "Ligue 1", "buts": 1, "passes": 1, "note": 8.7}, {"adversaire": "Newcastle", "competition": "Ligue des Champions", "buts": 1, "passes": 1, "note": 9}]}
+{"nom": "Sofyan Amrabat", "matchs": []}
+{"nom": "Erling Haaland", "matchs": [{"adversaire": "Liverpool", "competition": "Premier League", "buts": 2, "passes": 0, "note": 9}, {"adversaire": "Arsenal", "competition": "Premier League", "buts": 1, "passes": 0, "note": 8.5}]}
+{"nom": "Joueur Al-Hilal (exemple)", "matchs": []}</code></pre><p><code>$filter</code> garde dans un tableau les éléments qui vérifient <code>cond</code>. <code>as: "m"</code> nomme l'élément courant, qu'on lit avec <code>$$m</code> (deux dollars). Un joueur sans match valide a un tableau vide (Amrabat, Al-Hilal).</p></div></details></div>
+<div class="exo"><h4>Question 2</h4><p>Afficher le nom du joueur et la liste des adversaires présents dans ses matchs. (pensez à utiliser $map)</p><details class="sol"><summary>Réponse</summary><div class="in"><pre><code>db.joueurs.aggregate([
+  { $project: {
+      _id: 0,
+      nom: 1,
+      adversaires: { $map: { input: "$matchs", as: "m", in: "$$m.adversaire" } }
+  } }
+])</code></pre><p class="q">Résultat sur le jeu d'essai</p><pre><code>{"nom": "Achraf Hakimi", "adversaires": ["Marseille", "Lens"]}
+{"nom": "Kylian Mbappé", "adversaires": ["Marseille", "Lens", "Newcastle"]}
+{"nom": "Sofyan Amrabat", "adversaires": ["Liverpool", "Chelsea"]}
+{"nom": "Erling Haaland", "adversaires": ["Liverpool", "Arsenal"]}
+{"nom": "Joueur Al-Hilal (exemple)", "adversaires": ["Al-Nassr"]}</code></pre><p><code>$map</code> transforme chaque élément : ici, on ne garde que l'adversaire.</p></div></details></div>
+<div class="exo"><h4>Question 3</h4><p>Afficher le nom du joueur et uniquement le premier match de son tableau matchs. (pensez à utiliser $arrayElemAt)</p><details class="sol"><summary>Réponse</summary><div class="in"><pre><code>db.joueurs.aggregate([
+  { $project: {
+      _id: 0,
+      nom: 1,
+      premier_match: { $arrayElemAt: ["$matchs", 0] }
+  } }
+])</code></pre><p class="q">Résultat sur le jeu d'essai</p><pre><code>{"nom": "Achraf Hakimi", "premier_match": {"adversaire": "Marseille", "competition": "Ligue 1", "buts": 1, "passes": 1, "note": 8.2}}
+{"nom": "Kylian Mbappé", "premier_match": {"adversaire": "Marseille", "competition": "Ligue 1", "buts": 2, "passes": 0, "note": 9.1}}
+{"nom": "Sofyan Amrabat", "premier_match": {"adversaire": "Liverpool", "competition": "Premier League", "buts": 0, "passes": 0, "note": 7.3}}
+{"nom": "Erling Haaland", "premier_match": {"adversaire": "Liverpool", "competition": "Premier League", "buts": 2, "passes": 0, "note": 9}}
+{"nom": "Joueur Al-Hilal (exemple)", "premier_match": {"adversaire": "Al-Nassr", "competition": "Saudi Pro League", "buts": 1, "passes": 0, "note": 7.8}}</code></pre><p><code>$arrayElemAt: [tableau, 0]</code> renvoie le premier élément (indice 0).</p></div></details></div>
+<div class="exo"><h4>Question 4</h4><p>Afficher le nom du joueur et les deux premiers matchs de son tableau matchs. (pensez à utiliser $slice)</p><details class="sol"><summary>Réponse</summary><div class="in"><pre><code>db.joueurs.aggregate([
+  { $project: {
+      _id: 0,
+      nom: 1,
+      deux_premiers: { $slice: ["$matchs", 2] }
+  } }
+])</code></pre><p class="q">Résultat sur le jeu d'essai</p><pre><code>{"nom": "Achraf Hakimi", "deux_premiers": [{"adversaire": "Marseille", "competition": "Ligue 1", "buts": 1, "passes": 1, "note": 8.2}, {"adversaire": "Lens", "competition": "Ligue 1", "buts": 0, "passes": 1, "note": 7.6}]}
+{"nom": "Kylian Mbappé", "deux_premiers": [{"adversaire": "Marseille", "competition": "Ligue 1", "buts": 2, "passes": 0, "note": 9.1}, {"adversaire": "Lens", "competition": "Ligue 1", "buts": 1, "passes": 1, "note": 8.7}]}
+{"nom": "Sofyan Amrabat", "deux_premiers": [{"adversaire": "Liverpool", "competition": "Premier League", "buts": 0, "passes": 0, "note": 7.3}, {"adversaire": "Chelsea", "competition": "Premier League", "buts": 1, "passes": 0, "note": 7.9}]}
+{"nom": "Erling Haaland", "deux_premiers": [{"adversaire": "Liverpool", "competition": "Premier League", "buts": 2, "passes": 0, "note": 9}, {"adversaire": "Arsenal", "competition": "Premier League", "buts": 1, "passes": 0, "note": 8.5}]}
+{"nom": "Joueur Al-Hilal (exemple)", "deux_premiers": [{"adversaire": "Al-Nassr", "competition": "Saudi Pro League", "buts": 1, "passes": 0, "note": 7.8}]}</code></pre><p><code>$slice: [tableau, 2]</code> renvoie les deux premiers éléments.</p></div></details></div>
+<div class="exo"><h4>Question 5</h4><p>Afficher le nom du joueur et la liste des adversaires des matchs où la note est supérieure ou égale à 8. (pensez à combiner $filter et $map)</p><details class="sol"><summary>Réponse</summary><div class="in"><pre><code>db.joueurs.aggregate([
+  { $project: {
+      _id: 0,
+      nom: 1,
+      adversaires: {
+        $map: {
+          input: { $filter: { input: "$matchs", as: "m", cond: { $gte: ["$$m.note", 8] } } },
+          as: "m",
+          in: "$$m.adversaire"
+        }
+      }
+  } }
+])</code></pre><p class="q">Résultat sur le jeu d'essai</p><pre><code>{"nom": "Achraf Hakimi", "adversaires": ["Marseille"]}
+{"nom": "Kylian Mbappé", "adversaires": ["Marseille", "Lens", "Newcastle"]}
+{"nom": "Sofyan Amrabat", "adversaires": []}
+{"nom": "Erling Haaland", "adversaires": ["Liverpool", "Arsenal"]}
+{"nom": "Joueur Al-Hilal (exemple)", "adversaires": []}</code></pre><p>On filtre d'abord, puis on applique <code>$map</code> au résultat : <code>input</code> du <code>$map</code> est le <code>$filter</code>.</p></div></details></div>
+<div class="exo"><h4>Question 6</h4><p>Afficher le nom du joueur et le premier match parmi ceux dont la note est supérieure à 8. (pensez à combiner $filter et $arrayElemAt)</p><details class="sol"><summary>Réponse</summary><div class="in"><pre><code>db.joueurs.aggregate([
+  { $project: {
+      _id: 0,
+      nom: 1,
+      premier_match: {
+        $arrayElemAt: [
+          { $filter: { input: "$matchs", as: "m", cond: { $gt: ["$$m.note", 8] } } },
+          0
+        ]
+      }
+  } }
+])</code></pre><p class="q">Résultat sur le jeu d'essai</p><pre><code>{"nom": "Achraf Hakimi", "premier_match": {"adversaire": "Marseille", "competition": "Ligue 1", "buts": 1, "passes": 1, "note": 8.2}}
+{"nom": "Kylian Mbappé", "premier_match": {"adversaire": "Marseille", "competition": "Ligue 1", "buts": 2, "passes": 0, "note": 9.1}}
+{"nom": "Sofyan Amrabat"}
+{"nom": "Erling Haaland", "premier_match": {"adversaire": "Liverpool", "competition": "Premier League", "buts": 2, "passes": 0, "note": 9}}
+{"nom": "Joueur Al-Hilal (exemple)"}</code></pre><p>Attention : « supérieure à 8 » est strict, donc <code>$gt</code>. Pour un joueur sans match valide, le champ est absent du résultat (Amrabat, Al-Hilal).</p></div></details></div>
+<div class="exo"><h4>Question 7</h4><p>Afficher le nom du joueur et le nom du premier adversaire parmi les matchs où il a marqué au moins un but. (pensez à combiner $filter, $map et $arrayElemAt)</p><details class="sol"><summary>Réponse</summary><div class="in"><pre><code>db.joueurs.aggregate([
+  { $project: {
+      _id: 0,
+      nom: 1,
+      premier_adversaire: {
+        $arrayElemAt: [
+          { $map: {
+              input: { $filter: { input: "$matchs", as: "m", cond: { $gte: ["$$m.buts", 1] } } },
+              as: "m",
+              in: "$$m.adversaire"
+          } },
+          0
+        ]
+      }
+  } }
+])</code></pre><p class="q">Résultat sur le jeu d'essai</p><pre><code>{"nom": "Achraf Hakimi", "premier_adversaire": "Marseille"}
+{"nom": "Kylian Mbappé", "premier_adversaire": "Marseille"}
+{"nom": "Sofyan Amrabat", "premier_adversaire": "Chelsea"}
+{"nom": "Erling Haaland", "premier_adversaire": "Liverpool"}
+{"nom": "Joueur Al-Hilal (exemple)", "premier_adversaire": "Al-Nassr"}</code></pre><p>Trois étapes imbriquées : <code>$filter</code> (buts &gt;= 1), <code>$map</code> (garder l'adversaire), <code>$arrayElemAt</code> (le premier).</p></div></details></div>
+<div class="exo"><h4>Question 8</h4><p>Afficher le nom du joueur et les deux premiers matchs dont la note est supérieure à 7.5. (pensez à combiner $filter et $slice)</p><details class="sol"><summary>Réponse</summary><div class="in"><pre><code>db.joueurs.aggregate([
+  { $project: {
+      _id: 0,
+      nom: 1,
+      matchs: {
+        $slice: [
+          { $filter: { input: "$matchs", as: "m", cond: { $gt: ["$$m.note", 7.5] } } },
+          2
+        ]
+      }
+  } }
+])</code></pre><p class="q">Résultat sur le jeu d'essai</p><pre><code>{"nom": "Achraf Hakimi", "matchs": [{"adversaire": "Marseille", "competition": "Ligue 1", "buts": 1, "passes": 1, "note": 8.2}, {"adversaire": "Lens", "competition": "Ligue 1", "buts": 0, "passes": 1, "note": 7.6}]}
+{"nom": "Kylian Mbappé", "matchs": [{"adversaire": "Marseille", "competition": "Ligue 1", "buts": 2, "passes": 0, "note": 9.1}, {"adversaire": "Lens", "competition": "Ligue 1", "buts": 1, "passes": 1, "note": 8.7}]}
+{"nom": "Sofyan Amrabat", "matchs": [{"adversaire": "Chelsea", "competition": "Premier League", "buts": 1, "passes": 0, "note": 7.9}]}
+{"nom": "Erling Haaland", "matchs": [{"adversaire": "Liverpool", "competition": "Premier League", "buts": 2, "passes": 0, "note": 9}, {"adversaire": "Arsenal", "competition": "Premier League", "buts": 1, "passes": 0, "note": 8.5}]}
+{"nom": "Joueur Al-Hilal (exemple)", "matchs": [{"adversaire": "Al-Nassr", "competition": "Saudi Pro League", "buts": 1, "passes": 0, "note": 7.8}]}</code></pre><p>Filtre strict <code>$gt: 7.5</code>, puis <code>$slice</code> pour garder les deux premiers.</p></div></details></div>
+<h2 id="p3">Partie 3 : mises à jour</h2>
+<div class="box piege"><p class="t">À faire dans l'ordre</p><p>Les mises à jour de cette partie se suivent sur le même jeu de données (par exemple, la question 4 renomme <code>nationalite</code> en <code>pays</code>). Si vous les testez, rechargez le jeu d'essai avant de recommencer.</p></div>
+<div class="exo"><h4>Question 1</h4><p>Modifier l'âge du joueur dont le nom est « Achraf Hakimi » et le passer à 26 ans. (pensez à utiliser updateOne() avec $set)</p><details class="sol"><summary>Réponse</summary><div class="in"><pre><code>db.joueurs.updateOne({ nom: "Achraf Hakimi" }, { $set: { age: 26 } })</code></pre><p class="q">Résultat sur le jeu d'essai</p><pre><code>matchedCount : 1, modifiedCount : 1
+// vérification
+db.joueurs.find({ nom: "Achraf Hakimi" }, { nom: 1, age: 1, _id: 0 })
+{"nom": "Achraf Hakimi", "age": 26}</code></pre><p><code>updateOne</code> modifie un seul document (le premier qui correspond). <code>$set</code> remplace la valeur du champ.</p></div></details></div>
+<div class="exo"><h4>Question 2</h4><p>Augmenter le nombre de minutes jouées de tous les joueurs du club « Paris Saint-Germain » de 100 minutes. (pensez à utiliser updateMany() avec $inc)</p><details class="sol"><summary>Réponse</summary><div class="in"><pre><code>db.joueurs.updateMany({ club: "Paris Saint-Germain" }, { $inc: { "performance.minutes_jouees": 100 } })</code></pre><p class="q">Résultat sur le jeu d'essai</p><pre><code>matchedCount : 2, modifiedCount : 2
+// vérification
+db.joueurs.find({ club: "Paris Saint-Germain" }, { nom: 1, "performance.minutes_jouees": 1, _id: 0 })
+{"nom": "Achraf Hakimi", "performance": {"minutes_jouees": 2900}}
+{"nom": "Kylian Mbappé", "performance": {"minutes_jouees": 2800}}</code></pre><p>Notation pointée pour un champ du sous-document : <code>performance.minutes_jouees</code>. <code>updateMany</code> modifie tous les joueurs du club (2 ici).</p></div></details></div>
+<div class="exo"><h4>Question 3</h4><p>Supprimer le champ minutes_jouees pour tous les joueurs du club « Al-Hilal ». (pensez à utiliser $unset)</p><details class="sol"><summary>Réponse</summary><div class="in"><pre><code>db.joueurs.updateMany({ club: "Al-Hilal" }, { $unset: { "performance.minutes_jouees": "" } })</code></pre><p class="q">Résultat sur le jeu d'essai</p><pre><code>matchedCount : 1, modifiedCount : 1
+// vérification
+db.joueurs.find({ club: "Al-Hilal" }, { nom: 1, performance: 1, _id: 0 })
+{"nom": "Joueur Al-Hilal (exemple)", "performance": {"saison": "2023/2024", "buts": 10}}</code></pre><p><code>$unset</code> supprime le champ ; la valeur donnée (<code>""</code>) est ignorée.</p></div></details></div>
+<div class="exo"><h4>Question 4</h4><p>Renommer le champ nationalite en pays pour tous les documents. (pensez à utiliser $rename)</p><details class="sol"><summary>Réponse</summary><div class="in"><pre><code>db.joueurs.updateMany({}, { $rename: { nationalite: "pays" } })</code></pre><p class="q">Résultat sur le jeu d'essai</p><pre><code>matchedCount : 5, modifiedCount : 5
+// vérification
+db.joueurs.find({}, { nom: 1, pays: 1, nationalite: 1, _id: 0 })
+{"nom": "Achraf Hakimi", "pays": "Maroc"}
+{"nom": "Kylian Mbappé", "pays": "France"}
+{"nom": "Sofyan Amrabat", "pays": "Maroc"}
+{"nom": "Erling Haaland", "pays": "Norvège"}
+{"nom": "Joueur Al-Hilal (exemple)", "pays": "Arabie saoudite"}</code></pre><p>Pour viser tous les documents, le filtre est <code>{}</code>. <code>$rename</code> : <code>{ ancien: "nouveau" }</code>.</p></div></details></div>
+<div class="exo"><h4>Question 5</h4><p>Ajouter un nouveau match au joueur « Erling Haaland » avec l'adversaire « Tottenham », compétition « Premier League », buts 1, passes 1, note 8.4. (pensez à utiliser $push)</p><details class="sol"><summary>Réponse</summary><div class="in"><pre><code>db.joueurs.updateOne(
+  { nom: "Erling Haaland" },
+  { $push: { matchs: { adversaire: "Tottenham", competition: "Premier League", buts: 1, passes: 1, note: 8.4 } } }
+)</code></pre><p class="q">Résultat sur le jeu d'essai</p><pre><code>matchedCount : 1, modifiedCount : 1
+// vérification
+db.joueurs.find({ nom: "Erling Haaland" }, { nom: 1, matchs: 1, _id: 0 })
+{"nom": "Erling Haaland", "matchs": [{"adversaire": "Liverpool", "competition": "Premier League", "buts": 2, "passes": 0, "note": 9}, {"adversaire": "Arsenal", "competition": "Premier League", "buts": 1, "passes": 0, "note": 8.5}, {"adversaire": "Tottenham", "competition": "Premier League", "buts": 1, "passes": 1, "note": 8.4}]}</code></pre><p><code>$push</code> ajoute l'élément à la fin du tableau, même s'il existe déjà.</p></div></details></div>
+<div class="exo"><h4>Question 6</h4><p>Supprimer tous les matchs du joueur « Kylian Mbappé » contre « Lens ». (pensez à utiliser $pull)</p><details class="sol"><summary>Réponse</summary><div class="in"><pre><code>db.joueurs.updateOne({ nom: "Kylian Mbappé" }, { $pull: { matchs: { adversaire: "Lens" } } })</code></pre><p class="q">Résultat sur le jeu d'essai</p><pre><code>matchedCount : 1, modifiedCount : 1
+// vérification
+db.joueurs.find({ nom: "Kylian Mbappé" }, { nom: 1, "matchs.adversaire": 1, _id: 0 })
+{"nom": "Kylian Mbappé", "matchs": [{"adversaire": "Marseille"}, {"adversaire": "Newcastle"}]}</code></pre><p><code>$pull</code> retire du tableau tous les éléments qui vérifient la condition (ici, les sous-documents dont l'adversaire est Lens).</p></div></details></div>
+<div class="exo"><h4>Question 7</h4><p>Ajouter la compétition « UEFA Super Cup » dans un tableau de compétitions d'un joueur sans créer de doublons. (pensez à utiliser $addToSet)</p><details class="sol"><summary>Réponse</summary><div class="in"><pre><code>db.joueurs.updateOne({ nom: "Erling Haaland" }, { $addToSet: { competitions: "UEFA Super Cup" } })</code></pre><p class="q">Résultat sur le jeu d'essai</p><pre><code>matchedCount : 1, modifiedCount : 1
+2e exécution : matchedCount : 1, modifiedCount : 0
+// vérification
+db.joueurs.find({ nom: "Erling Haaland" }, { nom: 1, competitions: 1, _id: 0 })
+{"nom": "Erling Haaland", "competitions": ["UEFA Super Cup"]}</code></pre><p><code>$addToSet</code> n'ajoute que si la valeur est absente. À la deuxième exécution, <code>modifiedCount</code> vaut 0. Le champ <code>competitions</code> est créé s'il n'existe pas. L'énoncé ne dit pas quel joueur ni quel champ : j'ai pris Haaland et <code>competitions</code>.</p></div></details></div>
+<div class="exo"><h4>Question 8</h4><p>Modifier la note du match contre « Marseille » pour le joueur « Achraf Hakimi » et la passer à 9.0. (pensez à utiliser arrayFilters avec $set)</p><details class="sol"><summary>Réponse</summary><div class="in"><pre><code>db.joueurs.updateOne(
+  { nom: "Achraf Hakimi" },
+  { $set: { "matchs.$[m].note": 9.0 } },
+  { arrayFilters: [{ "m.adversaire": "Marseille" }] }
+)</code></pre><p class="q">Résultat sur le jeu d'essai</p><pre><code>matchedCount : 1, modifiedCount : 1
+// vérification
+db.joueurs.find({ nom: "Achraf Hakimi" }, { nom: 1, matchs: 1, _id: 0 })
+{"nom": "Achraf Hakimi", "matchs": [{"adversaire": "Marseille", "competition": "Ligue 1", "buts": 1, "passes": 1, "note": 9}, {"adversaire": "Lens", "competition": "Ligue 1", "buts": 0, "passes": 1, "note": 7.6}]}</code></pre><p><code>$[m]</code> désigne les éléments du tableau qui vérifient le filtre nommé <code>m</code> dans <code>arrayFilters</code>. Le nom (<code>m</code>) doit commencer par une minuscule et être le même des deux côtés.</p></div></details></div>
+<div class="exo"><h4>Question 9</h4><p>Modifier la note de tous les matchs où le joueur a marqué au moins 1 but, en ajoutant +0.2 à la note existante. (pensez à utiliser updateMany() avec $inc et arrayFilters)</p><details class="sol"><summary>Réponse</summary><div class="in"><pre><code>db.joueurs.updateMany(
+  {},
+  { $inc: { "matchs.$[m].note": 0.2 } },
+  { arrayFilters: [{ "m.buts": { $gte: 1 } }] }
+)</code></pre><p class="q">Résultat sur le jeu d'essai</p><pre><code>matchedCount : 5, modifiedCount : 5
+// vérification
+db.joueurs.find({ nom: "Sofyan Amrabat" }, { nom: 1, matchs: 1, _id: 0 })
+{"nom": "Sofyan Amrabat", "matchs": [{"adversaire": "Liverpool", "competition": "Premier League", "buts": 0, "passes": 0, "note": 7.3}, {"adversaire": "Chelsea", "competition": "Premier League", "buts": 1, "passes": 0, "note": 8.1}]}</code></pre><p>Même principe avec <code>$inc</code>, sur tous les joueurs (<code>{}</code> et <code>updateMany</code>). Avec des décimaux, le résultat peut s'afficher avec beaucoup de chiffres (par exemple 9.299999999999999 pour 9.1 + 0.2) : c'est la virgule flottante, pas une erreur.</p></div></details></div>
+<div class="exo"><h4>Question 10</h4><p>Remplacer complètement le document du joueur « Sofyan Amrabat » par un nouveau document contenant uniquement : { nom: "Sofyan Amrabat", club: "Manchester United", nationalite: "Maroc", poste: "Milieu défensif" }. (pensez à utiliser replaceOne())</p><details class="sol"><summary>Réponse</summary><div class="in"><pre><code>db.joueurs.replaceOne(
+  { nom: "Sofyan Amrabat" },
+  { nom: "Sofyan Amrabat", club: "Manchester United", nationalite: "Maroc", poste: "Milieu défensif" }
+)</code></pre><p class="q">Résultat sur le jeu d'essai</p><pre><code>matchedCount : 1, modifiedCount : 1
+// vérification
+db.joueurs.find({ nom: "Sofyan Amrabat" })
+{"_id": 3, "nom": "Sofyan Amrabat", "club": "Manchester United", "nationalite": "Maroc", "poste": "Milieu défensif"}</code></pre><p><code>replaceOne</code> remplace tout le document sauf <code>_id</code> : <code>performance</code> et <code>matchs</code> disparaissent. Pas d'opérateur <code>$</code> dans le nouveau document.</p></div></details></div>
+
+<h2 id="aide">Aide-mémoire : quel opérateur pour quoi</h2>
+<div class="tw"><table>
+<tr><th>Besoin</th><th>Outil</th><th>Piège</th></tr>
+<tr><td>Valeur dans une liste</td><td><code>$in</code></td><td>OU sur un champ, pas sur un tableau d'objets</td></tr>
+<tr><td>Le tableau contient toutes ces valeurs</td><td><code>$all</code></td><td>Les valeurs peuvent venir d'éléments différents</td></tr>
+<tr><td>Taille exacte d'un tableau</td><td><code>$size</code></td><td>Pas de « au moins n »</td></tr>
+<tr><td>Plusieurs conditions sur le même élément</td><td><code>$elemMatch</code></td><td>Sans lui, chaque condition peut être vraie dans un élément différent</td></tr>
+<tr><td>Le champ existe</td><td><code>$exists</code></td><td><code>true</code> garde aussi les valeurs 0 ou null</td></tr>
+<tr><td>Trier, ignorer, limiter</td><td><code>sort</code>, <code>skip</code>, <code>limit</code></td><td>Ordre appliqué : tri, puis skip, puis limit</td></tr>
+<tr><td>Garder des éléments d'un tableau (résultat)</td><td><code>$filter</code> avec <code>$$m</code></td><td>Deux dollars pour la variable, un seul pour un champ</td></tr>
+<tr><td>Transformer chaque élément</td><td><code>$map</code></td><td>Renvoie un tableau de même taille</td></tr>
+<tr><td>Premier élément, deux premiers</td><td><code>$arrayElemAt</code>, <code>$slice</code></td><td>Tableau vide : le champ est absent avec <code>$arrayElemAt</code></td></tr>
+<tr><td>Modifier un ou plusieurs documents</td><td><code>updateOne</code>, <code>updateMany</code></td><td>Tous les documents : filtre <code>{}</code></td></tr>
+<tr><td>Fixer, incrémenter, supprimer, renommer un champ</td><td><code>$set</code>, <code>$inc</code>, <code>$unset</code>, <code>$rename</code></td><td>Champ d'un sous-document : notation pointée entre guillemets</td></tr>
+<tr><td>Ajouter à un tableau</td><td><code>$push</code> ou <code>$addToSet</code></td><td><code>$push</code> accepte les doublons, <code>$addToSet</code> non</td></tr>
+<tr><td>Retirer d'un tableau</td><td><code>$pull</code></td><td>La condition porte sur l'élément (<code>{ adversaire: "Lens" }</code>)</td></tr>
+<tr><td>Modifier certains éléments d'un tableau</td><td><code>$[m]</code> et <code>arrayFilters</code></td><td>Le nom <code>m</code> est identique dans les deux</td></tr>
+<tr><td>Remplacer tout le document</td><td><code>replaceOne</code></td><td>Tous les autres champs disparaissent, sauf <code>_id</code></td></tr>
+</table></div>
+
+<div class="foot">Énoncé du Test 1 (4ème GI, École Polytechnique) d'après les photos fournies. Les réponses sont les miennes, exécutées et vérifiées sur MongoDB 9.0.</div>
+</main>
+</div>
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

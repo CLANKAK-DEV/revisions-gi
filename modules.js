@@ -8,7 +8,7 @@ window.MODULES = [
     meta: 'Dr. Yassine Oukdach, chapitres 1 à 3, TP 2 et 3',
     desc: 'ACID, BASE, CAP, modèles de données NoSQL, MongoDB et requêtes find(), avec les TP corrigés.',
     href: 'nosql/index.html',
-    stats: ['77 QCM', '33 questions de cours', 'Examen blanc', 'Révision interactive 5 semaines']
+    stats: ['77 QCM', '33 questions de cours', 'Examen blanc', 'Test 1 corrigé', 'Révision interactive 5 semaines']
   },
   {
     title: 'Réseaux et Télécoms',

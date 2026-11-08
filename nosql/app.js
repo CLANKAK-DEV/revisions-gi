@@ -8,6 +8,7 @@
     ['questions.html', 'Questions de cours'],
     ['pratique.html', 'Examen blanc pratique'],
     ['pieges.html', 'Pièges et aide-mémoire'],
+    ['test1.html', 'Test 1 corrigé (joueurs)'],
     ['interactif.html', 'Révision interactive']
   ];
   var here = location.pathname.split('/').pop() || 'index.html';
