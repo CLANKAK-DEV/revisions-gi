@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QCM de révision Qualité Logicielle</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="shell">
+<aside class="side" id="side"></aside>
+<main>
+<h1>QCM de révision</h1>
+<p class="lead">116 questions à une seule bonne réponse, sur tous les chapitres. Les questions de concepts de base reprennent le style des QCM de fin de cours. La correction s'affiche au clic.</p>
+
+<div class="bar">
+<button class="btn on" data-qcm-ch="0">Tout</button>
+<button class="btn" data-qcm-ch="1">Concepts</button>
+<button class="btn" data-qcm-ch="2">Modèles</button>
+<button class="btn" data-qcm-ch="3">ISO 25010</button>
+<button class="btn" data-qcm-ch="4">Métriques de code</button>
+<button class="btn" data-qcm-ch="5">Métriques POO</button>
+<button class="btn" data-qcm-ch="6">SonarQube et TP</button>
+<button class="btn" data-qcm-ch="7">Calculs</button>
+<button class="btn" id="qcm-shuffle">Mélanger</button>
+<button class="btn" id="qcm-reset">Recommencer</button>
+<span class="score" id="score"></span>
+</div>
+
+<div id="qcm"></div>
+
+<div class="foot">Les options sont mélangées à chaque chargement de la page.</div>
+</main>
+</div>
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pièges et aide-mémoire</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="shell">
+<aside class="side" id="side"></aside>
+<main>
+<h1>Pièges et aide-mémoire</h1>
+<p class="lead">Les erreurs qui coûtent des points, y compris les incohérences repérées dans les slides, puis une méthode pour les calculs.</p>
+
+<h2>Pièges de cours</h2>
+<div class="box piege"><p class="t">1. Erreur, défaut, défaillance</p>
+<p>Ordre : erreur (humain), défaut (produit), défaillance (exploitation). Le bug est un mot vague. Un défaut est une erreur humaine non détectée.</p></div>
+<div class="box piege"><p class="t">2. Qualité du code, qualité du logiciel</p>
+<p>La qualité ne se limite pas au code source : elle couvre aussi procédures, règles, documentation et données, et repose sur le produit et le processus.</p></div>
+<div class="box piege"><p class="t">3. Facteur, critère</p>
+<p>Facteur : vision externe (utilisateur). Critère : vision interne (développeur). Ne pas inverser.</p></div>
+<div class="box piege"><p class="t">4. Les nombres des modèles</p>
+<p>McCall : 11 facteurs et 23 critères. ISO 9126 : 6 et 27. ISO 25010:2011 : 8. ISO 25010:2023 : 9 caractéristiques et 38 sous-caractéristiques. La slide liste en fait 40 sous-caractéristiques : retenez 38, comme le texte.</p></div>
+<div class="box piege"><p class="t">5. Security et safety</p>
+<p>Security : protection contre accès non autorisés (confidentialité, intégrité...). Safety : absence de risque pour les personnes, l'environnement, les biens (fail-safe...). Nouveauté de 2023.</p></div>
+<div class="box piege"><p class="t">6. Qualité interne, externe, à l'usage</p>
+<p>Interne : sans exécuter le code. Externe : pendant l'exécution (tests). À l'usage : conditions réelles chez l'utilisateur.</p></div>
+<div class="box piege"><p class="t">7. Échelles de Stevens</p>
+<p>Zéro arbitraire : intervalle (température en Celsius). Zéro absolu : ratio (taux de couverture). Comptage : absolu. Ordre sans écart mesurable : ordinal (sévérité d'un bug).</p></div>
+<div class="box piege"><p class="t">8. Complexité cyclomatique et cognitive</p>
+<p>Cyclomatique : chemins linéairement indépendants (McCabe, 1976). Cognitive : effort pour comprendre (SonarSource, 2016).</p></div>
+
+<h2>Pièges de calcul</h2>
+<div class="tw"><table>
+<tr><th>Piège</th><th>Règle correcte</th></tr>
+<tr><td>Compter le else comme décision</td><td>Seuls if, for, while comptent 1. Le else ne compte pas. Un CASE à N cas compte N - 1.</td></tr>
+<tr><td>Oublier le « + 1 »</td><td>C = π + 1. V(G) = E - N + 2P (P = 1).</td></tr>
+<tr><td>Complexité cyclomatique à 0</td><td>Le minimum est 1.</td></tr>
+<tr><td>Mélanger n et N en Halstead</td><td>n = n1 + n2 (vocabulaire, distincts). N = N1 + N2 (longueur, occurrences). L'énoncé du TD3 inverse les noms.</td></tr>
+<tr><td>Erreur d'addition de la slide</td><td>Exemple while : N1 = 14 et N2 = 11 donnent N = 25, pas 24.</td></tr>
+<tr><td>Oublier le log base 2</td><td>V = N · log2(n), pas log10 ni ln.</td></tr>
+<tr><td>D de Halstead à l'envers</td><td>D = (n1 / 2) × (N2 / n2), avec n1 opérateurs et n2 opérandes.</td></tr>
+<tr><td>Temps ou bugs de Halstead</td><td>T = E / 18 (secondes). B = E^(2/3) / 3000, pas E / 3000.</td></tr>
+<tr><td>LCOM négatif</td><td>LCOM = P - Q si P &gt; Q, sinon 0.</td></tr>
+<tr><td>Confondre P et Q</td><td>P : paires de méthodes sans attribut commun. Q : paires avec attribut commun.</td></tr>
+<tr><td>Instabilité à l'envers</td><td>I = Ce / (Ca + Ce). Ca : classes qui dépendent de moi (entrant). Ce : classes dont je dépends (sortant).</td></tr>
+<tr><td>Distance sans valeur absolue</td><td>D = |A + I - 1|, toujours entre 0 et 1.</td></tr>
+<tr><td>RFC oublie les méthodes de la classe</td><td>RFC = méthodes de la classe plus méthodes appelées directement.</td></tr>
+<tr><td>SI mal lu</td><td>SI = NORM × DIT / NOM. Au-delà de 1,5 : très spécialisée.</td></tr>
+<tr><td>Bornes d'intervalle</td><td>[100 ; 250[ inclut 100 et exclut 250. ]20 ; 10] exclut 20 et inclut 10. Repérez les crochets avant de noter.</td></tr>
+<tr><td>Poids qui ne font pas 1</td><td>Les poids d'un niveau doivent sommer à 1 (0,5 + 0,5 ; 0,4 + 0,4 + 0,2).</td></tr>
+<tr><td>Moyenne simple au lieu de pondérée</td><td>Utiliser les coefficients donnés par l'énoncé. Poids égaux : moyenne simple.</td></tr>
+<tr><td>Ne pas écrire sa règle de comptage</td><td>En Halstead et en LOC, énoncez la règle (opérateurs, lignes vides) avant de calculer.</td></tr>
+</table></div>
+
+<h2>Pièges de TD et TP</h2>
+<ul>
+<li>TD1 : le rapport tient sur une page. Il faut les quatre blocs (cas, chaîne causale, impacts, mesures SQA par phase du SDLC) et les références.</li>
+<li>TD2 : définir en tête ce que vous appelez qualité mesurée et qualité totale, puisque le cours ne les définit pas explicitement.</li>
+<li>TD3 : justifiez le comptage des tokens (par exemple les deux-points, les parenthèses, le commentaire ignoré).</li>
+<li>TP CKJM : le tableau demande Ca et Ce, le fichier metrics.txt contient Ca et NPM. Ce se déduit des couplages sortants.</li>
+<li>TP SonarQube : ne pas laisser <code>&lt;VOTRE_TOKEN_SONAR&gt;</code> dans sonar-project.properties. Compiler avant de scanner. Relancer l'analyse après correction pour comparer.</li>
+<li>La slide sur Ca et Ce mélange entrant et sortant dans le texte. Suivez les exemples chiffrés : Forme (Ca = 2, Ce = 0) est la classe la plus stable.</li>
+</ul>
+
+<h2>Méthode pour les calculs</h2>
+<ol>
+<li>Écrivez la formule avant de remplacer les valeurs.</li>
+<li>Pour McCabe : comptez π en listant chaque if, for, while, case ; vérifiez avec E - N + 2P si le graphe est donné.</li>
+<li>Pour Halstead : tableau des opérateurs avec leurs occurrences, tableau des opérandes, puis n1, n2, N1, N2, et vérifiez que la somme des occurrences correspond à N1 et N2.</li>
+<li>Pour un modèle pondéré : note de chaque métrique (regardez les crochets), critères, facteurs, qualité, pourcentage.</li>
+<li>Terminez par une phrase d'interprétation avec la norme du cours.</li>
+</ol>
+
+<h2>Aide-mémoire : seuils du cours</h2>
+<div class="tw"><table>
+<tr><th>Métrique</th><th>Bon</th><th>Moyen</th><th>Mauvais</th></tr>
+<tr><td>V(G)</td><td>1 à 10</td><td>11 à 20</td><td>21 à 50 élevé, plus de 50 non testable</td></tr>
+<tr><td>DC</td><td>0,2 à 0,3</td><td></td><td>trop peu ou trop</td></tr>
+<tr><td>WMC</td><td>0 à 10</td><td>11 à 20</td><td>plus de 20</td></tr>
+<tr><td>DIT</td><td>0 à 4</td><td>5 à 7</td><td>plus de 7</td></tr>
+<tr><td>NOC</td><td>0 à 3</td><td>4 à 7</td><td>plus de 7</td></tr>
+<tr><td>CBO</td><td>0 à 5</td><td>6 à 10</td><td>plus de 10</td></tr>
+<tr><td>RFC</td><td>0 à 20</td><td>21 à 50</td><td>plus de 50</td></tr>
+<tr><td>LCOM</td><td>0 à 1</td><td></td><td>plus de 1</td></tr>
+<tr><td>SI</td><td>environ 0 à 1</td><td></td><td>plus de 1,5</td></tr>
+<tr><td>D moyen</td><td>moins de 0,3</td><td>0,3 à 0,5</td><td>plus de 0,5</td></tr>
+</table></div>
+
+<h3>Dernier tour avant l'examen</h3>
+<div class="box ex">
+<ul>
+<li>Refaire le <a href="qcm.html">QCM</a> du chapitre Calculs jusqu'à zéro faute.</li>
+<li>Refaire TD2 et TD3 de la page <a href="exercices.html">TD, TP et exercices</a> sans regarder.</li>
+<li>Passer l'<a href="pratique.html">examen blanc</a> en temps limité.</li>
+<li>Réciter les 15 éléments de la page <a href="essentiel.html">Essentiel</a>.</li>
+</ul>
+</div>
+
+<div class="foot">Basé sur les cours, TD et TP fournis.</div>
+</main>
+</div>
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pièges et aide-mémoire PHP</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="shell">
+<aside class="side" id="side"></aside>
+<main>
+<h1>Pièges et aide-mémoire</h1>
+<p class="lead">Les erreurs qui font perdre des points, celles des TP, et une méthode pour répondre aux « Prédire l'affichage ». Chaque règle a été vérifiée en exécutant du code.</p>
+
+<h2>Pièges de cours</h2>
+<div class="box piege"><p class="t">1. Ouvrir un fichier PHP par double-clic</p>
+<p>L'adresse commence par <code>file:///</code> : ni Apache ni PHP n'interviennent, le code s'affiche. Toujours <code>http://localhost/...</code> avec Apache démarré.</p></div>
+<div class="box piege"><p class="t">2. Penser que le visiteur voit le PHP</p>
+<p>Il ne reçoit que le HTML produit. Ctrl + U ne montre aucun code PHP, mais montre les commentaires HTML.</p></div>
+<div class="box piege"><p class="t">3. Les noms de variables sont sensibles à la casse</p>
+<p><code>$Prenom</code> et <code>$prenom</code> sont deux variables : la première non définie donne un Warning. Les noms de fonctions ne le sont pas, les variables oui.</p></div>
+<div class="box piege"><p class="t">4. isset et empty</p>
+<p><code>isset($x)</code> est false si <code>$x</code> vaut null. <code>empty($x)</code> est true pour <code>0</code> et <code>"0"</code> : une note de 0 est « vide ». Ni l'un ni l'autre ne provoque d'avertissement.</p></div>
+<div class="box piege"><p class="t">5. Le type dépend de la valeur, pas de la variable</p>
+<p><code>"14.5"</code> est une chaîne numérique : <code>is_numeric</code> dit true, <code>get_debug_type</code> dit « string ».</p></div>
+<div class="box piege"><p class="t">6. + n'est pas .</p>
+<p><code>"5" + 5</code> donne l'entier 10, <code>"5" . 5</code> donne la chaîne <code>"55"</code>. Quand on mélange les deux, mettez des parenthèses : en PHP 8, <code>"Remise : " . 10 + 5</code> calcule d'abord <code>10 + 5</code> et affiche « Remise : 15 ».</p></div>
+<div class="box piege"><p class="t">7. Cookie et session</p>
+<p>Le cookie est chez le client et modifiable : jamais de donnée de sécurité dedans. La session est sur le serveur. Le cookie de session sans <code>expires</code> disparaît à la fermeture du navigateur, donc la session aussi.</p></div>
+<div class="box piege"><p class="t">8. Validation côté client seulement</p>
+<p><code>required</code> et <code>type="email"</code> se retirent avec l'inspecteur. Sans validation PHP, le formulaire n'est pas protégé.</p></div>
+<div class="box piege"><p class="t">9. Faire confiance à $_FILES</p>
+<p><code>name</code> et <code>type</code> viennent du navigateur. Le type réel se lit dans le contenu avec <code>finfo</code>.</p></div>
+
+<h2>Pièges de code</h2>
+<div class="tw"><table>
+<tr><th>Piège</th><th>Règle correcte</th></tr>
+<tr><td>Oublier le <code>;</code></td><td>Parse error : rien ne s'exécute, même les lignes avant l'erreur.</td></tr>
+<tr><td>Oublier le point de concaténation</td><td><code>"École : " ECOLE</code> est une Parse error. Écrire <code>"École : " . ECOLE</code>.</td></tr>
+<tr><td>Guillemets simples avec une variable</td><td><code>'Âge : $age'</code> affiche <code>$age</code> littéralement. Utiliser des guillemets doubles.</td></tr>
+<tr><td><code>"abc" + 1</code></td><td>TypeError et arrêt du script. <code>"10 pommes" + 5</code> donne 15 avec un Warning.</td></tr>
+<tr><td><code>0 == "a"</code></td><td>false en PHP 8 (c'était true en PHP 7). <code>"1e3" == "1000"</code> reste true : utiliser <code>===</code>.</td></tr>
+<tr><td>Post-incrément dans une expression</td><td><code>$a = 3; $b = $a++ + 2;</code> donne <code>$b = 5</code> et <code>$a = 4</code>.</td></tr>
+<tr><td><code>switch</code> sans <code>break</code></td><td>L'exécution « tombe » dans le <code>case</code> suivant : <code>switch ("2") { case 2: echo "a"; case 3: echo "b"; break; }</code> affiche « ab ».</td></tr>
+<tr><td><code>match</code> sans <code>default</code></td><td><code>UnhandledMatchError</code> si aucune branche ne correspond.</td></tr>
+<tr><td>Mauvais ordre des tests <code>if</code></td><td>Tester du plus restrictif au plus large : l'enfant étudiant paie le tarif enfant.</td></tr>
+<tr><td>Boucle infinie</td><td>Oubli de <code>$i++</code> dans un <code>while</code>, ou condition qui évolue dans le mauvais sens.</td></tr>
+<tr><td><code>$t = sort($t)</code></td><td><code>sort</code> modifie le tableau et renvoie true : le tableau est perdu.</td></tr>
+<tr><td>Ordre de <code>array_map</code> et <code>array_filter</code></td><td><code>array_map(fonction, tableau)</code> ; <code>array_filter(tableau, fonction)</code>.</td></tr>
+<tr><td>Clés après <code>array_filter</code></td><td>Elles sont conservées (trou dans les indices) ; <code>array_values</code> renumérote.</td></tr>
+<tr><td>Modifier <code>$e</code> dans <code>foreach ($t as $e)</code></td><td><code>$e</code> est une copie. Utiliser <code>foreach ($t as $i =&gt; $e)</code> et <code>$t[$i]</code>.</td></tr>
+<tr><td>Fonction qui affiche au lieu de renvoyer</td><td>Une fonction de calcul fait <code>return</code>. L'affichage se fait à l'appel.</td></tr>
+<tr><td>Variable globale dans une fonction</td><td>Non visible : la passer en paramètre.</td></tr>
+<tr><td>Modifier un argument sans <code>&amp;</code></td><td>La fonction travaille sur une copie. Avec <code>&amp;</code>, elle modifie l'original.</td></tr>
+<tr><td>Fonction sans <code>static</code> pour un compteur</td><td>La variable repart de zéro à chaque appel.</td></tr>
+<tr><td>Récursivité sans cas d'arrêt</td><td>La fonction s'appelle indéfiniment.</td></tr>
+<tr><td>Chemin relatif dans <code>include</code></td><td>Lu depuis le premier script appelé. Utiliser <code>__DIR__ . '/...'</code>.</td></tr>
+<tr><td><code>fopen($f, 'w')</code> pour un journal</td><td>Le mode <code>w</code> efface le fichier. Utiliser <code>a</code>.</td></tr>
+<tr><td><code>json_decode($json)</code> sans <code>true</code></td><td>Renvoie un objet. Avec <code>true</code>, un tableau associatif.</td></tr>
+<tr><td><code>setcookie</code> ou <code>header</code> après un affichage</td><td>Erreur « headers already sent ». Même un espace avant <code>&lt;?php</code> compte.</td></tr>
+<tr><td>Lire un cookie juste après <code>setcookie</code></td><td>Il n'apparaît dans <code>$_COOKIE</code> qu'à la requête suivante.</td></tr>
+<tr><td>Oublier <code>session_start()</code></td><td><code>$_SESSION</code> reste vide. À écrire au début de chaque page concernée, avant tout affichage.</td></tr>
+<tr><td><code>session_destroy()</code> seul</td><td>Déconnexion en trois étapes : vider, détruire, supprimer le cookie.</td></tr>
+<tr><td>Comparer deux hachages avec <code>===</code></td><td>Deux hachages du même mot de passe sont différents (sel). Utiliser <code>password_verify</code>.</td></tr>
+<tr><td><code>filter_var($x, ...) == false</code></td><td>Tester avec <code>=== false</code> : <code>0</code> est un entier valide.</td></tr>
+<tr><td>Oublier <code>exit</code> après <code>header('Location: ...')</code></td><td>Le script continue de s'exécuter.</td></tr>
+<tr><td>Lire <code>$_POST['x']</code> sans <code>??</code></td><td>Warning si la clé est absente (premier affichage, case non cochée).</td></tr>
+<tr><td>Oublier <code>enctype="multipart/form-data"</code></td><td>Le fichier n'est pas transmis.</td></tr>
+<tr><td>Garder le nom d'origine d'un fichier envoyé</td><td>Risque d'écrasement et d'exécution (<code>.php</code>). Nom aléatoire et extension déduite du type réel.</td></tr>
+</table></div>
+
+<h2>Pièges de TP</h2>
+<ul>
+<li><strong>Affichage de <code>$moyenne</code> :</strong> dans le TP1, l'opérateur <code>/</code> donne un float ; une note de 21 n'existe pas, donc la moyenne visée est inatteignable.</li>
+<li><strong>TP2 :</strong> pour les mentions, <code>match (true)</code> ou <code>if / elseif</code> : un <code>switch</code> classique ne teste pas d'intervalles. Pour la factorielle de 0, <code>0! = 1</code>.</li>
+<li><strong>TP3 :</strong> <code>ajouterAuPanier</code> prend le panier et le stock par référence, sinon le stock ne baisse jamais. <code>usort</code> sur une copie si l'on veut garder l'ordre d'origine.</li>
+<li><strong>TP4 :</strong> lire l'ancienne date du cookie <em>avant</em> <code>setcookie()</code>. Message flash : ne pas détruire la session avant de le poser. Valider un cookie avec une liste blanche.</li>
+<li><strong>TP4, connexion :</strong> toute sortie (<code>echo</code>) avant <code>session_regenerate_id()</code> provoque un avertissement : préparer le message, traiter, puis afficher.</li>
+<li><strong>TP5 :</strong> le message flash se lit puis s'efface. Une case non cochée est absente de <code>$_POST</code>. Pour un upload, tester aussi <code>UPLOAD_ERR_INI_SIZE</code> : au-delà de <code>upload_max_filesize</code> (2M par défaut), le code d'erreur n'est plus <code>UPLOAD_ERR_OK</code> et le script ne reçoit pas le fichier.</li>
+</ul>
+
+<h2>Méthode : « Prédire l'affichage »</h2>
+<ol>
+<li>Lisez le code <strong>ligne par ligne</strong>, comme PHP, en notant la valeur de chaque variable sur papier.</li>
+<li>Repérez les pièges : guillemets simples ou doubles, <code>+</code> ou <code>.</code>, <code>==</code> ou <code>===</code>, <code>++$i</code> ou <code>$i++</code>, <code>break</code> oublié.</li>
+<li>Pour un tableau, notez les <strong>clés</strong> (conservées après <code>array_filter</code>, renumérotées après <code>sort</code>).</li>
+<li>Pour une erreur, précisez si elle arrête le script (Parse error, TypeError) ou non (Warning).</li>
+<li>Écrivez le type avec la valeur quand on vous demande <code>var_dump</code> : <code>int(15)</code>, <code>string(3) "105"</code>.</li>
+</ol>
+
+<div class="box retenir"><p class="t">Différences entre versions de PHP à connaître</p>
+<ul>
+<li>PHP 8 : <code>"abc" + 1</code> lève une TypeError (PHP 7 : Warning et résultat 1) ; <code>0 == "a"</code> est false ; <code>match</code>, arguments nommés, <code>str_starts_with</code> existent.</li>
+<li>PHP 8.4 : <code>fputcsv</code> et <code>fgetcsv</code> demandent le paramètre <code>escape</code> pour éviter une dépréciation.</li>
+<li>Votre cours cible PHP 8.2 (XAMPP 8.2.12). En cas de doute à l'examen, suivez le cours.</li>
+</ul></div>
+
+<div class="box ex">
+<p class="t">Dernier tour avant l'examen</p>
+<ul>
+<li>Refaire le <a href="qcm.html">QCM</a> « Prédire la sortie » jusqu'à zéro faute.</li>
+<li>Refaire les corrigés du <a href="tp.html">TP2 et du TP3</a> sans regarder.</li>
+<li>Passer l'<a href="pratique.html">examen blanc</a> en temps limité.</li>
+</ul>
+</div>
+
+<div class="foot">Basé sur les cours et TP fournis. Les règles de version ont été vérifiées avec PHP 8.0 et 8.5.</div>
+</main>
+</div>
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

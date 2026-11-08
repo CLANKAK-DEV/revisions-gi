@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Essentiel à retenir NoSQL</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="shell">
+<aside class="side" id="side"></aside>
+<main>
+<h1>Essentiel à retenir</h1>
+<p class="lead">Une page pour tout le cours : ce qu'il faut absolument savoir, et comment les notions se relient entre elles. Lisez-la la veille de l'examen, puis allez vérifier dans le résumé ce qui reste flou.</p>
+
+<div class="box">
+<p class="t">Sommaire</p>
+<ul>
+<li><a href="#six">Le cours en 6 phrases</a></li>
+<li><a href="#c1">Chapitre 1 : pourquoi NoSQL</a></li>
+<li><a href="#c2">Chapitre 2 : MongoDB</a></li>
+<li><a href="#c3">Chapitre 3 : interroger avec find()</a></li>
+<li><a href="#tp">Ce que les TP demandent de savoir faire</a></li>
+<li><a href="#cle">Les 12 phrases à connaître par cœur</a></li>
+</ul>
+</div>
+
+<h2 id="six">Le cours en 6 phrases</h2>
+<ol class="six">
+<li>Le relationnel (SQL) est fiable grâce à ACID, mais son schéma est rigide, ses jointures coûtent cher et il se répartit mal sur plusieurs serveurs.</li>
+<li>Le volume, la vélocité et la variété des données (les 3V) ont rendu ces limites gênantes : d'où le NoSQL, « Not Only SQL ».</li>
+<li>Le NoSQL gagne en flexibilité (sans schéma), en scalabilité horizontale (sharding, réplication) et en vitesse (pas de jointures, données imbriquées).</li>
+<li>Sur plusieurs serveurs, le théorème CAP oblige à choisir, en cas de coupure réseau, entre cohérence et disponibilité. Le modèle BASE choisit la disponibilité.</li>
+<li>MongoDB est un NoSQL orienté documents : base, collections, documents, champs, en JSON/BSON.</li>
+<li>On l'interroge avec <code>find(filtre, projection)</code> puis <code>sort</code>, <code>skip</code>, <code>limit</code>, avec des opérateurs dédiés pour les sous-documents et les tableaux.</li>
+</ol>
+
+<!-- =================== CHAPITRE 1 =================== -->
+<h2 id="c1">Chapitre 1 : pourquoi NoSQL</h2>
+
+<h3>La chaîne logique du chapitre</h3>
+<p>Tout le chapitre est une suite de causes et de conséquences. Si vous retenez cette chaîne, vous retrouvez le reste.</p>
+<div class="flow">
+<span class="n k">3V : volume, vélocité, variété</span><span class="a">&rarr;</span>
+<span class="n">limites de SQL : schéma fixe, jointures, scale-up</span><span class="a">&rarr;</span>
+<span class="n g">NoSQL : sans schéma, scale-out, sans jointures</span><span class="a">&rarr;</span>
+<span class="n">données réparties sur plusieurs serveurs</span><span class="a">&rarr;</span>
+<span class="n y">CAP : choisir C ou A en cas de partition</span>
+</div>
+<div class="flow">
+<span class="n y">choix C (CP)</span><span class="a">&rarr;</span><span class="n">modèle ACID, relationnel</span>
+<span class="a">|</span>
+<span class="n y">choix A (AP)</span><span class="a">&rarr;</span><span class="n">modèle BASE, cohérence éventuelle, beaucoup de NoSQL</span>
+</div>
+
+<h3>Les relations à connaître</h3>
+<div class="tw"><table>
+<tr><th>Problème ou contexte</th><th>Réponse NoSQL</th><th>Notion associée</th></tr>
+<tr><td>Variété : nouveaux types de données (images, JSON, logs)</td><td>Pas de schéma fixe</td><td>Schema-less, pas de ALTER TABLE</td></tr>
+<tr><td>Volume : trop de données pour un serveur</td><td>Répartir sur plusieurs machines</td><td>Scale-out, sharding, load balancing</td></tr>
+<tr><td>Jointures lentes sur de grosses tables</td><td>Dupliquer ou imbriquer</td><td>Dénormalisation, documents JSON</td></tr>
+<tr><td>Panne d'un serveur</td><td>Copier les données ailleurs</td><td>Réplication, haute disponibilité</td></tr>
+<tr><td>Coupure du réseau entre serveurs</td><td>Choisir cohérence ou disponibilité</td><td>CAP : CP ou AP</td></tr>
+<tr><td>Rester toujours disponible</td><td>Accepter des écarts temporaires</td><td>BASE : cohérence éventuelle</td></tr>
+<tr><td>Ne jamais vendre deux fois le même billet</td><td>Transaction tout ou rien</td><td>ACID (atomicité, isolation)</td></tr>
+</table></div>
+
+<h3>À savoir absolument</h3>
+<div class="box retenir">
+<ul>
+<li><span class="tag r">Indispensable</span>Définition : NoSQL = Not Only SQL, bases non relationnelles pour données massives, variées ou semi-structurées.</li>
+<li><span class="tag r">Indispensable</span>3V : Volume, Vélocité, Variété, chacun avec un exemple.</li>
+<li><span class="tag r">Indispensable</span>ACID : Atomicité (tout ou rien), Cohérence (état valide), Isolation (transactions parallèles sans interférence), Durabilité (permanent après commit).</li>
+<li><span class="tag r">Indispensable</span>CAP : Cohérence, Disponibilité (Availability), Tolérance au Partitionnement. Impossible d'avoir les trois à la fois.</li>
+<li><span class="tag r">Indispensable</span>BASE : Basically Available, Soft-state, Eventually consistent.</li>
+<li><span class="tag y">Important</span>Scale-up (une machine plus puissante) contre scale-out (plusieurs machines).</li>
+<li><span class="tag y">Important</span>Exemples : ACID pour PostgreSQL, MySQL, Oracle. BASE pour Cassandra, DynamoDB, MongoDB.</li>
+<li><span class="tag y">Important</span>Hôtel d'Agadir : CP, Rome refuse la réservation. AP, les deux serveurs acceptent puis on corrige.</li>
+<li><span class="tag y">Important</span>Les 4 familles NoSQL : clé-valeur, documents, colonnes, graphes (schéma du cours).</li>
+</ul>
+</div>
+
+<!-- =================== CHAPITRE 2 =================== -->
+<h2 id="c2">Chapitre 2 : MongoDB</h2>
+
+<h3>La chaîne logique du chapitre</h3>
+<div class="flow">
+<span class="n k">Serveur mongod</span><span class="a">&rarr;</span>
+<span class="n">bases de données</span><span class="a">&rarr;</span>
+<span class="n">collections</span><span class="a">&rarr;</span>
+<span class="n">documents (JSON, stockés en BSON)</span><span class="a">&rarr;</span>
+<span class="n g">champs : texte, nombre, tableau, sous-document</span>
+</div>
+
+<h3>Vocabulaire SQL et MongoDB</h3>
+<div class="tw"><table>
+<tr><th>SQL</th><th>MongoDB</th></tr>
+<tr><td>Base de données</td><td>Base de données</td></tr>
+<tr><td>Table</td><td>Collection</td></tr>
+<tr><td>Ligne</td><td>Document</td></tr>
+<tr><td>Colonne</td><td>Champ</td></tr>
+<tr><td>Jointure</td><td>Document imbriqué</td></tr>
+</table></div>
+
+<h3>Les relations à connaître</h3>
+<div class="tw"><table>
+<tr><th>Élément MongoDB</th><th>Il répond à quel besoin du chapitre 1 ?</th></tr>
+<tr><td>Document JSON/BSON, sans schéma imposé</td><td>Variété des données, pas de migration</td></tr>
+<tr><td>Document imbriqué</td><td>Éviter les jointures (dénormalisation)</td></tr>
+<tr><td>Sharding</td><td>Volume, scale-out, répartition de charge</td></tr>
+<tr><td>Replica set (primaire plus secondaires, bascule automatique)</td><td>Haute disponibilité, tolérance aux pannes</td></tr>
+<tr><td>Journal (Write Ahead Log) de WiredTiger</td><td>Durabilité, le D de ACID</td></tr>
+<tr><td>Transactions multi-documents depuis la version 4.0</td><td>ACID : MongoDB n'est pas limité à BASE</td></tr>
+<tr><td>Atlas</td><td>Cloud managé : mise à l'échelle, sauvegardes, haute dispo intégrées</td></tr>
+</table></div>
+
+<h3>À savoir absolument</h3>
+<div class="box retenir">
+<ul>
+<li><span class="tag r">Indispensable</span>MongoDB : SGBD NoSQL orienté documents, JSON/BSON, nom venant de « humongous ».</li>
+<li><span class="tag r">Indispensable</span>Un document a un <code>_id</code> unique et obligatoire (ObjectId généré si absent), taille maximale 16 Mo.</li>
+<li><span class="tag r">Indispensable</span>Une collection n'impose pas de schéma : deux documents peuvent avoir des champs différents.</li>
+<li><span class="tag r">Indispensable</span><code>use MaBase</code> ne crée pas la base, elle apparaît à la première insertion. La collection se crée toute seule à la première insertion.</li>
+<li><span class="tag r">Indispensable</span><code>insertOne</code> renvoie <code>acknowledged</code> et <code>insertedId</code>. <code>insertMany</code> prend un tableau et renvoie <code>insertedIds</code>.</li>
+<li><span class="tag y">Important</span>Moteur de stockage WiredTiger : cache en RAM, journal, compression.</li>
+<li><span class="tag y">Important</span>Compass : interface graphique. mongosh : shell en ligne de commande. mongod : le processus serveur. URI par défaut : <code>mongodb://localhost:27017</code>.</li>
+<li><span class="tag y">Important</span><code>createCollection</code> avec <code>capped: true</code> exige <code>size</code> (octets). <code>max</code> est optionnel.</li>
+<li><span class="tag y">Important</span>Bases système : admin, local, config. Community (SSPL, gratuit) contre Enterprise (payant, support).</li>
+<li><span class="tag y">Important</span>Historique : 2009 version 1.0, 2014-2015 WiredTiger (3.0), 2018 transactions ACID (4.0).</li>
+</ul>
+</div>
+
+<!-- =================== CHAPITRE 3 =================== -->
+<h2 id="c3">Chapitre 3 : interroger avec find()</h2>
+
+<h3>La formule à connaître</h3>
+<pre><code>db.collection.find( filtre , projection ).sort( {...} ).skip( n ).limit( n )</code></pre>
+<div class="flow">
+<span class="n k">filtre : quels documents ?</span><span class="a">&rarr;</span>
+<span class="n">tri</span><span class="a">&rarr;</span>
+<span class="n">skip</span><span class="a">&rarr;</span>
+<span class="n">limit</span><span class="a">&rarr;</span>
+<span class="n g">projection : quels champs afficher ?</span>
+</div>
+<p>MongoDB applique le tri, puis skip, puis limit, quel que soit l'ordre d'écriture. Le résultat de find() est un curseur.</p>
+
+<h3>Je veux... alors j'écris...</h3>
+<div class="tw"><table>
+<tr><th>Je veux</th><th>J'écris</th></tr>
+<tr><td>Tous les documents</td><td><code>find()</code> ou <code>find({})</code></td></tr>
+<tr><td>Une valeur précise</td><td><code>{ champ: valeur }</code></td></tr>
+<tr><td>Deux conditions en même temps (ET)</td><td><code>{ a: 1, b: 2 }</code> ou <code>$and: [ ... ]</code></td></tr>
+<tr><td>L'une ou l'autre (OU)</td><td><code>{ $or: [ { a: 1 }, { b: 2 } ] }</code></td></tr>
+<tr><td>Supérieur, inférieur</td><td><code>$gt</code>, <code>$gte</code>, <code>$lt</code>, <code>$lte</code></td></tr>
+<tr><td>Un intervalle inclusif</td><td><code>{ champ: { $gte: 15, $lte: 18 } }</code></td></tr>
+<tr><td>Une valeur parmi une liste</td><td><code>{ champ: { $in: [ ... ] } }</code></td></tr>
+<tr><td>Un texte qui contient, commence, finit</td><td><code>/mot/i</code>, <code>/^debut/</code>, <code>/fin$/</code></td></tr>
+<tr><td>Un champ d'un sous-document</td><td><code>{ "adresse.ville": "Agadir" }</code> (guillemets obligatoires)</td></tr>
+<tr><td>Le champ existe, son type</td><td><code>$exists: true</code>, <code>$type: "number"</code></td></tr>
+<tr><td>Champ nul ou absent</td><td><code>{ champ: null }</code></td></tr>
+<tr><td>Un tableau qui contient une valeur</td><td><code>{ tab: valeur }</code></td></tr>
+<tr><td>Un tableau qui contient au moins l'une des valeurs</td><td><code>$in</code></td></tr>
+<tr><td>Un tableau qui contient toutes les valeurs</td><td><code>$all</code></td></tr>
+<tr><td>Un tableau d'exactement N éléments</td><td><code>$size: N</code></td></tr>
+<tr><td>Un même élément qui vérifie plusieurs conditions</td><td><code>$elemMatch</code></td></tr>
+<tr><td>Afficher seulement certains champs</td><td>projection <code>{ nom: 1, _id: 0 }</code></td></tr>
+<tr><td>Afficher seulement l'élément trouvé d'un tableau</td><td><code>{ "tab.$": 1 }</code></td></tr>
+<tr><td>Trier</td><td><code>.sort({ champ: 1 })</code> croissant, <code>-1</code> décroissant</td></tr>
+<tr><td>Les N premiers, ou une page</td><td><code>.limit(N)</code>, <code>.skip(k).limit(N)</code></td></tr>
+<tr><td>Compter</td><td><code>countDocuments(filtre)</code></td></tr>
+</table></div>
+
+<h3>Les relations à connaître</h3>
+<div class="tw"><table>
+<tr><th>Si...</th><th>Alors...</th></tr>
+<tr><td>Le champ est dans un sous-document</td><td>notation pointée entre guillemets</td></tr>
+<tr><td>Deux conditions portent sur le même élément d'un tableau d'objets</td><td><code>$elemMatch</code>, sinon deux éléments différents peuvent les valider</td></tr>
+<tr><td>On veut seulement l'élément trouvé</td><td><code>$elemMatch</code> trouve le document entier, puis la projection <code>"tab.$"</code> garde l'élément</td></tr>
+<tr><td>Le champ vaut null ou n'existe pas</td><td><code>{ champ: null }</code> ramène les deux cas, <code>$exists</code> les sépare</td></tr>
+<tr><td>On mélange 1 et 0 dans la projection</td><td>Erreur, sauf pour <code>_id</code></td></tr>
+<tr><td>On veut « au moins N éléments »</td><td><code>$size</code> ne suffit pas, il teste l'égalité</td></tr>
+</table></div>
+<p>Les erreurs les plus fréquentes sont détaillées dans la page <a href="pieges.html">Pièges et aide-mémoire</a>.</p>
+
+<!-- =================== TP =================== -->
+<h2 id="tp">Ce que les TP demandent de savoir faire</h2>
+<div class="grid">
+<div class="card"><h3>TP2</h3><p>Créer une base et des collections (Compass puis mongosh), insérer des documents simples, avec champs variés, imbriqués, tableaux, sous-documents. Montrer la flexibilité.</p></div>
+<div class="card"><h3>TP3</h3><p>find() avec filtres, projections, tri, limite, comptage, sur documents simples, imbriqués et tableaux d'objets. Importer movies.json avec mongoimport.</p></div>
+</div>
+
+<!-- =================== PAR COEUR =================== -->
+<h2 id="cle">Les 12 phrases à connaître par cœur</h2>
+<ol class="six">
+<li>NoSQL veut dire Not Only SQL.</li>
+<li>Les 3V : Volume, Vélocité, Variété.</li>
+<li>Scale-up : une machine plus puissante. Scale-out : plusieurs machines.</li>
+<li>ACID : Atomicité, Cohérence, Isolation, Durabilité.</li>
+<li>CAP : Cohérence, Disponibilité, Partition. En cas de partition, on sacrifie C ou A.</li>
+<li>BASE : Basically Available, Soft-state, Eventually consistent.</li>
+<li>Base, Collections, Documents, Champs : l'équivalent de Base, Tables, Lignes, Colonnes.</li>
+<li>Un document : JSON/BSON, <code>_id</code> obligatoire, 16 Mo au maximum.</li>
+<li>Replica set : copies, disponibilité. Sharding : morceaux, volume.</li>
+<li><code>use</code> ne crée rien tant qu'on n'insère pas.</li>
+<li>Plusieurs conditions dans un filtre : ET. Intervalle : <code>$gte</code> et <code>$lte</code> dans le même objet.</li>
+<li><code>$in</code> : au moins une valeur. <code>$all</code> : toutes. <code>$size</code> : exactement N. <code>$elemMatch</code> : le même élément.</li>
+</ol>
+
+<div class="box ex">
+<p class="t">Et ensuite</p>
+<p>Testez-vous avec le <a href="qcm.html">QCM</a>, puis passez l'<a href="pratique.html">examen blanc</a>.</p>
+</div>
+
+<div class="foot">Synthèse des chapitres 1 à 3 et des TP 2 et 3.</div>
+</main>
+</div>
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

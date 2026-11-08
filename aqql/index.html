@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Révision Qualité Logicielle</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="shell">
+<aside class="side" id="side"></aside>
+<main>
+<h1>Réviser la Qualité Logicielle</h1>
+<p class="lead">Un résumé en français simple des six cours, des trois TD et des deux TP, classé par priorité, avec des exercices corrigés, des QCM, des questions de cours et un examen blanc. Pensé pour réviser même avec peu de temps.</p>
+
+<h2>Par où commencer</h2>
+<div class="grid">
+<a class="card" href="essentiel.html"><span class="tag y">Commencer ici</span><h3>Essentiel à retenir</h3><p>Priorités selon votre temps, chaînes logiques, toutes les formules, 15 éléments à connaître par cœur.</p></a>
+<a class="card" href="cours.html"><span class="tag b">1</span><h3>Résumé du cours</h3><p>Les six cours, avec une étiquette de priorité sur chaque partie.</p></a>
+<a class="card" href="exercices.html"><span class="tag g">2</span><h3>TD, TP et exercices</h3><p>TD1, TD2, TD3 corrigés, méthodes des TP, 10 exercices supplémentaires.</p></a>
+<a class="card" href="qcm.html"><span class="tag y">3</span><h3>QCM</h3><p>116 questions avec correction, filtrables par chapitre.</p></a>
+<a class="card" href="questions.html"><span class="tag b">4</span><h3>Questions de cours</h3><p>Les questions probables avec des réponses courtes.</p></a>
+<a class="card" href="pratique.html"><span class="tag r">5</span><h3>Examen blanc pratique</h3><p>Un sujet de 20 points avec chronomètre et corrigé.</p></a>
+<a class="card" href="pieges.html"><span class="tag r">6</span><h3>Pièges et aide-mémoire</h3><p>Erreurs classiques, incohérences des slides, seuils du cours.</p></a>
+</div>
+
+<h2>Si le temps manque</h2>
+<div class="tw"><table>
+<tr><th>Temps</th><th>Programme</th></tr>
+<tr><td>2 heures</td><td>Page Essentiel, puis QCM Calculs et Métriques de code, puis TD3 corrigé.</td></tr>
+<tr><td>Une demi-journée</td><td>Ajouter les chapitres Concepts et Modèles du résumé, ISO 25010, TD2 corrigé, QCM correspondants.</td></tr>
+<tr><td>Un jour ou plus</td><td>Tout le résumé, tous les exercices, SonarQube et TP, examen blanc chronométré, pièges.</td></tr>
+</table></div>
+
+<h2>Ce que contient le cours</h2>
+<div class="grid">
+<div class="card"><h3>Concepts de base</h3><p>Logiciel, erreur, défaut, défaillance, échecs célèbres, qualité, SQA, métrologie.</p></div>
+<div class="card"><h3>Modèles de qualité</h3><p>Facteurs, critères, métriques, McCall, ISO 9126, GQM, évaluation, échelles de Stevens.</p></div>
+<div class="card"><h3>ISO 25010:2023</h3><p>Trois dimensions, 9 caractéristiques, 38 sous-caractéristiques, métriques, ISO 25059.</p></div>
+<div class="card"><h3>Métriques de code</h3><p>LOC, graphe de contrôle, McCabe, Halstead.</p></div>
+<div class="card"><h3>Métriques POO</h3><p>WMC, DIT, NOC, CBO, RFC, LCOM, SI, abstractivité, instabilité, distance.</p></div>
+<div class="card"><h3>SonarQube</h3><p>Sept axes, Quality Gate, complexités, TP.</p></div>
+</div>
+
+<div class="box retenir">
+<p class="t">Ce que je ne sais pas, et ce que j'ai repéré</p>
+<ul>
+<li>Je n'ai pas le format de votre contrôle ni de votre examen. Les priorités sont mon estimation.</li>
+<li>Dans la slide Halstead, N1 = 14 et N2 = 11 donnent N = 25, pas 24.</li>
+<li>La slide ISO 25010:2023 annonce 38 sous-caractéristiques mais en liste 40.</li>
+<li>Le cours ne définit pas « qualité mesurée » ni « qualité totale » (TD2) : mon interprétation est écrite dans la solution.</li>
+<li>Je n'ai pas votre projet gestion_Bib ni vos résultats Sonar et CKJM : pour les TP, je donne la méthode et les critères.</li>
+</ul>
+</div>
+
+<div class="foot">Cours du Pr. Aimad Qazdar, 4ème année Génie Informatique. Ouvrez simplement ce site dans votre navigateur, il fonctionne hors ligne.</div>
+</main>
+</div>
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

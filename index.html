@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mes révisions</title>
+<link rel="stylesheet" href="hub.css">
+</head>
+<body>
+<main class="hub">
+<h1>Mes révisions</h1>
+<p class="lead">Un site par matière, chacun séparé des autres : résumé, exercices corrigés, QCM, questions de cours et examen blanc. Choisissez un module. <span id="count"></span> pour l'instant.</p>
+
+<div class="grid" id="modules"></div>
+
+<h2>Ajouter un module</h2>
+<div class="box retenir">
+<p class="t">Comment ça se passe</p>
+<ol>
+<li>Vous me donnez le dossier de la matière (cours, TD, TP en PDF ou PowerPoint).</li>
+<li>Je crée le site dans un dossier <code>site</code> à l'intérieur, sans toucher aux autres modules.</li>
+<li>J'ajoute un bloc dans <code>modules.js</code> : la carte apparaît ici, et le site a un lien « Tous les modules » pour revenir.</li>
+</ol>
+</div>
+
+<div class="foot">Ouvrez simplement ce fichier dans votre navigateur, tout fonctionne hors ligne. Les scores de QCM sont gardés séparément pour chaque module.</div>
+</main>
+<script src="modules.js"></script>
+<script src="hub.js"></script>
+</body>
+</html>

@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pièges et aide-mémoire</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="shell">
+<aside class="side" id="side"></aside>
+<main>
+<h1>Pièges et aide-mémoire</h1>
+<p class="lead">Les erreurs qui coûtent des points, puis une fiche à relire la veille de l'examen.</p>
+
+<h2>Erreurs fréquentes en réseaux (chapitre 1)</h2>
+<div class="box piege"><p class="t">1. Confondre protocole et interface</p>
+<p>Le protocole relie deux couches de même niveau sur deux machines différentes. L'interface relie deux couches voisines sur la même machine.</p></div>
+<div class="box piege"><p class="t">2. Mal placer les couches d'OSI dans TCP/IP</p>
+<p>Application, Présentation, Session d'OSI sont dans l'Application de TCP/IP. Liaison et Physique sont dans l'Accès au réseau. Transport et Réseau gardent chacune la leur (Réseau devient Internet).</p></div>
+<div class="box piege"><p class="t">3. Mélanger topologie physique et topologie logique</p>
+<p>Physique : le câblage. Logique : la façon dont les hôtes accèdent au support et dont les messages circulent. Un réseau câblé en étoile peut fonctionner logiquement comme un bus.</p></div>
+<div class="box piege"><p class="t">4. Associer la mauvaise caractéristique à la mauvaise topologie</p>
+<p>Support partagé et collisions : bus. Débit maximum par station et nœud central : étoile. Tour de rôle : anneau. Tous reliés : maillée (Internet). Étoiles interconnectées : arbre.</p></div>
+<div class="box piege"><p class="t">5. Ranger un protocole dans le mauvais domaine</p>
+<p>IoT : MQTT, LoRa, Zigbee, BLE, CoAP. Embarqué : I2C, SPI, UART. Industrie : Modbus, Profibus, Profinet, RS-232/RS-485. Industrie et automobile : CAN. LAN : Ethernet, Wi-Fi. Internet : TCP/IP, HTTP/HTTPS.</p></div>
+<div class="box piege"><p class="t">6. Confondre les niveaux Schneider et Siemens</p>
+<p>Schneider : AS-i (capteur), CANopen (machine), Ethernet Modbus TCP (atelier et entreprise). Siemens : Interface AS (terrain), Profibus DP (commande), Profinet (supervision).</p></div>
+<div class="box piege"><p class="t">7. Triple play et quadruple play</p>
+<p>Triple play : Internet, télévision, téléphonie fixe (réponse de la correction). Quadruple play : plus le mobile. La slide de convergence écrit les deux ensemble, ce qui prête à confusion.</p></div>
+<div class="box piege"><p class="t">8. Deux classifications différentes</p>
+<p>Informatiques, industriels, mobiles : classification par domaine. Télécommunications, téléinformatiques, télédiffusion : classification des réseaux de communication en télécoms. LAN, MAN, WAN : classification par taille.</p></div>
+
+<h2>Erreurs fréquentes en traitement du signal (chapitre 2)</h2>
+<div class="tw"><table>
+<tr><th>Erreur</th><th>Pourquoi c'est faux</th><th>Correct</th></tr>
+<tr><td>Perte de 20 % égale 20 dB</td><td>Le dB est logarithmique</td><td>A = 10 log10(1/0,8) ≈ 0,97 dB</td></tr>
+<tr><td>Oublier le facteur 10 devant le log</td><td>Pour des puissances, c'est 10 log10</td><td>(S/N)dB = 10 log10(Ps / Pb)</td></tr>
+<tr><td>Calculer S/N en dB avec des dB déjà convertis</td><td>On ne prend le log qu'une fois, sur le rapport linéaire</td><td>S/N = 0,5 / 0,01 = 50, puis 16,99 dB</td></tr>
+<tr><td>Multiplier des dB</td><td>Les dB s'additionnent</td><td>Chaîne : -6 + 10 - 3 = +1 dB</td></tr>
+<tr><td>Écrire 10 dB = 10 W</td><td>10 dB est un rapport, pas une puissance</td><td>10 dB : puissance divisée par 10</td></tr>
+<tr><td>Prendre fmin ou la bande passante dans Shannon</td><td>Shannon utilise la fréquence maximale</td><td>fe ≥ 2 × 3400 = 6800 Hz</td></tr>
+<tr><td>Écrire fe ≤ 2 fmax</td><td>Sens de l'inégalité inversé</td><td>fe ≥ 2 fmax</td></tr>
+<tr><td>Confondre bande passante et fréquence maximale</td><td>W = f2 - f1</td><td>3400 - 300 = 3100 Hz</td></tr>
+<tr><td>Oublier le filtre anti-repliement</td><td>Il se place avant l'échantillonnage</td><td>Limiter fmax avant de numériser</td></tr>
+<tr><td>Confondre signal quantifié et échantillonné</td><td>Quantifié : amplitude discrète. Échantillonné : temps discret.</td><td>Numérique : les deux discrets</td></tr>
+<tr><td>Confondre information, message, signal</td><td>Information : abstraite. Message : concret. Signal : physique.</td><td>Voir la définition de chacun</td></tr>
+<tr><td>Confondre ETTD et ETCD</td><td>ETTD traite les données. ETCD adapte au support (modem).</td><td>ETTD = DTE, ETCD = DCE</td></tr>
+<tr><td>Confondre bruit blanc et bruit impulsif</td><td>Blanc : agitation thermique. Impulsif : parasites, diaphonie.</td><td>Voir le cours</td></tr>
+<tr><td>Prendre ω pour f sur le spectre</td><td>sin(400 t) : ω = 400 rad/s</td><td>f = 400 / 2π ≈ 63,7 Hz</td></tr>
+<tr><td>Spectre d'un signal périodique par transformée de Fourier</td><td>Périodique : série de Fourier</td><td>Non périodique : transformée de Fourier</td></tr>
+<tr><td>Oublier que la FFT est symétrique</td><td>Seule la moitié 0 à fe/2 est utile</td><td>Tracer f[:N/2] seulement</td></tr>
+</table></div>
+
+<h2>Méthode pour les calculs</h2>
+<ol>
+<li>Écrivez la formule avant de remplacer les valeurs.</li>
+<li>Convertissez d'abord les unités (mW en W, kHz en Hz).</li>
+<li>Pour les dB : rapport linéaire, puis 10 log10. À l'inverse : P = P0 · 10^(dB/10).</li>
+<li>Vérifiez l'ordre de grandeur : 3 dB, c'est un facteur 2. Si vous trouvez 30 dB pour une perte de 20 %, quelque chose est faux.</li>
+<li>Terminez par une phrase de réponse avec l'unité.</li>
+</ol>
+
+<h2>Aide-mémoire</h2>
+
+<h3>Les modèles en couches</h3>
+<div class="tw"><table>
+<tr><th>OSI</th><th>TCP/IP</th><th>Exemples</th></tr>
+<tr><td>7 Application, 6 Présentation, 5 Session</td><td>Application</td><td>HTTP, FTP, DHCP</td></tr>
+<tr><td>4 Transport</td><td>Transport</td><td>TCP, UDP</td></tr>
+<tr><td>3 Réseau</td><td>Internet</td><td>IP, ICMP, ARP</td></tr>
+<tr><td>2 Liaison, 1 Physique</td><td>Accès au réseau</td><td>Ethernet</td></tr>
+</table></div>
+
+<h3>Formules</h3>
+<pre><code>Affaiblissement   A = 10 log10(Pentrée / Psortie)  (dB)       G = -A
+Sortie            Ps = Pe · 10^(-A/10)
+Signal sur bruit  (S/N)dB = 10 log10(Psignal / Pbruit)
+Shannon           fe ≥ 2 · fmax            Fe = 1 / Te
+Bande passante    W = f2 - f1
+Durée FFT         T = N · Te = N / fe      résolution = fe / N
+Pulsation         ω = 2π f
+Compléments       niveaux = 2^n    débit = fe · n    C = W log2(1 + S/N)</code></pre>
+
+<h3>Repères en dB</h3>
+<div class="tw"><table>
+<tr><th>dB</th><th>3</th><th>6</th><th>10</th><th>20</th><th>30</th></tr>
+<tr><td>Rapport de puissance</td><td>environ 2</td><td>environ 4</td><td>10</td><td>100</td><td>1000</td></tr>
+</table></div>
+
+<h3>Dernier tour avant l'examen</h3>
+<div class="box ex">
+<ul>
+<li>Refaire le <a href="qcm.html">QCM</a> en mode mélangé jusqu'à zéro faute.</li>
+<li>Refaire les calculs de la page <a href="exercices.html">Exercices corrigés</a> sans regarder la solution.</li>
+<li>Passer l'<a href="pratique.html">examen blanc</a> en temps limité.</li>
+<li>Réciter : 7 couches OSI, 4 couches TCP/IP, 5 topologies, 3 types de déformation, 3 outils de Fourier.</li>
+</ul>
+</div>
+
+<div class="foot">Basé sur le chapitre 1, le chapitre 2 (parties 1 et 2), le QCM récapitulatif et les exercices fournis.</div>
+</main>
+</div>
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

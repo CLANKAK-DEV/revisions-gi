@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Essentiel à retenir Réseaux et Télécoms</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="shell">
+<aside class="side" id="side"></aside>
+<main>
+<h1>Essentiel à retenir</h1>
+<p class="lead">Une page pour tout le module : ce qu'il faut absolument savoir, et comment les notions se relient entre elles. Lisez-la la veille de l'examen, puis retournez dans le résumé pour ce qui reste flou.</p>
+
+<div class="box">
+<p class="t">Sommaire</p>
+<ul>
+<li><a href="#six">Le module en 6 phrases</a></li>
+<li><a href="#c1">Chapitre 1 : réseaux et télécoms</a></li>
+<li><a href="#c2">Chapitre 2 : signal et numérisation</a></li>
+<li><a href="#calc">Les calculs à maîtriser</a></li>
+<li><a href="#cle">Les 15 éléments à connaître par cœur</a></li>
+</ul>
+</div>
+
+<h2 id="six">Le module en 6 phrases</h2>
+<ol class="six">
+<li>Un réseau est un ensemble de nœuds reliés par des liens. La topologie décrit comment on les relie.</li>
+<li>Pour que des équipements différents se comprennent, on organise la communication en couches normalisées : OSI (7 couches, modèle de référence) et TCP/IP (4 couches, celui d'Internet).</li>
+<li>On classe les réseaux par taille (PAN, LAN, MAN, WAN), par domaine (informatiques, industriels, mobiles) et, en télécoms, par nature (télécommunications, téléinformatiques, télédiffusion).</li>
+<li>Une information est transportée par un signal, analogique ou numérique. En chemin, le signal subit trois déformations : affaiblissement, bruit, distorsion.</li>
+<li>Pour numériser un signal : échantillonner (fe ≥ 2 fmax), quantifier, coder.</li>
+<li>Un circuit de données (deux ETCD et une ligne) se caractérise par sa bande passante, son débit et son mode de transmission.</li>
+</ol>
+
+<!-- =================== CHAPITRE 1 =================== -->
+<h2 id="c1">Chapitre 1 : réseaux et télécoms</h2>
+
+<h3>La chaîne logique du chapitre</h3>
+<div class="flow">
+<span class="n k">Réseau : nœuds et liens</span><span class="a">&rarr;</span>
+<span class="n">topologie</span><span class="a">&rarr;</span>
+<span class="n">architecture en couches : couche, protocole, interface</span><span class="a">&rarr;</span>
+<span class="n g">normalisation : OSI et TCP/IP</span><span class="a">&rarr;</span>
+<span class="n">protocoles par domaine</span><span class="a">&rarr;</span>
+<span class="n y">classification des réseaux</span>
+</div>
+<div class="flow">
+<span class="n k">Télécoms</span><span class="a">&rarr;</span>
+<span class="n">systèmes : transmission et commutation</span><span class="a">&rarr;</span>
+<span class="n">constituent les réseaux</span><span class="a">&rarr;</span>
+<span class="n y">convergence : VoIP, triple play, 5G</span>
+</div>
+
+<h3>Les relations à connaître</h3>
+<div class="tw"><table>
+<tr><th>Si on vous dit...</th><th>Pensez à...</th></tr>
+<tr><td>Support partagé, collisions</td><td>Bus</td></tr>
+<tr><td>Nœud central, débit maximum par station</td><td>Étoile</td></tr>
+<tr><td>Étoiles interconnectées</td><td>Arbre</td></tr>
+<tr><td>Tour de rôle, débit à peu près fixe</td><td>Anneau</td></tr>
+<tr><td>Tous les nœuds reliés, base d'Internet</td><td>Maillée</td></tr>
+<tr><td>Une seule paire de nœuds sur le support</td><td>Mode point-à-point</td></tr>
+<tr><td>Support partagé entre plusieurs nœuds</td><td>Mode multipoint (diffusion)</td></tr>
+<tr><td>Dialogue entre deux couches de même niveau sur deux hôtes</td><td>Protocole</td></tr>
+<tr><td>Passage entre deux couches voisines d'un même hôte</td><td>Interface</td></tr>
+<tr><td>Application + Présentation + Session (OSI)</td><td>Application (TCP/IP)</td></tr>
+<tr><td>Liaison + Physique (OSI)</td><td>Accès au réseau (TCP/IP)</td></tr>
+<tr><td>TCP, UDP</td><td>Transport</td></tr>
+<tr><td>IP, ICMP, ARP</td><td>Internet (couche Réseau d'OSI)</td></tr>
+<tr><td>Bureau ou bâtiment, ville, vaste zone</td><td>LAN, MAN, WAN</td></tr>
+<tr><td>Capteurs, actionneurs, automates, robots</td><td>Réseaux industriels</td></tr>
+<tr><td>Voix et SMS, données, haut débit, faible latence et IoT</td><td>2G, 3G, 4G, 5G</td></tr>
+<tr><td>Regrouper plusieurs signaux sur un support</td><td>Multiplexage (système de transmission)</td></tr>
+<tr><td>Aiguiller l'information</td><td>Commutation : circuit (téléphonie), messages, paquets</td></tr>
+</table></div>
+
+<h3>Les réseaux industriels en une image mentale</h3>
+<p>Plus on monte dans l'usine, plus le volume d'échange augmente (du bit au méga-octet) et moins le temps de réponse est critique.</p>
+<div class="tw"><table>
+<tr><th>Niveau</th><th>Schneider Electric</th><th>Siemens</th></tr>
+<tr><td>Entreprise, supervision</td><td>Ethernet Modbus TCP (MES, ERP)</td><td>Profinet</td></tr>
+<tr><td>Atelier</td><td>Ethernet Modbus TCP</td><td></td></tr>
+<tr><td>Machine, commande</td><td>CANopen</td><td>Profibus DP</td></tr>
+<tr><td>Capteur, terrain</td><td>AS-i</td><td>Interface AS</td></tr>
+</table></div>
+
+<h3>À savoir absolument</h3>
+<div class="box retenir">
+<ul>
+<li><span class="tag r">Indispensable</span>Définition d'un réseau, différence entre hôte (terminal) et équipement de réseau.</li>
+<li><span class="tag r">Indispensable</span>Les 5 topologies et leur caractéristique principale.</li>
+<li><span class="tag r">Indispensable</span>Couche, protocole, interface : trois définitions.</li>
+<li><span class="tag r">Indispensable</span>Les 7 couches OSI et les 4 couches TCP/IP, avec la correspondance.</li>
+<li><span class="tag r">Indispensable</span>PAN, LAN, MAN, WAN (et BAN) avec leur portée.</li>
+<li><span class="tag y">Important</span>Les protocoles par domaine : Internet, LAN, IoT, embarqué, industrie.</li>
+<li><span class="tag y">Important</span>Les niveaux Schneider et Siemens.</li>
+<li><span class="tag y">Important</span>Les générations mobiles 2G à 5G et ce que chacune apporte.</li>
+<li><span class="tag y">Important</span>Télécoms : émetteur, support, récepteur, protocoles de gestion. Système contre réseau.</li>
+<li><span class="tag y">Important</span>Les 3 catégories de réseaux de télécoms avec exemples.</li>
+<li><span class="tag y">Important</span>IT, OT, mobile : l'exemple du capteur de température vers le cloud.</li>
+</ul>
+</div>
+
+<!-- =================== CHAPITRE 2 =================== -->
+<h2 id="c2">Chapitre 2 : signal et numérisation</h2>
+
+<h3>La chaîne logique du chapitre</h3>
+<div class="flow">
+<span class="n k">Information</span><span class="a">&rarr;</span>
+<span class="n">message (forme concrète)</span><span class="a">&rarr;</span>
+<span class="n">signal (forme physique)</span><span class="a">&rarr;</span>
+<span class="n">chaîne de communication</span><span class="a">&rarr;</span>
+<span class="n y">déformations : affaiblissement, bruit, distorsion</span>
+</div>
+<div class="flow">
+<span class="n g">analyse spectrale : oscillogramme et spectre</span><span class="a">&rarr;</span>
+<span class="n k">signal analogique</span><span class="a">&rarr;</span>
+<span class="n">échantillonnage (Shannon)</span><span class="a">&rarr;</span>
+<span class="n">quantification</span><span class="a">&rarr;</span>
+<span class="n">codage binaire</span><span class="a">&rarr;</span>
+<span class="n y">transmission sur un circuit de données</span>
+</div>
+
+<h3>Les relations à connaître</h3>
+<div class="tw"><table>
+<tr><th>Relation</th><th>Ce qu'il faut en retenir</th></tr>
+<tr><td>Information, message, signal</td><td>Information : abstraite. Message : concret (texte, voix, image). Signal : physique (tension, onde).</td></tr>
+<tr><td>ETTD et ETCD</td><td>ETTD traite les données. ETCD adapte au support (modem). Deux ETCD et la ligne forment le circuit de données.</td></tr>
+<tr><td>Capteur, transmetteur</td><td>Le capteur transforme la grandeur physique. Le transmetteur met le signal en forme pour la transmission.</td></tr>
+<tr><td>Traitement du signal</td><td>Créer (modulation), analyser (détection), transformer (filtrage, codage).</td></tr>
+<tr><td>Affaiblissement et gain</td><td>G = -A. On compense avec amplificateurs ou répéteurs.</td></tr>
+<tr><td>Bruit et S/N</td><td>Plus le bruit est fort, plus S/N baisse, plus la ligne est mauvaise.</td></tr>
+<tr><td>Signal périodique, non périodique, N échantillons</td><td>Série de Fourier, transformée de Fourier, TFD (FFT).</td></tr>
+<tr><td>Analogique, quantifié, échantillonné, numérique</td><td>Quantifié : amplitude discrète. Échantillonné : temps discret. Numérique : les deux.</td></tr>
+<tr><td>fe et fmax</td><td>Shannon : fe ≥ 2 fmax. Sinon repliement. Le filtre anti-repliement est avant l'échantillonnage.</td></tr>
+<tr><td>Pas de quantification et Fe</td><td>Meilleure qualité si P petit et Fe élevée.</td></tr>
+<tr><td>Bande passante</td><td>W = f2 - f1. Le circuit se comporte comme un filtre passe-bande.</td></tr>
+<tr><td>CAN et CNA</td><td>CAN à l'émission, CNA à la réception.</td></tr>
+</table></div>
+
+<h3>À savoir absolument</h3>
+<div class="box retenir">
+<ul>
+<li><span class="tag r">Indispensable</span>Définitions : information, message, signal.</li>
+<li><span class="tag r">Indispensable</span>Les 3 déformations et la formule de l'affaiblissement.</li>
+<li><span class="tag r">Indispensable</span>Le théorème de Shannon et le repliement.</li>
+<li><span class="tag r">Indispensable</span>Les 3 étapes de la numérisation.</li>
+<li><span class="tag r">Indispensable</span>La classification morphologique des signaux (quatre classes).</li>
+<li><span class="tag y">Important</span>Série de Fourier, transformée de Fourier, TFD : quand utiliser chacune.</li>
+<li><span class="tag y">Important</span>Bande passante et exemple de la ligne téléphonique (300 à 3400 Hz).</li>
+<li><span class="tag y">Important</span>Déterministe contre aléatoire, énergie finie contre puissance finie.</li>
+<li><span class="tag y">Important</span>Les caractéristiques d'un circuit de données.</li>
+</ul>
+</div>
+
+<!-- =================== CALCULS =================== -->
+<h2 id="calc">Les calculs à maîtriser</h2>
+<div class="tw"><table>
+<tr><th>Calcul</th><th>Formule</th><th>Exemple du cours</th></tr>
+<tr><td>Affaiblissement</td><td>A = 10 log10(Pe / Ps)</td><td>Perte de 20 % : A ≈ 0,97 dB</td></tr>
+<tr><td>Puissance de sortie</td><td>Ps = Pe · 10^(-A/10)</td><td>1 W et 10 dB : 0,1 W</td></tr>
+<tr><td>Rapport signal sur bruit</td><td>(S/N)dB = 10 log10(Ps / Pb)</td><td>0,5 W et 0,01 W : 50, soit 16,99 dB</td></tr>
+<tr><td>Fréquence d'échantillonnage</td><td>fe ≥ 2 fmax</td><td>[300 ; 3400] Hz : 6800 Hz</td></tr>
+<tr><td>Bande passante</td><td>W = f2 - f1</td><td>3400 - 300 = 3100 Hz</td></tr>
+<tr><td>Durée d'acquisition (FFT)</td><td>T = N / fe</td><td>fe = 150 Hz, N = 150 : T = 1 s</td></tr>
+</table></div>
+<div class="box retenir"><p class="t">Repères en dB</p><p>3 dB : facteur 2. 10 dB : facteur 10. 20 dB : facteur 100. 30 dB : facteur 1000. Les dB s'additionnent le long d'une chaîne.</p></div>
+<p>Tous ces calculs sont détaillés, pas à pas, dans la page <a href="exercices.html">Exercices corrigés</a>.</p>
+
+<!-- =================== PAR COEUR =================== -->
+<h2 id="cle">Les 15 éléments à connaître par cœur</h2>
+<ol class="six">
+<li>OSI : Application, Présentation, Session, Transport, Réseau, Liaison de données, Physique.</li>
+<li>TCP/IP : Application, Transport, Internet, Accès au réseau.</li>
+<li>Topologies : bus, étoile, arbre, anneau, maillée.</li>
+<li>Tailles : BAN, PAN, LAN, MAN, WAN.</li>
+<li>Domaines : informatiques, industriels, mobiles.</li>
+<li>Télécoms : télécommunications, téléinformatiques, télédiffusion.</li>
+<li>Mobile : 2G voix et SMS, 3G données, 4G haut débit, 5G faible latence et IoT.</li>
+<li>IoT : MQTT, LoRa, Zigbee, BLE, CoAP. Embarqué : I2C, SPI, UART.</li>
+<li>Industrie : Modbus, Profibus, Profinet, RS-232/RS-485. CAN : industrie et automobile.</li>
+<li>Déformations : affaiblissement, bruits, distorsion.</li>
+<li>Traitement du signal : créer, analyser, transformer.</li>
+<li>Outils spectraux : série de Fourier, transformée de Fourier, TFD.</li>
+<li>Numérisation : échantillonnage, quantification, codage.</li>
+<li>Shannon : fe ≥ 2 fmax.</li>
+<li>Modes de transmission d'un circuit de données : simplex, half-duplex, full-duplex.</li>
+</ol>
+
+<div class="box ex">
+<p class="t">Et ensuite</p>
+<p>Testez-vous avec le <a href="qcm.html">QCM</a>, puis passez l'<a href="pratique.html">examen blanc</a>.</p>
+</div>
+
+<div class="foot">Synthèse du chapitre 1, du chapitre 2 (parties 1 et 2) et des exercices.</div>
+</main>
+</div>
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,540 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TP corrigés et exercices</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="shell">
+<aside class="side" id="side"></aside>
+<main>
+<h1>TP corrigés et exercices</h1>
+<p class="lead">Les TP 2 et 3 corrigés pas à pas, puis deux exercices inspirés des TP avec de nouvelles données. Essayez d'abord seul, puis ouvrez la solution.</p>
+
+<div class="bar">
+<button class="btn" data-toggle-all="open">Tout ouvrir</button>
+<button class="btn" data-toggle-all="close">Tout fermer</button>
+</div>
+
+<div class="box">
+<p class="t">Sommaire</p>
+<ul>
+<li><a href="#tp2">TP2 : installation, création et insertion</a></li>
+<li><a href="#tp3">TP3 : find() sur EtudiantsTP, EtudiantsTP2, EtudiantsTP3 et movies</a></li>
+<li><a href="#exo">Exercices inspirés des TP : Livres et Commandes</a></li>
+</ul>
+</div>
+
+<div class="box retenir">
+<p class="t">Avant de commencer : ce que je suppose</p>
+<p>Dans le PDF du TP3, certains symboles de comparaison ont disparu à l'extraction du texte (par exemple « moyenne  15 »). Je lis ces questions comme « inférieure ou égale à 15 », « note supérieure ou égale à 17 », « moyenne supérieure ou égale à 16 ». Vérifiez avec l'énoncé papier si besoin. Quand une question est ambiguë, je donne les deux lectures.</p>
+</div>
+
+<!-- ================= TP2 ================= -->
+<h2 id="tp2">TP2 : Introduction à MongoDB</h2>
+
+<h3>Installation, en résumé</h3>
+<ol>
+<li>Télécharger MongoDB Community Server (MSI pour Windows) sur le site officiel, type d'installation « Complete », services par défaut, cocher l'installation de Compass.</li>
+<li>Télécharger et installer MongoDB Shell (mongosh) à part.</li>
+<li>Vérifier dans un terminal : <code>mongosh --version</code>. (Le TP écrit <code>mongod --version</code> pour le serveur.)</li>
+</ol>
+
+<h3>Exercice 1 : base Genie_Informatique_MongoDB avec Compass</h3>
+<p>Tout se fait dans Compass : on colle du JSON dans la fenêtre Insert Document (vue JSON).</p>
+<div class="exo">
+<p class="q">1 et 2. Connexion, création de la base et de la collection Etudiants</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<ol>
+<li>Ouvrir Compass. L'URI par défaut est <code>mongodb://localhost:27017</code>. Cliquer sur Connect.</li>
+<li>Cliquer sur Create Database. Database Name : <code>Genie_Informatique_MongoDB</code>. Collection Name : <code>Etudiants</code>. Create Database.</li>
+</ol>
+</div></details>
+
+<p class="q">3. Un premier document simple (id, nom, ville)</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<p>Ouvrir la collection Etudiants, Add Data, Insert Document, coller puis Insert :</p>
+<pre><code>{ "id": 1, "nom": "Omar", "ville": "Agadir" }</code></pre>
+</div></details>
+
+<p class="q">4. Au moins 3 étudiants avec des informations variées</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<p>Dans Insert Document on peut coller un tableau de documents :</p>
+<pre><code>[
+  { "id": 2, "nom": "Sara", "ville": "Rabat", "filiere": "Informatique" },
+  { "id": 3, "nom": "Amine", "ville": "Marrakech", "age": 24 },
+  { "id": 4, "nom": "Aya", "ville": "Fès", "email": "aya@exemple.ma" }
+]</code></pre>
+<p>Chaque document a des champs différents : c'est volontaire, pour montrer la flexibilité.</p>
+</div></details>
+
+<p class="q">5 et 6. Collection Modules, puis document imbriqué pour l'enseignant</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<pre><code>{ "code": "BD1", "intitule": "Bases de données", "semestre": "S7" }
+
+{ "code": "NS1", "intitule": "NoSQL", "semestre": "S7",
+  "enseignant": { "nom": "Dr. Alaoui", "email": "alaoui@exemple.ma" } }</code></pre>
+<p>La clé <code>enseignant</code> contient un sous-document : c'est un document imbriqué.</p>
+</div></details>
+
+<p class="q">7 et 8. Collection Notes : un tableau de notes, puis un tableau de sous-documents</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<pre><code>{ "etudiant_id": 1, "notes": [15, 12, 18] }
+
+{ "etudiant_id": 2,
+  "resultats": [
+    { "matiere": "BD", "note": 16 },
+    { "matiere": "Réseaux", "note": 14 }
+  ] }</code></pre>
+<p>Premier cas : tableau de valeurs simples. Second cas : tableau de sous-documents.</p>
+</div></details>
+
+<p class="q">9. Dans Etudiants, un document avec un tableau d'adresses email</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<pre><code>{ "id": 5, "nom": "Hiba", "ville": "Agadir",
+  "emails": ["hiba@exemple.ma", "hiba.perso@exemple.com"] }</code></pre>
+</div></details>
+
+<p class="q">10. Collection Projets : texte, nombre, tableau, objet imbriqué</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<pre><code>{ "titre": "Plateforme de gestion de stages",   // texte
+  "annee": 2025,                                  // nombre
+  "membres": ["Omar", "Sara", "Amine"],           // tableau
+  "encadrant": { "nom": "Dr. Alaoui", "email": "alaoui@exemple.ma" }   // objet imbriqué
+}</code></pre>
+<p>Le JSON strict n'accepte pas les commentaires <code>//</code>. Retirez-les avant de coller dans Compass.</p>
+</div></details>
+</div>
+
+<h3>Exercice 2 : CinemaDB avec mongosh</h3>
+<div class="exo">
+<p class="q">1 à 3. Base, collection Films, document simple</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<pre><code>use CinemaDB
+db.createCollection("Films")
+db.Films.insertOne({ id: 1, titre: "Inception", annee: 2010 })</code></pre>
+<p>Résultat attendu : <code>{ acknowledged: true, insertedId: ObjectId("...") }</code>. Le champ <code>id</code> n'est pas l'<code>_id</code> : MongoDB crée quand même son propre <code>_id</code>.</p>
+</div></details>
+
+<p class="q">4 et 5. Document intermédiaire (genre, duree), puis document avancé (réalisateur imbriqué, tableau d'acteurs)</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<pre><code>db.Films.insertOne({ id: 2, titre: "Titanic", annee: 1997, genre: "Drame", duree: 195 })
+
+db.Films.insertOne({
+  id: 3, titre: "Interstellar", annee: 2014, genre: "Science-fiction", duree: 169,
+  realisateur: { nom: "Christopher Nolan", nationalite: "UK" },
+  acteurs: ["Matthew McConaughey", "Anne Hathaway"]
+})</code></pre>
+</div></details>
+
+<p class="q">6. Montrer la flexibilité : mêmes Films, champs différents (langue, budget, noteIMDB)</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<pre><code>db.Films.insertOne({ id: 4, titre: "Amélie", annee: 2001, langue: "Français", budget: 10000000, noteIMDB: 8.3 })</code></pre>
+<p>Dans la même collection coexistent maintenant quatre formes de documents. Aucun ALTER TABLE n'a été nécessaire.</p>
+</div></details>
+
+<p class="q">7 à 9. Collection Realisateurs : simples, intermédiaires, avancés</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<pre><code>// simples
+db.Realisateurs.insertMany([
+  { id: 1, nom: "Christopher Nolan", pays: "UK" },
+  { id: 2, nom: "Quentin Tarantino", pays: "USA" }
+])
+
+// intermédiaires : champs supplémentaires
+db.Realisateurs.insertMany([
+  { id: 3, nom: "James Cameron", pays: "Canada", annee_naissance: 1954, nombre_films: 12 },
+  { id: 4, nom: "Jean-Pierre Jeunet", pays: "France", annee_naissance: 1953, nombre_films: 7 }
+])
+
+// avancés : contact imbriqué + tableau de films
+db.Realisateurs.insertMany([
+  { id: 5, nom: "Nadine Labaki", pays: "Liban",
+    contact: { email: "labaki@exemple.com", telephone: "+961 00 000 000" },
+    films: ["Caramel", "Capharnaüm"] }
+])</code></pre>
+</div></details>
+
+<p class="q">10. Collection Seances : film_id, date, salle, champ optionnel tickets_vendus</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<pre><code>db.Seances.insertMany([
+  { film_id: 1, date: "2025-10-15", salle: "Salle A", tickets_vendus: 120 },
+  { film_id: 2, date: "2025-10-20", salle: "Salle B" }
+])</code></pre>
+<p>Le second document n'a pas <code>tickets_vendus</code> : un champ optionnel est simplement absent.</p>
+<p>Vérifier à la fin : <code>show collections</code> doit afficher Films, Realisateurs, Seances.</p>
+</div></details>
+</div>
+
+<!-- ================= TP3 ================= -->
+<h2 id="tp3">TP3 : La récupération des documents</h2>
+
+<h3>Mise en place</h3>
+<pre><code>use TP3
+db.EtudiantsTP.insertMany([ ...D1... ])
+db.EtudiantsTP2.insertMany([ ...D2... ])
+db.EtudiantsTP3.insertMany([ ...D3... ])</code></pre>
+<div class="box piege"><p class="t">Piège dans l'énoncé</p>
+<p>Dans D3, le premier document (Omar) est écrit avec <code>id: 1</code> et non <code>_id: 1</code>. MongoDB lui crée donc un <code>_id</code> de type ObjectId, alors que les deux autres ont <code>_id: 2</code> et <code>_id: 3</code>. Ça ne change pas les résultats des requêtes, mais ça se voit à l'affichage.</p></div>
+
+<h3>Partie 1 : EtudiantsTP (documents simples)</h3>
+<p>Données : Omar 22 ans Informatique Agadir 15 / Sara 21 Mathématiques Rabat 17 / Yassine 23 Physique Casablanca 14 / Amine 24 Informatique Marrakech 18 / Aya 22 Chimie Fès 13 / Hiba 25 Mathématiques Agadir 19.</p>
+<div class="exo">
+<p class="q">1 et 2. Tous les étudiants, puis nom et filière seulement</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<pre><code>db.EtudiantsTP.find()
+db.EtudiantsTP.find({}, { nom: 1, filiere: 1, _id: 0 })</code></pre>
+<p>Le filtre est vide <code>{}</code> parce qu'on veut tous les documents, la projection vient en 2e argument.</p>
+</div></details>
+
+<p class="q">3. Filière Informatique</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<pre><code>db.EtudiantsTP.find({ filiere: "Informatique" })</code></pre>
+<p>Résultat : Omar et Amine.</p>
+</div></details>
+
+<p class="q">4 et 5. Moyenne &gt; 15, puis moyenne ≤ 15</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<pre><code>db.EtudiantsTP.find({ moyenne: { $gt: 15 } })    // Sara 17, Amine 18, Hiba 19
+db.EtudiantsTP.find({ moyenne: { $lte: 15 } })   // Omar 15, Yassine 14, Aya 13</code></pre>
+<p>Si l'énoncé voulait « ≥ 15 », on écrit <code>$gte</code> et Omar rejoint Sara, Amine, Hiba. Omar (15) est le cas limite à surveiller.</p>
+</div></details>
+
+<p class="q">6. Ville Agadir</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<pre><code>db.EtudiantsTP.find({ ville: "Agadir" })   // Omar, Hiba</code></pre>
+</div></details>
+
+<p class="q">7 et 8. Tri par nom croissant, tri par moyenne décroissante</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<pre><code>db.EtudiantsTP.find().sort({ nom: 1 })
+// Amine, Aya, Hiba, Omar, Sara, Yassine
+
+db.EtudiantsTP.find().sort({ moyenne: -1 })
+// Hiba 19, Amine 18, Sara 17, Omar 15, Yassine 14, Aya 13</code></pre>
+</div></details>
+
+<p class="q">9 et 10. Les 3 premiers, puis le nombre total</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<pre><code>db.EtudiantsTP.find().limit(3)       // Omar, Sara, Yassine (ordre d'insertion, non garanti)
+db.EtudiantsTP.countDocuments()      // 6</code></pre>
+<p>« Les 3 premiers » sans tri n'a pas d'ordre garanti. En pratique on voit l'ordre d'insertion, mais pour un résultat sûr il faut un <code>sort()</code>.</p>
+</div></details>
+</div>
+
+<h3>Partie 2 : EtudiantsTP2 (documents imbriqués)</h3>
+<p>Données : Omar (info: age 22, ville Agadir), Informatique, 15 / Sara (21, Rabat), Mathématiques, 17 / Amine (24, Marrakech), Informatique, 18.</p>
+<div class="exo">
+<p class="q">1 à 4. Tous, nom et filière, nom et ville imbriquée, filière Informatique</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<pre><code>db.EtudiantsTP2.find()
+db.EtudiantsTP2.find({}, { nom: 1, filiere: 1, _id: 0 })
+db.EtudiantsTP2.find({}, { nom: 1, "info.ville": 1, _id: 0 })
+db.EtudiantsTP2.find({ filiere: "Informatique" })    // Omar, Amine</code></pre>
+<p>Le résultat de la 3e : <code>{ nom: "Omar", info: { ville: "Agadir" } }</code>. La ville reste dans son sous-document.</p>
+</div></details>
+
+<p class="q">5 et 6. Ville Agadir, puis âge supérieur à 21</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<pre><code>db.EtudiantsTP2.find({ "info.ville": "Agadir" })   // Omar
+db.EtudiantsTP2.find({ "info.age": { $gt: 21 } })  // Omar (22), Amine (24)</code></pre>
+<p>Sara a exactement 21 ans, donc elle est exclue par <code>$gt</code>.</p>
+</div></details>
+
+<p class="q">7. Moyenne comprise entre 15 et 18 inclus</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<pre><code>db.EtudiantsTP2.find({ moyenne: { $gte: 15, $lte: 18 } })   // les 3 : 15, 17, 18</code></pre>
+</div></details>
+
+<p class="q">8. Nom et moyenne seulement, triés par moyenne décroissante</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<pre><code>db.EtudiantsTP2.find({}, { nom: 1, moyenne: 1, _id: 0 }).sort({ moyenne: -1 })
+// Amine 18, Sara 17, Omar 15</code></pre>
+<p>On peut trier sur un champ qu'on ne projette pas ; ici on le projette pour voir le tri.</p>
+</div></details>
+
+<p class="q">9. Ville qui contient la lettre « a » ($regex sur info.ville)</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<pre><code>db.EtudiantsTP2.find({ "info.ville": { $regex: "a" } })
+// ou : db.EtudiantsTP2.find({ "info.ville": /a/ })</code></pre>
+<p>Agadir, Rabat et Marrakech contiennent tous un « a » minuscule : les 3 documents sortent. Sans l'option <code>i</code>, la casse compte : « A » majuscule ne compterait pas. Ajoutez <code>$options: "i"</code> ou <code>/a/i</code> pour ignorer la casse.</p>
+</div></details>
+
+<p class="q">10. Vérifier que info.age existe et est numérique</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<pre><code>db.EtudiantsTP2.find({ "info.age": { $exists: true, $type: "number" } })</code></pre>
+<p>Les 3 documents sortent. Pour détecter les anomalies, comparez avec <code>countDocuments()</code> : si les deux nombres sont égaux, tous les âges sont numériques.</p>
+</div></details>
+</div>
+
+<h3>Partie 3 : EtudiantsTP3 (tableaux d'objets)</h3>
+<p>Données : Omar, Informatique, résultats [Programmation 16, BD 18, Réseaux 14] / Sara, Mathématiques, [Analyse 17, Algèbre 15] / Yassine, Physique, [Électricité 13, Mécanique 16].</p>
+<div class="exo">
+<p class="q">1. Étudiants ayant un module « BD »</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<pre><code>db.EtudiantsTP3.find({ "resultats.module": "BD" })   // Omar</code></pre>
+<p>MongoDB parcourt le tableau et regarde le champ <code>module</code> de chaque élément.</p>
+</div></details>
+
+<p class="q">2. Au moins un module avec une note &gt; 15</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<pre><code>db.EtudiantsTP3.find({ "resultats.note": { $gt: 15 } })</code></pre>
+<p>Omar (16, 18), Sara (17) et Yassine (16) : les trois documents. Aucun filtre complexe n'est nécessaire car il n'y a qu'une seule condition.</p>
+</div></details>
+
+<p class="q">3. Étudiants dont les modules sont Programmation et Réseaux ($all)</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<pre><code>db.EtudiantsTP3.find({ "resultats.module": { $all: ["Programmation", "Réseaux"] } })   // Omar</code></pre>
+<p>$all veut dire « contient les deux », pas « n'a que ces deux ». Omar a aussi BD et il est quand même retenu.</p>
+</div></details>
+
+<p class="q">4. Au moins 3 modules ($size: 3)</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<pre><code>db.EtudiantsTP3.find({ resultats: { $size: 3 } })   // Omar</code></pre>
+<p>$size teste « exactement 3 ». Ici personne n'a plus de 3 modules, donc ça revient au même que « au moins 3 ». Si un étudiant avait 4 modules, il ne sortirait pas.</p>
+<p>Pour un vrai « au moins 3 » : <code>db.EtudiantsTP3.find({ "resultats.2": { $exists: true } })</code> (le troisième élément existe).</p>
+</div></details>
+
+<p class="q">5. Note ≥ 17 dans « BD » ($elemMatch)</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<pre><code>db.EtudiantsTP3.find({ resultats: { $elemMatch: { module: "BD", note: { $gte: 17 } } } })   // Omar (BD = 18)</code></pre>
+<p>$elemMatch garantit que module = BD et note ≥ 17 portent sur le même élément du tableau.</p>
+</div></details>
+
+<p class="q">6 et 7. Informatique triés par nom, puis nom et modules seulement</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<pre><code>db.EtudiantsTP3.find({ filiere: "Informatique" }).sort({ nom: 1 })   // Omar
+
+db.EtudiantsTP3.find({}, { nom: 1, "resultats.module": 1, _id: 0 })
+// { nom: "Omar", resultats: [ { module: "Programmation" }, { module: "BD" }, { module: "Réseaux" } ] } ...</code></pre>
+<p>La projection <code>"resultats.module": 1</code> garde seulement le champ <code>module</code> de chaque élément du tableau.</p>
+</div></details>
+
+<p class="q">8. Une note comprise entre 14 et 18 dans un module</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<pre><code>db.EtudiantsTP3.find({ resultats: { $elemMatch: { note: { $gte: 14, $lte: 18 } } } })</code></pre>
+<p>Les trois étudiants sortent (Omar 16, Sara 17, Yassine 16). Utilisez $elemMatch pour que les deux bornes visent la même note. Sans lui, <code>{ "resultats.note": { $gte: 14, $lte: 18 } }</code> peut être satisfait par une note ≥ 14 et une autre ≤ 18.</p>
+</div></details>
+
+<p class="q">9. Compter les étudiants ayant une note moyenne ≥ 16</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<p>La collection EtudiantsTP3 n'a pas de champ <code>moyenne</code> : la question est ambiguë. Deux lectures possibles.</p>
+<p>Lecture A : la moyenne des notes de chaque étudiant est ≥ 16. Il faut calculer la moyenne, avec <code>$expr</code> et <code>$avg</code> (hors programme du cours, mais c'est la seule façon propre) :</p>
+<pre><code>db.EtudiantsTP3.countDocuments({ $expr: { $gte: [ { $avg: "$resultats.note" }, 16 ] } })
+// Omar : (16+18+14)/3 = 16   Sara : (17+15)/2 = 16   Yassine : 14,5  =&gt; 2</code></pre>
+<p>Lecture B : l'étudiant a au moins une note ≥ 16 (version simple, compatible avec le cours) :</p>
+<pre><code>db.EtudiantsTP3.countDocuments({ "resultats.note": { $gte: 16 } })   // 3</code></pre>
+<p>À l'examen, si une question est ambiguë, écrivez votre interprétation en une phrase avant la requête.</p>
+</div></details>
+
+<p class="q">10. Vérifier que resultats existe et est un tableau</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<pre><code>db.EtudiantsTP3.find({ resultats: { $exists: true, $type: "array" } })   // les 3</code></pre>
+</div></details>
+</div>
+
+<h3>Partie 4 : la collection movies</h3>
+<div class="exo">
+<p class="q">A) Mise en place</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<ol>
+<li>Télécharger <code>movies.json</code> (jeu d'exemple sample_mflix).</li>
+<li>Installer MongoDB Database Tools, ajouter <code>C:\Program Files\MongoDB\Tools\100\bin</code> à la variable d'environnement Path, rouvrir le terminal, vérifier avec <code>mongoimport --version</code>.</li>
+<li>Importer, depuis un terminal ordinaire (pas dans mongosh) :</li>
+</ol>
+<pre><code>mongoimport --host localhost:27017 --db TP_Movies --collection movies --file "C:\chemin\vers\movies.json"</code></pre>
+<ol start="4">
+<li>Vérifier : <code>mongosh</code>, puis <code>use TP_Movies</code>, puis <code>db.movies.countDocuments()</code>.</li>
+</ol>
+</div></details>
+
+<p class="q">B) Les 16 questions</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<pre><code>use TP_Movies
+
+// 1
+db.movies.find()
+// 2
+db.movies.find({}, { title: 1, year: 1, _id: 0 })
+// 3
+db.movies.find({ year: 1990 })
+// 4
+db.movies.find({ runtime: { $gt: 120 } })
+// 5
+db.movies.find({ "imdb.rating": { $gte: 8 } })
+// 6
+db.movies.find().sort({ year: 1 })
+// 7
+db.movies.find({ "imdb.rating": { $type: "number" } }).sort({ "imdb.rating": -1 })
+// 8
+db.movies.find().limit(5)
+// 9
+db.movies.find({}, { title: 1, year: 1, _id: 0 }).sort({ year: 1 })
+// 10
+db.movies.countDocuments()
+// 11
+db.movies.find({ "imdb.rating": { $gte: 7, $lte: 9 } })
+// 12
+db.movies.find({ genres: "Drama" })
+// 13
+db.movies.find({ title: { $regex: "Love" } })
+// 14
+db.movies.find({ "imdb.rating": { $exists: true } })
+// 15
+db.movies.find({ year: { $type: "number" } })
+// 16
+db.movies.find({ genres: { $all: ["Comedy", "Romance"] } })</code></pre>
+<h4>Explications utiles</h4>
+<ul>
+<li>Questions 5, 7, 11, 14 : le champ est imbriqué, donc notation pointée entre guillemets.</li>
+<li>Question 7 : j'ajoute le filtre <code>$type: "number"</code>. Le tri MongoDB range les types dans un ordre fixe (nombres avant chaînes). Dans ce jeu de données certains films peuvent avoir une note vide en texte : en tri décroissant ils remonteraient en tête. À vérifier avec <code>db.movies.countDocuments({ "imdb.rating": { $type: "string" } })</code>.</li>
+<li>Question 12 : <code>genres</code> est un tableau, et <code>{ genres: "Drama" }</code> teste si le tableau contient Drama.</li>
+<li>Question 13 : pour ignorer la casse, <code>/love/i</code>.</li>
+<li>Question 14 : $exists: true accepte aussi un champ à null. Pour exclure les null, ajoutez <code>$type: "number"</code>.</li>
+<li>Question 15 : le but est de détecter les films dont <code>year</code> n'est pas un nombre. Pour les trouver : <code>db.movies.find({ year: { $not: { $type: "number" } } })</code>.</li>
+<li>Question 16 : $all, donc les deux genres, et d'autres genres sont permis en plus.</li>
+</ul>
+</div></details>
+</div>
+
+<!-- ================= EXERCICES ================= -->
+<h2 id="exo">Exercices inspirés des TP</h2>
+
+<h3>Exercice A : la bibliothèque (find, projection, tri, tableaux)</h3>
+<p>Insérez ces données dans une base <code>Bibliotheque</code> :</p>
+<pre><code>db.Livres.insertMany([
+  { _id: 1, titre: "Le Petit Prince", auteur: "Saint-Exupéry", annee: 1943, genres: ["Conte", "Philosophie"], prix: 60, stock: 12 },
+  { _id: 2, titre: "L'Etranger", auteur: "Camus", annee: 1942, genres: ["Roman", "Philosophie"], prix: 45, stock: 0 },
+  { _id: 3, titre: "Les Misérables", auteur: "Hugo", annee: 1862, genres: ["Roman", "Histoire"], prix: 90, stock: 5 },
+  { _id: 4, titre: "La Peste", auteur: "Camus", annee: 1947, genres: ["Roman", "Philosophie"], prix: 55 },
+  { _id: 5, titre: "Notre-Dame de Paris", auteur: "Hugo", annee: 1831, genres: ["Roman", "Histoire"], prix: 70, stock: 8 },
+  { _id: 6, titre: "Antigone", auteur: "Anouilh", annee: 1944, genres: ["Théâtre"], prix: 35, stock: 3 }
+])</code></pre>
+
+<div class="exo">
+<p class="q">A1. Les titres des livres de Camus (sans l'_id)</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<p>Étape 1 : filtre sur l'auteur. Étape 2 : projection du titre seulement, avec <code>_id: 0</code>.</p>
+<pre><code>db.Livres.find({ auteur: "Camus" }, { titre: 1, _id: 0 })</code></pre>
+<p>Résultat : L'Etranger, La Peste.</p>
+</div></details>
+
+<p class="q">A2. Les livres publiés après 1940 dont le prix est au plus 55</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<p>Deux conditions sur deux champs différents : ET implicite. Après 1940 : _id 1, 2, 4, 6. Prix ≤ 55 parmi eux : 2 (45), 4 (55), 6 (35).</p>
+<pre><code>db.Livres.find({ annee: { $gt: 1940 }, prix: { $lte: 55 } })</code></pre>
+<p>Résultat : L'Etranger, La Peste, Antigone.</p>
+</div></details>
+
+<p class="q">A3. Les livres de Hugo OU de prix supérieur à 80</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<pre><code>db.Livres.find({ $or: [ { auteur: "Hugo" }, { prix: { $gt: 80 } } ] })</code></pre>
+<p>Résultat : Les Misérables (Hugo et 90) et Notre-Dame de Paris (Hugo). Le livre à 90 est déjà un Hugo, donc il n'y a pas de doublon.</p>
+</div></details>
+
+<p class="q">A4 et A5. Livres du genre Philosophie ; livres à la fois Roman et Histoire</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<pre><code>db.Livres.find({ genres: "Philosophie" })                    // _id 1, 2, 4
+db.Livres.find({ genres: { $all: ["Roman", "Histoire"] } })  // _id 3, 5</code></pre>
+<p>Pour un seul genre, la valeur seule suffit. Pour deux genres obligatoires en même temps : $all. Avec $in on aurait obtenu les livres qui sont Roman ou Histoire (4 livres).</p>
+</div></details>
+
+<p class="q">A6. Titres commençant par « La » suivis d'un espace</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<pre><code>db.Livres.find({ titre: /^La / })    // La Peste</code></pre>
+<p>Sans l'espace, <code>/^La/</code> trouverait aussi un titre comme « Labyrinthe ». Ici le résultat est identique.</p>
+</div></details>
+
+<p class="q">A7. Livres sans champ stock ; livres dont le stock vaut 0 ; que renvoie { stock: null } ?</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<pre><code>db.Livres.find({ stock: { $exists: false } })   // La Peste (_id 4)
+db.Livres.find({ stock: 0 })                    // L'Etranger (_id 2)
+db.Livres.find({ stock: null })                 // La Peste seulement</code></pre>
+<p>Zéro n'est pas null. <code>{ stock: null }</code> ramène les champs absents ou égaux à null, donc La Peste, mais pas L'Etranger.</p>
+</div></details>
+
+<p class="q">A8. Les deux livres les plus chers</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<pre><code>db.Livres.find().sort({ prix: -1 }).limit(2)</code></pre>
+<p>Résultat : Les Misérables (90), Notre-Dame de Paris (70). Le tri doit venir avant la limite, mais MongoDB l'applique de toute façon dans cet ordre.</p>
+</div></details>
+
+<p class="q">A9. Deuxième page de 2 livres, triés par titre croissant</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<p>Titres triés (ordre binaire) : Antigone, L'Etranger, La Peste, Le Petit Prince, Les Misérables, Notre-Dame de Paris. Page 1 = les 2 premiers, page 2 = les 2 suivants.</p>
+<pre><code>db.Livres.find().sort({ titre: 1 }).skip(2).limit(2)</code></pre>
+<p>Résultat : La Peste, Le Petit Prince.</p>
+</div></details>
+
+<p class="q">A10 à A12. Compter les romans ; vérifier que prix est numérique ; compter la philosophie</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<pre><code>db.Livres.countDocuments({ genres: "Roman" })         // 4
+db.Livres.countDocuments({ prix: { $type: "number" } })  // 6, donc tous les prix sont numériques
+db.Livres.countDocuments({ genres: "Philosophie" })    // 3</code></pre>
+</div></details>
+</div>
+
+<h3>Exercice B : les commandes (tableaux de sous-documents)</h3>
+<pre><code>db.Commandes.insertMany([
+  { _id: 1, client: "Omar", ville: "Agadir",
+    articles: [ { produit: "Clavier", qte: 2, prix: 150 }, { produit: "Souris", qte: 1, prix: 80 } ], statut: "livrée" },
+  { _id: 2, client: "Sara", ville: "Rabat",
+    articles: [ { produit: "Ecran", qte: 1, prix: 1200 } ], statut: "en cours" },
+  { _id: 3, client: "Amine", ville: "Agadir",
+    articles: [ { produit: "Clavier", qte: 5, prix: 140 }, { produit: "Ecran", qte: 2, prix: 1150 }, { produit: "Câble", qte: 10, prix: 20 } ], statut: "livrée" },
+  { _id: 4, client: "Aya", ville: "Fès", articles: [], statut: "annulée" }
+])</code></pre>
+
+<div class="exo">
+<p class="q">B1. Commandes qui contiennent un Clavier</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<pre><code>db.Commandes.find({ "articles.produit": "Clavier" })   // _id 1 et 3</code></pre>
+</div></details>
+
+<p class="q">B2. Commandes avec un Clavier dont le prix est supérieur à 145</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<p>Il faut que « Clavier » et « prix &gt; 145 » portent sur le même article : $elemMatch.</p>
+<pre><code>db.Commandes.find({ articles: { $elemMatch: { produit: "Clavier", prix: { $gt: 145 } } } })   // _id 1</code></pre>
+<p>Dans la commande 3, le clavier est à 140 : il ne passe pas.</p>
+<p>Version fausse, très fréquente :</p>
+<pre><code>db.Commandes.find({ "articles.produit": "Clavier", "articles.prix": { $gt: 145 } })   // _id 1 ET 3 (erreur)</code></pre>
+<p>La commande 3 est renvoyée à tort : elle a un Clavier (premier article) et un article à plus de 145 (l'écran à 1150). Deux articles différents ont validé les deux conditions.</p>
+</div></details>
+
+<p class="q">B3. Commandes avec exactement 3 articles ; commandes sans aucun article</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<pre><code>db.Commandes.find({ articles: { $size: 3 } })   // _id 3
+db.Commandes.find({ articles: { $size: 0 } })   // _id 4</code></pre>
+</div></details>
+
+<p class="q">B4. Les clients d'Agadir, triés par nom, nom seulement</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<pre><code>db.Commandes.find({ ville: "Agadir" }, { client: 1, _id: 0 }).sort({ client: 1 })</code></pre>
+<p>Résultat : Amine, Omar.</p>
+</div></details>
+
+<p class="q">B5. Commandes livrées ou annulées</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<pre><code>db.Commandes.find({ statut: { $in: ["livrée", "annulée"] } })   // _id 1, 3, 4</code></pre>
+<p>Équivalent avec <code>$or</code>, mais <code>$in</code> est plus court quand c'est le même champ.</p>
+</div></details>
+
+<p class="q">B6. Pour les commandes contenant un Ecran, afficher le client et seulement l'article Ecran</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<pre><code>db.Commandes.find(
+  { "articles.produit": "Ecran" },
+  { client: 1, "articles.$": 1, _id: 0 }
+)</code></pre>
+<p>Résultat : <code>{ client: "Sara", articles: [ { produit: "Ecran", qte: 1, prix: 1200 } ] }</code> et <code>{ client: "Amine", articles: [ { produit: "Ecran", qte: 2, prix: 1150 } ] }</code>. L'opérateur positionnel <code>$</code> ne garde que l'élément du tableau qui a satisfait le filtre.</p>
+</div></details>
+</div>
+
+<div class="foot">Les résultats de ces exercices ont été recalculés avec une bibliothèque qui reproduit le langage de requête MongoDB.</div>
+</main>
+</div>
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

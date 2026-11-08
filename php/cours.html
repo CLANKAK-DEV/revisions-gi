@@ -1,0 +1,387 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Résumé du cours PHP</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="shell">
+<aside class="side" id="side"></aside>
+<main>
+<h1>Résumé du cours</h1>
+<p class="lead">Les cinq chapitres de INF4041, expliqués simplement, avec les définitions et un exemple pour chaque notion. Les étiquettes disent quoi réviser en premier : rouge pour la priorité 1, jaune pour la priorité 2, bleu pour la priorité 3.</p>
+
+<div class="box">
+<p class="t">Sommaire</p>
+<ul>
+<li><a href="#ch1">Chapitre 1 : introduction à PHP</a></li>
+<li><a href="#ch2">Chapitre 2 : structures de contrôle</a></li>
+<li><a href="#ch3">Chapitre 3 : tableaux et fonctions</a></li>
+<li><a href="#ch4">Chapitre 4 : fichiers, cookies et sessions</a></li>
+<li><a href="#ch5">Chapitre 5 : formulaires et upload</a></li>
+</ul>
+</div>
+
+<!-- ======================= CHAPITRE 1 ======================= -->
+<h2 id="ch1">Chapitre 1 : introduction à PHP</h2>
+
+<h3>Le Web et l'architecture client-serveur <span class="tag y">Priorité 2</span></h3>
+<div class="box def"><p class="t">Définition : architecture client-serveur</p>
+<p>Deux programmes communiquent : le <strong>client</strong> envoie des requêtes, le <strong>serveur</strong> les attend, les traite et renvoie une réponse. Sur le Web, le client est le navigateur, le serveur est Apache ou Nginx.</p></div>
+<ul>
+<li>Le client prend l'initiative ; le serveur tourne en permanence et écoute un port (80 pour HTTP, 443 pour HTTPS).</li>
+<li><strong>HTTP</strong> définit le format des messages : la requête contient une méthode (GET, POST), une URL, des en-têtes ; la réponse contient un code de statut, des en-têtes et un contenu (souvent du HTML). HTTPS est la version chiffrée.</li>
+<li>Une URL se compose d'un protocole, d'un domaine, éventuellement d'un port, d'un chemin et de paramètres : <code>https://www.epa.ma:443/etudiants/liste.php?annee=4</code>. <code>localhost</code> désigne la machine elle-même (127.0.0.1).</li>
+</ul>
+<div class="tw"><table>
+<tr><th>Élément</th><th>Signification</th></tr>
+<tr><td>GET</td><td>Demander (lire) une ressource</td></tr>
+<tr><td>POST</td><td>Envoyer des données au serveur</td></tr>
+<tr><td>200 OK</td><td>La requête a réussi</td></tr>
+<tr><td>301 / 302</td><td>Redirection permanente / temporaire</td></tr>
+<tr><td>403 Forbidden</td><td>Accès refusé</td></tr>
+<tr><td>404 Not Found</td><td>La ressource n'existe pas</td></tr>
+<tr><td>500 Internal Server Error</td><td>Erreur dans le programme du serveur</td></tr>
+</table></div>
+<div class="flow"><span class="n k">Navigateur</span><span class="n">requête GET</span><span class="n k">Apache</span><span class="n">passe le .php à</span><span class="n g">interpréteur PHP</span><span class="n">génère du HTML</span><span class="n k">Navigateur</span></div>
+<p><strong>Statique ou dynamique ?</strong> Un site statique envoie des fichiers HTML écrits à l'avance, identiques pour tous. Un site dynamique construit la page à la demande avec un programme serveur (PHP), éventuellement une base de données. Le navigateur ne reçoit que du HTML : il ne voit jamais le code PHP.</p>
+
+<h3>Le langage PHP <span class="tag b">Priorité 3</span></h3>
+<div class="box def"><p class="t">Définition : PHP</p>
+<p>« PHP: Hypertext Preprocessor » : langage libre, <strong>interprété</strong>, de script <strong>côté serveur</strong>, intégrable au HTML. Le script est exécuté par l'interpréteur sur le serveur ; le résultat (en général du HTML) est envoyé au navigateur.</p></div>
+<ul>
+<li>Gratuit, multiplateforme, typage dynamique (types déclarables depuis PHP 7), multi-paradigme (procédural et objet), écosystème riche (Composer, Laravel, Symfony).</li>
+<li>Repères : 1994 Rasmus Lerdorf ; PHP 5 (2004) objet et PDO ; PHP 7 (2015) performances et types ; PHP 8 (2020) JIT, <code>match</code>, arguments nommés.</li>
+<li>Exemples : WordPress (plus de 40 % des sites), Wikipédia, Laravel, Magento, PrestaShop.</li>
+</ul>
+
+<h3>L'environnement de développement <span class="tag y">Priorité 2</span></h3>
+<ul>
+<li>Il faut un serveur web, l'interpréteur PHP, une base de données (MySQL ou MariaDB) et un éditeur. <strong>XAMPP</strong> regroupe Apache, MariaDB, PHP et phpMyAdmin.</li>
+<li>Les scripts se placent dans <code>htdocs</code> (<code>C:\xampp\htdocs</code>) et s'ouvrent à <code>http://localhost/...</code>. Pour le service : Apache sert PHP (port 80), MySQL sert la base (port 3306, utile à partir du chapitre 7).</li>
+<li>Si Apache refuse de démarrer, le port 80 est presque toujours déjà utilisé : changer <code>Listen 8080</code> dans <code>httpd.conf</code>.</li>
+<li><code>phpinfo()</code> vérifie l'installation (version, <code>php.ini</code>, extensions). Ne jamais le laisser en production.</li>
+<li>Serveur intégré pour le développement : <code>php -S localhost:8000</code>.</li>
+</ul>
+<div class="box piege"><p class="t">L'erreur la plus fréquente</p>
+<p>Ouvrir un fichier PHP par double-clic : l'adresse commence par <code>file:///</code>, le fichier est lu sur le disque sans Apache ni PHP, donc le code n'est pas exécuté. Toujours démarrer Apache puis ouvrir <code>http://localhost/...</code>.</p></div>
+
+<h3>Syntaxe de base <span class="tag r">Priorité 1</span></h3>
+<ul>
+<li>Le code PHP est entre <code>&lt;?php</code> et <code>?&gt;</code>. Chaque instruction se termine par <code>;</code>. La balise de fermeture est facultative (même conseillée de l'omettre) en fin de fichier 100 % PHP. <code>&lt;?= $nom ?&gt;</code> est un raccourci pour <code>&lt;?php echo $nom; ?&gt;</code>.</li>
+<li><code>echo</code> affiche (plusieurs arguments possibles), <code>print</code> n'en accepte qu'un.</li>
+<li>Commentaires : <code>//</code> et <code>#</code> sur une ligne, <code>/* ... */</code> sur plusieurs lignes.</li>
+</ul>
+<div class="box def"><p class="t">Définition : variable</p>
+<p>Un emplacement mémoire nommé qui stocke une valeur. Le nom commence par <code>$</code>, puis une lettre ou <code>_</code>, puis lettres, chiffres ou <code>_</code>. <strong>Sensible à la casse</strong> : <code>$nom</code> et <code>$Nom</code> sont deux variables.</p></div>
+<div class="tw"><table>
+<tr><th>Type</th><th>Exemple</th></tr>
+<tr><td>int</td><td><code>$n = 42;</code></td></tr>
+<tr><td>float</td><td><code>$pi = 3.14;</code></td></tr>
+<tr><td>string</td><td><code>$s = "Agadir";</code></td></tr>
+<tr><td>bool</td><td><code>true</code> ou <code>false</code></td></tr>
+<tr><td>array</td><td><code>[1, 2, 3]</code></td></tr>
+<tr><td>object, null</td><td><code>new DateTime()</code>, <code>null</code> (absence de valeur)</td></tr>
+</table></div>
+<p>Le typage est <strong>dynamique</strong> : le type vient de la valeur. <code>var_dump()</code> affiche le type <em>et</em> la valeur, c'est l'outil de débogage de base.</p>
+
+<h4>Tester et convertir</h4>
+<div class="tw"><table>
+<tr><th>Fonction</th><th>Rôle</th></tr>
+<tr><td><code>isset($x)</code></td><td>true si la variable existe <strong>et</strong> n'est pas null</td></tr>
+<tr><td><code>empty($x)</code></td><td>true si la variable n'existe pas ou est vide : <code>""</code>, <code>"0"</code>, <code>0</code>, <code>0.0</code>, <code>null</code>, <code>false</code>, <code>[]</code></td></tr>
+<tr><td><code>unset($x)</code></td><td>supprime la variable</td></tr>
+<tr><td><code>is_null</code>, <code>is_int</code>, <code>is_string</code>, <code>is_numeric</code></td><td>testent le type ou le contenu</td></tr>
+<tr><td><code>gettype</code> / <code>get_debug_type</code></td><td>nom du type ; <code>gettype(1.5)</code> donne « double », <code>get_debug_type(1.5)</code> donne « float »</td></tr>
+<tr><td><code>(int)</code> <code>(float)</code> <code>(string)</code> <code>(bool)</code></td><td>conversion forcée : <code>(int) "12.7abc"</code> donne 12</td></tr>
+</table></div>
+<p><code>isset()</code> et <code>empty()</code> ne provoquent jamais d'avertissement, même si la variable n'existe pas ; lire directement une variable inexistante provoque un Warning.</p>
+
+<h4>Chaînes et calculs</h4>
+<ul>
+<li>Guillemets doubles : interpolation des variables et des séquences comme <code>\n</code>. Guillemets simples : texte pris tel quel. Concaténation : <code>.</code> ; ajout : <code>.=</code>.</li>
+<li>Une chaîne dans un calcul (PHP 8) : <strong>numérique</strong> (<code>"10"</code>) convertie sans erreur ; <strong>commence par un nombre</strong> (<code>"10 pommes"</code>) : le nombre est utilisé avec un Warning ; <strong>non numérique</strong> (<code>"abc"</code>, <code>""</code>) : TypeError, le script s'arrête.</li>
+<li><code>"5" + 5</code> vaut l'entier 10, alors que <code>"5" . 5</code> vaut la chaîne <code>"55"</code>.</li>
+</ul>
+<div class="box def"><p class="t">Définition : constante</p>
+<p>Un identificateur dont la valeur ne change plus pendant l'exécution. Sans <code>$</code>, en majuscules par convention : <code>const TVA = 0.20;</code> ou <code>define('ECOLE', 'EPA');</code>. Prédéfinies : <code>PHP_VERSION</code>, <code>PHP_EOL</code>, <code>__DIR__</code>, <code>__FILE__</code>, <code>__LINE__</code>.</p></div>
+
+<h4>Les erreurs</h4>
+<div class="tw"><table>
+<tr><th>Erreur</th><th>Cause</th><th>Effet</th></tr>
+<tr><td>Parse error</td><td>Syntaxe invalide (point-virgule oublié)</td><td>Rien ne s'exécute</td></tr>
+<tr><td>Fatal error</td><td>Instruction impossible (fonction inexistante, TypeError)</td><td>Le script s'arrête là</td></tr>
+<tr><td>Warning</td><td>Problème non bloquant (variable non définie)</td><td>Le script continue</td></tr>
+</table></div>
+<p>En développement : <code>display_errors = On</code> et <code>error_reporting = E_ALL</code> dans <code>php.ini</code>. En production : afficher rien, tout écrire dans un journal.</p>
+
+<!-- ======================= CHAPITRE 2 ======================= -->
+<h2 id="ch2">Chapitre 2 : structures de contrôle</h2>
+
+<h3>Les opérateurs <span class="tag r">Priorité 1</span></h3>
+<div class="tw"><table>
+<tr><th>Famille</th><th>Opérateurs</th><th>À retenir</th></tr>
+<tr><td>Arithmétique</td><td><code>+ - * / % **</code></td><td><code>7 / 2</code> vaut 3.5 ; <code>7 % 2</code> vaut 1 ; <code>intdiv(7, 2)</code> vaut 3</td></tr>
+<tr><td>Affectation</td><td><code>= += -= *= /= .=</code></td><td><code>$x += 5</code> équivaut à <code>$x = $x + 5</code></td></tr>
+<tr><td>Incrément</td><td><code>$i++</code> <code>++$i</code></td><td><code>$i++</code> renvoie l'ancienne valeur puis incrémente ; <code>++$i</code> incrémente puis renvoie</td></tr>
+<tr><td>Comparaison</td><td><code>== === != !== &lt; &gt; &lt;= &gt;= &lt;=&gt;</code></td><td><code>&lt;=&gt;</code> renvoie -1, 0 ou 1</td></tr>
+<tr><td>Logique</td><td><code>&amp;&amp; || !</code></td><td>évaluation en court-circuit</td></tr>
+<tr><td>Coalescence nulle</td><td><code>??</code> et <code>??=</code></td><td>valeur par défaut si absent ou null</td></tr>
+</table></div>
+<div class="box def"><p class="t">Comparaison souple et stricte</p>
+<p><code>==</code> convertit les types avant de comparer : <code>1 == "1"</code> est vrai, <code>null == false</code> est vrai, <code>"1e3" == "1000"</code> est vrai. <code>===</code> compare la valeur <strong>et</strong> le type : <code>1 === "1"</code> est faux. Règle : utiliser <code>===</code> et <code>!==</code> par défaut.</p></div>
+<p><strong>Valeurs « falsy »</strong> (considérées comme fausses) : <code>false</code>, <code>0</code>, <code>0.0</code>, <code>""</code>, <code>"0"</code>, <code>[]</code>, <code>null</code>. Tout le reste est vrai.</p>
+<p><strong>Court-circuit :</strong> dans <code>A &amp;&amp; B</code>, si A est faux, B n'est pas évalué ; dans <code>A || B</code>, si A est vrai, B n'est pas évalué.</p>
+
+<h3>Les conditions <span class="tag r">Priorité 1</span></h3>
+<pre><code>if ($note &gt;= 16)      { $mention = "Très bien"; }
+elseif ($note &gt;= 14)  { $mention = "Bien"; }
+elseif ($note &gt;= 10)  { $mention = "Passable"; }
+else                  { $mention = "Non validé"; }</code></pre>
+<p>Les conditions sont testées dans l'ordre, <strong>du plus restrictif au plus large</strong> ; seul le bloc de la première condition vraie s'exécute. Toujours mettre les accolades.</p>
+<div class="tw"><table>
+<tr><th></th><th><code>switch</code></th><th><code>match</code> (PHP 8)</th></tr>
+<tr><td>Nature</td><td>instruction</td><td>expression : renvoie une valeur</td></tr>
+<tr><td>Comparaison</td><td>souple <code>==</code></td><td>stricte <code>===</code></td></tr>
+<tr><td><code>break</code></td><td>obligatoire (sinon « chute » dans le case suivant)</td><td>inutile</td></tr>
+<tr><td>Aucun cas ne correspond</td><td>rien ne se passe</td><td>erreur <code>UnhandledMatchError</code> sans <code>default</code></td></tr>
+</table></div>
+<pre><code>$mention = match (true) {          // match(true) permet de tester des intervalles
+    $note &gt;= 16 =&gt; "Très bien",
+    $note &gt;= 10 =&gt; "Passable",
+    default     =&gt; "Non validé",
+};
+$statut = ($age &gt;= 18) ? "majeur" : "mineur";   // ternaire
+$page = $_GET['page'] ?? 1;                      // coalescence nulle</code></pre>
+<p>Dans un fichier de vue (HTML mélangé), on préfère la <strong>syntaxe alternative</strong> : <code>if (...): ... else: ... endif;</code>, <code>endfor;</code>, <code>endforeach;</code>. Elle préfigure Blade en Laravel.</p>
+
+<h3>Les boucles <span class="tag r">Priorité 1</span></h3>
+<div class="tw"><table>
+<tr><th>Boucle</th><th>Quand l'utiliser</th><th>Particularité</th></tr>
+<tr><td><code>for</code></td><td>nombre de tours connu</td><td>initialisation, condition, incrémentation</td></tr>
+<tr><td><code>while</code></td><td>nombre de tours inconnu</td><td>condition testée <em>avant</em> : peut ne jamais s'exécuter</td></tr>
+<tr><td><code>do ... while</code></td><td>agir puis vérifier</td><td>exécutée <strong>au moins une fois</strong> ; point-virgule après le <code>while</code></td></tr>
+<tr><td><code>foreach</code></td><td>parcourir un tableau</td><td><code>foreach ($t as $cle =&gt; $valeur)</code></td></tr>
+</table></div>
+<ul>
+<li><code>break</code> quitte la boucle ; <code>continue</code> passe à l'itération suivante ; <code>break 2;</code> sort de deux boucles imbriquées.</li>
+<li>Boucles imbriquées : si l'extérieure fait n tours et l'intérieure m tours, le bloc intérieur s'exécute n × m fois.</li>
+<li><strong>Boucle infinie</strong> : la condition ne devient jamais fausse (oubli de l'incrémentation). PHP s'arrête après <code>max_execution_time</code> (30 s par défaut).</li>
+</ul>
+
+<!-- ======================= CHAPITRE 3 ======================= -->
+<h2 id="ch3">Chapitre 3 : tableaux et fonctions</h2>
+
+<h3>Les tableaux <span class="tag r">Priorité 1</span></h3>
+<div class="box def"><p class="t">Définition : tableau (array)</p>
+<p>Une collection ordonnée de paires clé et valeur dans une seule variable. Les clés sont des entiers ou des chaînes, les valeurs peuvent être de n'importe quel type, y compris d'autres tableaux.</p></div>
+<ul>
+<li><strong>Indexé</strong> : clés entières à partir de 0. <code>$t = ["Agadir", "Rabat"]; echo $t[0];</code></li>
+<li><strong>Associatif</strong> : clés textuelles. <code>$e = ["nom" =&gt; "Benali", "age" =&gt; 21];</code> ; <code>isset($e["tel"])</code> teste existence et non null, <code>array_key_exists</code> teste seulement la clé.</li>
+<li><strong>Multidimensionnel</strong> : <code>$promo[1]["nom"]</code>. C'est la forme d'un résultat de requête SQL : liste d'enregistrements.</li>
+<li>Ajouter : <code>$t[] = 40;</code> ; supprimer : <code>unset($t[1])</code> (laisse un trou, <code>array_values</code> renumérote) ; taille : <code>count($t)</code> ; afficher pour déboguer : <code>print_r</code> ou <code>var_dump</code> dans <code>&lt;pre&gt;</code>.</li>
+</ul>
+
+<h3>Fonctions natives et tris <span class="tag r">Priorité 1</span></h3>
+<div class="tw"><table>
+<tr><th>Fonction</th><th>Rôle</th></tr>
+<tr><td><code>array_push</code> / <code>array_pop</code></td><td>ajouter / retirer en fin</td></tr>
+<tr><td><code>array_unshift</code> / <code>array_shift</code></td><td>ajouter / retirer en début</td></tr>
+<tr><td><code>in_array($v, $t, true)</code></td><td>présence d'une valeur (<code>true</code> : comparaison stricte)</td></tr>
+<tr><td><code>array_search</code></td><td>clé de la valeur, ou false</td></tr>
+<tr><td><code>array_keys</code> / <code>array_values</code></td><td>liste des clés / des valeurs</td></tr>
+<tr><td><code>array_merge</code>, <code>array_slice</code></td><td>fusionner ; extraire une portion</td></tr>
+<tr><td><code>implode</code> / <code>explode</code></td><td>tableau vers chaîne / chaîne vers tableau</td></tr>
+<tr><td><code>array_sum</code>, <code>max</code>, <code>min</code></td><td>somme, maximum, minimum</td></tr>
+</table></div>
+<div class="tw"><table>
+<tr><th>Tri</th><th>Effet</th></tr>
+<tr><td><code>sort</code> / <code>rsort</code></td><td>par valeur croissante / décroissante, <strong>renumérote</strong> les clés : pour tableaux indexés</td></tr>
+<tr><td><code>asort</code> / <code>arsort</code></td><td>par valeur, <strong>conserve</strong> les clés : pour tableaux associatifs</td></tr>
+<tr><td><code>ksort</code> / <code>krsort</code></td><td>par clé</td></tr>
+<tr><td><code>usort($t, fn($a, $b) =&gt; $b["note"] &lt;=&gt; $a["note"])</code></td><td>tri personnalisé</td></tr>
+</table></div>
+<div class="box piege"><p class="t">Piège</p><p>Ces fonctions modifient le tableau par référence et renvoient <code>true</code>. Écrire <code>$t = sort($t);</code> fait de <code>$t</code> un booléen : le tableau est perdu.</p></div>
+
+<h3>map, filter, reduce <span class="tag r">Priorité 1</span></h3>
+<div class="tw"><table>
+<tr><th>Fonction</th><th>Syntaxe</th><th>Résultat</th></tr>
+<tr><td><code>array_map</code></td><td><code>array_map(fonction, tableau)</code></td><td>transforme chaque élément : autant d'éléments</td></tr>
+<tr><td><code>array_filter</code></td><td><code>array_filter(tableau, fonction)</code></td><td>garde ceux dont la fonction renvoie true : moins d'éléments, <strong>clés conservées</strong></td></tr>
+<tr><td><code>array_reduce</code></td><td><code>array_reduce(tableau, fonction, départ)</code></td><td>une seule valeur ; la fonction reçoit <code>$acc</code> et l'élément</td></tr>
+</table></div>
+<div class="box piege"><p class="t">Piège : l'ordre des arguments</p><p>Pour <code>array_map</code>, la fonction vient <strong>d'abord</strong> ; pour <code>array_filter</code> et <code>array_reduce</code>, le tableau vient d'abord.</p></div>
+<pre><code>$prixHT = [100, 250, 40, 800];
+$ttc   = array_map(fn($p) =&gt; $p * 1.2, $prixHT);            // [120, 300, 48, 960]
+$chers = array_filter($prixHT, fn($p) =&gt; $p &gt; 200);          // [1 =&gt; 250, 3 =&gt; 800] (clés gardées)
+$total = array_reduce($prixHT, fn($acc, $p) =&gt; $acc + $p, 0); // 1190</code></pre>
+
+<h3>Les fonctions <span class="tag r">Priorité 1</span></h3>
+<div class="box def"><p class="t">Définition : fonction</p>
+<p>Un bloc d'instructions nommé qui réalise une tâche et qu'on appelle autant de fois que nécessaire. Elle reçoit des <strong>paramètres</strong> et renvoie une <strong>valeur de retour</strong> avec <code>return</code>. Une fonction sans <code>return</code> renvoie <code>null</code>.</p></div>
+<pre><code>function prixTTC(float $prixHT, float $tva = 0.20): float
+{
+    return $prixHT * (1 + $tva);
+}
+prixTTC(100);                       // 120
+prixTTC(100, 0.10);                 // 110
+prixTTC(tva: 0.07, prixHT: 50);     // 53.5 (arguments nommés, PHP 8)</code></pre>
+<ul>
+<li><strong>Paramètre</strong> : la variable de la définition. <strong>Argument</strong> : la valeur passée à l'appel. Les paramètres avec valeur par défaut se placent en dernier.</li>
+<li><strong>Types</strong> : <code>int</code>, <code>float</code>, <code>string</code>, <code>bool</code>, <code>array</code> ; nullable <code>?float</code> ; union <code>int|float</code> ; <code>void</code>. <code>declare(strict_types=1);</code> en première ligne interdit les conversions automatiques (<code>"5"</code> passé à un <code>int</code> donne une TypeError).</li>
+<li><strong>Portée</strong> : une variable définie dans une fonction est locale ; une globale n'est pas visible dans les fonctions. On passe les données en paramètres (<code>global</code> est déconseillé). <code>static</code> garde la valeur d'un appel à l'autre.</li>
+<li><strong>Valeur ou référence</strong> : par défaut une copie ; avec <code>&amp;</code> (<code>int &amp;$n</code>) la fonction modifie la variable d'origine.</li>
+<li><strong>Anonyme et fléchée</strong> : <code>function ($x) use ($taux) { ... }</code> importe <code>$taux</code> ; <code>fn($x) =&gt; $x * $taux</code> la capture automatiquement. Servent de callbacks.</li>
+<li><strong>Récursive</strong> : une fonction qui s'appelle elle-même, avec obligatoirement un <strong>cas d'arrêt</strong>. Exemple : factorielle, parcours d'un menu à plusieurs niveaux.</li>
+</ul>
+<div class="box retenir"><p class="t">Bonnes pratiques</p>
+<p>Un nom, une action (<code>calculerMoyenne</code>, <code>estAdmis</code>). Une fonction, une responsabilité. Fonctions courtes. Séparer le calcul (qui fait <code>return</code>) de l'affichage (qui fait <code>echo</code>). Typer les paramètres et le retour.</p></div>
+
+<!-- ======================= CHAPITRE 4 ======================= -->
+<h2 id="ch4">Chapitre 4 : fichiers, cookies et sessions</h2>
+
+<h3>Inclusion de fichiers <span class="tag y">Priorité 2</span></h3>
+<div class="tw"><table>
+<tr><th>Instruction</th><th>Fichier introuvable</th><th>Usage</th></tr>
+<tr><td><code>include</code></td><td>Warning, le script continue</td><td></td></tr>
+<tr><td><code>require</code></td><td>erreur fatale, le script s'arrête</td><td>fragments d'affichage (en-tête, pied de page)</td></tr>
+<tr><td><code>include_once</code> / <code>require_once</code></td><td>idem, mais le fichier n'est inclus <strong>qu'une fois</strong></td><td>fichiers de fonctions et de configuration</td></tr>
+</table></div>
+<p>Un chemin relatif se lit par rapport au <strong>premier script appelé</strong>, pas au fichier qui contient l'instruction. On écrit donc <code>require_once __DIR__ . '/inc/fonctions.php';</code> : <code>__DIR__</code> est le dossier du fichier courant.</p>
+
+<h3>Lire et écrire des fichiers <span class="tag y">Priorité 2</span></h3>
+<ul>
+<li>Lire : <code>file_get_contents($chemin)</code> (tout en une chaîne), <code>file($chemin, FILE_IGNORE_NEW_LINES)</code> (un tableau de lignes), <code>fopen</code> + <code>fgets</code> + <code>fclose</code> (ligne par ligne, gros fichiers). Écrire : <code>file_put_contents($chemin, $donnees)</code>.</li>
+<li>Options : <code>FILE_APPEND</code> ajoute à la fin au lieu d'écraser ; <code>LOCK_EX</code> verrou exclusif contre les écritures simultanées.</li>
+<li>PHP lit et écrit le disque du <strong>serveur</strong>, jamais celui du visiteur.</li>
+</ul>
+<div class="tw"><table>
+<tr><th>Mode</th><th>Lecture</th><th>Écriture</th><th>Si le fichier existe</th><th>S'il n'existe pas</th></tr>
+<tr><td><code>r</code></td><td>oui</td><td>non</td><td>lecture depuis le début</td><td>erreur</td></tr>
+<tr><td><code>w</code></td><td>non</td><td>oui</td><td><strong>contenu effacé</strong></td><td>créé</td></tr>
+<tr><td><code>a</code></td><td>non</td><td>oui</td><td>écriture ajoutée à la fin</td><td>créé</td></tr>
+<tr><td><code>x</code></td><td>non</td><td>oui</td><td>erreur</td><td>créé</td></tr>
+</table></div>
+<p>Les modes <code>r+</code>, <code>w+</code>, <code>a+</code>, <code>x+</code> ajoutent la lecture. <strong>Journal ou livre d'or : mode <code>a</code>.</strong></p>
+<ul>
+<li><strong>CSV</strong> : une ligne par enregistrement ; <code>fputcsv</code> écrit une ligne, <code>fgetcsv</code> en lit une. <strong>JSON</strong> : <code>json_encode($tab, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)</code> et <code>json_decode($json, true)</code> (le <code>true</code> donne un tableau associatif au lieu d'un objet).</li>
+<li>Erreurs : tester avant (<code>file_exists</code>, <code>is_readable</code>, <code>is_writable</code>, <code>is_dir</code>) et tester le retour avec <code>=== false</code>. Détail technique dans <code>error_log()</code>, message neutre à l'utilisateur.</li>
+</ul>
+
+<h3>HTTP sans état, cookies et sessions <span class="tag r">Priorité 1</span></h3>
+<div class="box def"><p class="t">Protocole sans état</p>
+<p>Chaque requête HTTP est traitée indépendamment : le serveur ne se souvient de rien après la réponse. Pour reconnaître un utilisateur, le navigateur doit renvoyer un identifiant à chaque requête : c'est le rôle des cookies.</p></div>
+<div class="box def"><p class="t">Définition : cookie</p>
+<p>Petite donnée texte (nom et valeur, environ 4 Ko) que le serveur demande au navigateur de garder, via l'en-tête <code>Set-Cookie</code>. Le navigateur la renvoie au même site à chaque requête jusqu'à expiration. Stocké <strong>chez le client</strong>, lisible et modifiable par l'utilisateur : jamais de donnée sensible.</p></div>
+<pre><code>setcookie('theme', 'sombre', [
+    'expires'  =&gt; time() + 30*24*3600,   // sans expires : disparaît à la fermeture du navigateur
+    'path'     =&gt; '/',
+    'httponly' =&gt; true,                  // inaccessible au JavaScript (protège contre le vol par XSS)
+    'samesite' =&gt; 'Lax',                 // limite l'envoi depuis d'autres sites (protection CSRF)
+]);
+$theme = $_COOKIE['theme'] ?? 'clair';   // lire
+setcookie('theme', '', time() - 3600, '/'); // supprimer : date passée</code></pre>
+<p><code>setcookie()</code> s'appelle <strong>avant tout affichage</strong> (c'est un en-tête HTTP). Un cookie créé n'apparaît dans <code>$_COOKIE</code> qu'à la requête suivante.</p>
+<div class="box def"><p class="t">Définition : session</p>
+<p>Un mécanisme qui conserve <strong>côté serveur</strong> des données propres à un visiteur. PHP génère un identifiant aléatoire, l'envoie dans un cookie (<code>PHPSESSID</code>) et retrouve les données à chaque requête grâce à lui. Elles sont dans <code>$_SESSION</code>. Seul l'identifiant circule.</p></div>
+<div class="tw"><table>
+<tr><th>Cookie</th><th>Session</th></tr>
+<tr><td>Stocké chez le client</td><td>Stockée sur le serveur</td></tr>
+<tr><td>Lisible et modifiable par l'utilisateur</td><td>Inaccessible à l'utilisateur</td></tr>
+<tr><td>Peut survivre à la fermeture du navigateur</td><td>Expire après inactivité ou déconnexion</td></tr>
+<tr><td>Environ 4 Ko</td><td>Pratiquement illimitée</td></tr>
+<tr><td>Préférences, langue, « se souvenir de moi »</td><td>Authentification, panier, droits</td></tr>
+</table></div>
+<ul>
+<li><code>session_start();</code> au début de chaque page concernée, avant tout affichage. Déconnexion en trois étapes : <code>$_SESSION = [];</code> puis <code>session_destroy();</code> puis suppression du cookie de session.</li>
+<li><strong>Sécuriser</strong> : <code>session_regenerate_id(true)</code> après la connexion (contre la fixation de session) ; options <code>httponly</code>, <code>secure</code>, <code>samesite</code> ; limiter l'inactivité ; HTTPS en production.</li>
+</ul>
+
+<h3>Mots de passe <span class="tag r">Priorité 1</span></h3>
+<div class="box def"><p class="t">Fonction de hachage</p>
+<p>Transforme une donnée en empreinte de longueur fixe, <strong>à sens unique</strong>. On ne déchiffre pas : on calcule l'empreinte du mot de passe saisi et on la compare à celle stockée. Le <strong>sel</strong> aléatoire rend deux empreintes différentes pour un même mot de passe. bcrypt et Argon2 sont lents volontairement ; MD5 et SHA-1 sont à proscrire.</p></div>
+<pre><code>$hash = password_hash($mdp, PASSWORD_DEFAULT);        // 60 caractères, sel automatique
+if (password_verify($saisi, $hash)) {
+    session_regenerate_id(true);
+    $_SESSION['user'] = $email;
+} else {
+    echo "Identifiants incorrects";                      // message volontairement vague
+}</code></pre>
+
+<!-- ======================= CHAPITRE 5 ======================= -->
+<h2 id="ch5">Chapitre 5 : formulaires et upload</h2>
+
+<h3>Formulaires, GET et POST <span class="tag r">Priorité 1</span></h3>
+<div class="box def"><p class="t">Définition : formulaire</p>
+<p>Un élément <code>&lt;form&gt;</code> qui regroupe des champs et un bouton. À l'envoi, le navigateur envoie une requête HTTP avec les valeurs, chacune identifiée par l'attribut <code>name</code>. <code>action</code> donne le script cible, <code>method</code> la méthode (GET ou POST).</p></div>
+<div class="box def"><p class="t">Superglobales</p>
+<p>Tableaux associatifs prédéfinis, remplis à chaque requête et accessibles partout, même dans les fonctions : <code>$_GET</code> (paramètres de l'URL), <code>$_POST</code> (corps de la requête), <code>$_SERVER</code> (infos de requête), <code>$_FILES</code>, <code>$_COOKIE</code>, <code>$_SESSION</code>.</p></div>
+<div class="tw"><table>
+<tr><th>GET</th><th>POST</th></tr>
+<tr><td>Données dans l'URL, visibles, dans l'historique</td><td>Données dans le corps, absentes de l'URL</td></tr>
+<tr><td>Taille limitée (environ 2 000 caractères)</td><td>Pas de limite pratique, fichiers possibles</td></tr>
+<tr><td>Mise en favori, rechargement sans risque</td><td>Recharger renvoie le formulaire</td></tr>
+<tr><td>Pour <strong>lire</strong> : recherche, filtre, tri, pagination</td><td>Pour <strong>modifier</strong> : inscription, connexion, ajout, suppression</td></tr>
+<tr><td>Ne modifie jamais de données</td><td>Obligatoire pour mots de passe et fichiers</td></tr>
+</table></div>
+<div class="box piege"><p class="t">POST ne chiffre pas</p><p>POST évite seulement d'afficher les données dans l'URL et l'historique. Sans HTTPS, elles circulent en clair.</p></div>
+<ul>
+<li>Toutes les valeurs reçues sont des <strong>chaînes</strong>. On lit avec une valeur par défaut : <code>$q = $_GET['q'] ?? '';</code>. On nettoie avec <code>trim()</code>, on convertit avec <code>(int)</code>.</li>
+<li>Un même script affiche et traite : <code>if ($_SERVER['REQUEST_METHOD'] === 'POST') { ... }</code>.</li>
+<li>Les valeurs de <code>$_SERVER['HTTP_*']</code> viennent du navigateur et se falsifient.</li>
+</ul>
+<div class="tw"><table>
+<tr><th>Champ</th><th>Ce que PHP reçoit</th></tr>
+<tr><td>Texte, email, number, textarea</td><td>une chaîne (vide si rien saisi)</td></tr>
+<tr><td>Radio (même <code>name</code>)</td><td>la <code>value</code> du bouton coché, ou <strong>rien</strong></td></tr>
+<tr><td>Liste déroulante <code>select</code></td><td>la <code>value</code> de l'option choisie</td></tr>
+<tr><td>Case à cocher</td><td>rien si non cochée : tester avec <code>isset()</code></td></tr>
+<tr><td>Cases multiples <code>name="langages[]"</code></td><td>un <strong>tableau</strong> des valeurs cochées</td></tr>
+</table></div>
+
+<h3>Valider les données <span class="tag r">Priorité 1</span></h3>
+<div class="box def"><p class="t">Validation et filtrage</p>
+<p><strong>Valider</strong> : vérifier qu'une donnée respecte les règles (présence, format, longueur, valeur autorisée) et la refuser sinon. <strong>Filtrer</strong> : la transformer pour la rendre conforme (espaces, type, minuscules). Toujours <strong>côté serveur</strong> : la validation HTML5 (<code>required</code>, <code>type="email"</code>) améliore le confort mais se contourne.</p></div>
+<div class="flow"><span class="n k">Recevoir</span><span class="n">avec ?? et valeur par défaut</span><span class="n k">Nettoyer</span><span class="n">trim, conversion</span><span class="n k">Valider</span><span class="n">règles, messages dans $erreurs</span><span class="n k">Utiliser</span><span class="n">enregistrer</span><span class="n g">Échapper</span><span class="n">htmlspecialchars à l'affichage</span></div>
+<p><strong>On filtre en entrée, on échappe en sortie.</strong> L'échappement dépend de la destination : HTML (<code>htmlspecialchars</code>), SQL (requêtes préparées), URL.</p>
+<div class="tw"><table>
+<tr><th>Filtre <code>filter_var</code></th><th>Vérifie</th></tr>
+<tr><td><code>FILTER_VALIDATE_EMAIL</code></td><td>adresse email valide</td></tr>
+<tr><td><code>FILTER_VALIDATE_INT</code></td><td>entier (options <code>min_range</code> / <code>max_range</code>) : <code>"42"</code> donne 42, <code>"4.2"</code> donne false</td></tr>
+<tr><td><code>FILTER_VALIDATE_FLOAT</code>, <code>_URL</code>, <code>_BOOL</code>, <code>_REGEXP</code></td><td>décimal, URL, booléen, expression régulière</td></tr>
+</table></div>
+<div class="box piege"><p class="t">Piège</p><p><code>filter_var</code> renvoie la valeur filtrée ou <code>false</code>. Tester avec <code>=== false</code>, car <code>0</code> est un entier valide.</p></div>
+<p><strong>Réafficher le formulaire :</strong> chaque erreur à côté de son champ (<code>$erreurs['nom']</code>, tableau indexé par nom de champ) et le formulaire « collant » (la saisie reste dans <code>value="..."</code>, échappée avec <code>htmlspecialchars</code>). Exception : on ne réaffiche jamais un mot de passe.</p>
+
+<h3>Post / Redirect / Get et message flash <span class="tag r">Priorité 1</span></h3>
+<div class="box def"><p class="t">Motif PRG</p>
+<p>Après le traitement réussi d'un POST, ne pas afficher directement le résultat : rediriger (réponse 302) vers une page demandée en GET. Recharger cette page refait un simple GET, donc pas de double inscription ni de double commande. Écrire <code>header('Location: page.php'); exit;</code>. Le <code>exit</code> est obligatoire, sinon le script continue ; <code>header()</code> s'appelle avant tout affichage.</p></div>
+<p><strong>Message flash :</strong> message mis en session juste avant la redirection, affiché une seule fois par la page suivante, puis supprimé (<code>unset</code>). Les variables du script précédent ont disparu, la session est le seul pont.</p>
+<pre><code>// inscription.php, après succès
+$_SESSION['flash'] = 'Inscription réussie !';
+header('Location: merci.php'); exit;
+
+// merci.php
+if (isset($_SESSION['flash'])) { echo e($_SESSION['flash']); unset($_SESSION['flash']); }</code></pre>
+
+<h3>L'envoi de fichiers <span class="tag y">Priorité 2</span></h3>
+<ul>
+<li>Formulaire : méthode POST, <code>enctype="multipart/form-data"</code> (sans lui le fichier n'est pas transmis), champ <code>&lt;input type="file"&gt;</code>. PHP reçoit le fichier dans un dossier temporaire et le décrit dans <code>$_FILES</code> (<code>name</code>, <code>type</code>, <code>tmp_name</code>, <code>error</code>, <code>size</code>).</li>
+<li><code>name</code> et <code>type</code> viennent du navigateur : <strong>falsifiables</strong>. Un pirate peut envoyer <code>shell.php</code> présenté comme une image, puis l'exécuter en ouvrant <code>/uploads/shell.php</code>.</li>
+</ul>
+<div class="flow"><span class="n k">1. Code d'erreur</span><span class="n">=== UPLOAD_ERR_OK</span><span class="n k">2. Taille</span><span class="n">$f['size']</span><span class="n k">3. Type réel</span><span class="n">finfo et liste blanche</span><span class="n k">4. Nom aléatoire</span><span class="n">bin2hex(random_bytes(16))</span><span class="n g">5. Déplacer</span><span class="n">move_uploaded_file</span></div>
+
+<div class="box ex">
+<p class="t">Pour fixer ce résumé</p>
+<p>Lisez la page <a href="essentiel.html">Essentiel à retenir</a>, faites les <a href="exercices.html">exercices du cours</a> puis les <a href="tp.html">TP</a>, et testez-vous avec le <a href="qcm.html">QCM</a>.</p>
+</div>
+
+<div class="foot">Résumé fait à partir des chapitres 1 à 5 du Prof. Baqach Adil, INF4041. Le syllabus annonce aussi MySQL, Laravel, la sécurité et un mini-projet : ces chapitres ne sont pas dans les fichiers fournis.</div>
+</main>
+</div>
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

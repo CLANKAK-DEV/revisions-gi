@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pièges et aide-mémoire</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="shell">
+<aside class="side" id="side"></aside>
+<main>
+<h1>Pièges et aide-mémoire</h1>
+<p class="lead">Les erreurs qui coûtent des points, puis une fiche à relire la veille de l'examen.</p>
+
+<h2>Erreurs fréquentes en théorie</h2>
+<div class="box piege"><p class="t">1. Confondre les deux « A »</p>
+<p>Le A de ACID est l'Atomicité. Le A de CAP est la Disponibilité (Availability). Écrivez toujours le mot en entier quand vous répondez.</p></div>
+<div class="box piege"><p class="t">2. Dire que CAP permet de choisir 2 propriétés sur 3 « librement »</p>
+<p>La tolérance au partitionnement est imposée par la réalité d'un réseau. Le choix concret, en cas de coupure, est entre cohérence (CP) et disponibilité (AP).</p></div>
+<div class="box piege"><p class="t">3. Dire que NoSQL veut dire « pas de SQL »</p>
+<p>Not Only SQL : non relationnel, mais pas anti-SQL.</p></div>
+<div class="box piege"><p class="t">4. Dire que MongoDB n'est jamais ACID</p>
+<p>Le tableau ACID/BASE du cours range MongoDB côté BASE, mais MongoDB propose des transactions ACID multi-documents depuis la version 4.0 (2018). Citez les deux faits si la question est ouverte.</p></div>
+<div class="box piege"><p class="t">5. Confondre réplication et sharding</p>
+<p>Réplication : mêmes données copiées sur plusieurs serveurs (disponibilité). Sharding : données découpées entre serveurs (volume).</p></div>
+<div class="box piege"><p class="t">6. Croire que <code>use</code> crée la base</p>
+<p>Elle apparaît seulement après la première insertion (ou création de collection).</p></div>
+<div class="box piege"><p class="t">7. Oublier que la collection se crée toute seule</p>
+<p>Pas besoin de <code>createCollection</code> avant un <code>insertOne</code>. Mais <code>createCollection</code> reste nécessaire pour les options (capped, validator).</p></div>
+<div class="box piege"><p class="t">8. Mélanger les vocabulaires</p>
+<p>Collection, pas table. Document, pas ligne. Champ, pas colonne.</p></div>
+
+<h2>Erreurs fréquentes en requêtes</h2>
+<div class="tw"><table>
+<tr><th>Erreur</th><th>Pourquoi c'est faux</th><th>Correct</th></tr>
+<tr><td><code>find({ adresse.ville: "Agadir" })</code></td><td>Le point exige des guillemets</td><td><code>find({ "adresse.ville": "Agadir" })</code></td></tr>
+<tr><td><code>find({ age: { $gt: 21 } })</code> sur <code>info: { age }</code></td><td>Le champ est dans le sous-document</td><td><code>find({ "info.age": { $gt: 21 } })</code></td></tr>
+<tr><td><code>find({ annee > 2010 })</code></td><td>Pas d'opérateur de comparaison classique</td><td><code>find({ annee: { $gt: 2010 } })</code></td></tr>
+<tr><td><code>{ $or: { a: 1, b: 2 } }</code></td><td>$or attend un tableau</td><td><code>{ $or: [ { a: 1 }, { b: 2 } ] }</code></td></tr>
+<tr><td><code>find({}, { nom: 1, age: 0 })</code></td><td>Inclusion et exclusion mélangées</td><td><code>find({}, { nom: 1 })</code></td></tr>
+<tr><td>Projection sans <code>_id: 0</code></td><td>L'_id s'affiche quand même</td><td><code>{ nom: 1, _id: 0 }</code></td></tr>
+<tr><td><code>find({ moyenne: { $gt: 15, $lt: 18 } })</code> pour « entre 15 et 18 inclus »</td><td>Bornes exclues</td><td><code>{ $gte: 15, $lte: 18 }</code></td></tr>
+<tr><td><code>find({ competences: ["SQL","JS"] })</code> pour « a SQL et JS »</td><td>Égalité exacte du tableau, avec l'ordre</td><td><code>{ competences: { $all: ["SQL","JS"] } }</code></td></tr>
+<tr><td><code>$size: 3</code> pour « au moins 3 »</td><td>$size = exactement</td><td><code>{ "tab.2": { $exists: true } }</code></td></tr>
+<tr><td>Deux conditions sur un tableau d'objets sans $elemMatch</td><td>Deux éléments différents peuvent les valider</td><td><code>{ tab: { $elemMatch: { a: .., b: .. } } }</code></td></tr>
+<tr><td><code>$in</code> quand l'énoncé dit « tous les modules »</td><td>$in = au moins un</td><td><code>$all</code></td></tr>
+<tr><td><code>find({ notes: null })</code> pour « champ à null »</td><td>Ramène aussi les champs absents</td><td>Ajouter <code>$type: 10</code>, ou comparer avec <code>$exists</code></td></tr>
+<tr><td>Penser que <code>$exists: true</code> exclut les null</td><td>Un champ à null existe</td><td><code>{ $exists: true, $type: "number" }</code> par exemple</td></tr>
+<tr><td>Regex sur un entier ou entre guillemets sans <code>$regex</code></td><td>/.../ n'est pas une chaîne</td><td><code>/ar/i</code> ou <code>{ $regex: "ar", $options: "i" }</code></td></tr>
+<tr><td>Chercher « contient a » mais oublier la casse</td><td>Sans <code>i</code>, A et a sont différents</td><td><code>/a/i</code></td></tr>
+<tr><td><code>sort({ nom: "asc" })</code></td><td>Le cours utilise 1 et -1</td><td><code>sort({ nom: 1 })</code></td></tr>
+<tr><td><code>limit</code> pour « le meilleur » sans tri</td><td>Sans tri, l'ordre n'est pas garanti</td><td><code>sort({ note: -1 }).limit(1)</code></td></tr>
+</table></div>
+
+<h2>Pièges propres aux TP</h2>
+<ul>
+<li>TP3, D3 : Omar est écrit avec <code>id: 1</code> (sans underscore), donc son <code>_id</code> est un ObjectId généré.</li>
+<li>TP3, partie 3, question 3 : « dont tous les modules sont Programmation et Réseaux » avec <code>$all</code> veut dire « contient les deux », pas « n'a que ces deux ».</li>
+<li>TP3, partie 3, question 9 : la moyenne n'existe pas comme champ ; expliquez votre interprétation.</li>
+<li>TP3, partie 4 : <code>mongoimport</code> se tape dans un terminal normal, pas dans mongosh. Ajoutez le dossier des Database Tools au Path puis rouvrez le terminal.</li>
+<li>TP2 : le JSON de Compass n'accepte pas les commentaires <code>//</code>.</li>
+<li>Le fichier movies.json peut contenir des champs au mauvais type (année en texte, note vide). C'est le but des questions avec <code>$type</code>. En tri décroissant, les chaînes passent avant les nombres.</li>
+</ul>
+
+<h2>Méthode pour l'examen</h2>
+<ol>
+<li>Lisez la question et soulignez : filtre, projection, tri, limite. Une requête find() se construit dans cet ordre.</li>
+<li>Repérez les champs imbriqués (point + guillemets) et les tableaux (<code>$in</code>, <code>$all</code>, <code>$size</code>, <code>$elemMatch</code>).</li>
+<li>Repérez les bornes : « supérieur à » = strict, « au moins » = inclusif.</li>
+<li>Écrivez la requête, puis simulez-la sur 2 documents de l'énoncé.</li>
+<li>Vérifiez les accolades, les crochets, les guillemets.</li>
+<li>Pour une question ambiguë, notez l'hypothèse en une phrase.</li>
+</ol>
+
+<h2>Aide-mémoire</h2>
+
+<h3>Vocabulaire</h3>
+<div class="tw"><table>
+<tr><th>SQL</th><th>MongoDB</th></tr>
+<tr><td>Table</td><td>Collection</td></tr>
+<tr><td>Ligne</td><td>Document</td></tr>
+<tr><td>Colonne</td><td>Champ</td></tr>
+<tr><td>SELECT ... WHERE</td><td>find(filtre, projection)</td></tr>
+<tr><td>INSERT INTO</td><td>insertOne / insertMany</td></tr>
+<tr><td>ORDER BY</td><td>sort</td></tr>
+<tr><td>LIMIT / OFFSET</td><td>limit / skip</td></tr>
+<tr><td>COUNT(*)</td><td>countDocuments</td></tr>
+<tr><td>LIKE</td><td>regex</td></tr>
+<tr><td>IS NULL</td><td>{ champ: null }</td></tr>
+</table></div>
+
+<h3>Opérateurs</h3>
+<div class="tw"><table>
+<tr><th>Catégorie</th><th>Opérateurs</th></tr>
+<tr><td>Comparaison</td><td>$eq, $gt, $gte, $lt, $lte, $in (et $ne, $nin)</td></tr>
+<tr><td>Logique</td><td>$and, $or (tableaux), ET implicite</td></tr>
+<tr><td>Tableaux</td><td>valeur seule, $in, $all, $size, $elemMatch, positionnel $</td></tr>
+<tr><td>Éléments</td><td>$exists, $type</td></tr>
+<tr><td>Texte</td><td>/regex/i, $regex, $options</td></tr>
+<tr><td>Résultats</td><td>sort({c: 1 ou -1}), limit(n), skip(n), countDocuments</td></tr>
+<tr><td>Projection</td><td>{ champ: 1 }, { champ: 0 }, { _id: 0 }, { "tab.$": 1 }</td></tr>
+</table></div>
+
+<h3>Types BSON utiles pour $type</h3>
+<p>string 2, number 1/16/18, object 3, array 4, bool 8, date 9, null 10.</p>
+
+<h3>Trois formules à connaître par cœur</h3>
+<pre><code>CAP  : Cohérence, Availability (disponibilité), Partition tolerance
+BASE : Basically Available, Soft-state, Eventually consistent
+ACID : Atomicité, Cohérence, Isolation, Durabilité</code></pre>
+
+<h3>Dernier tour avant l'examen</h3>
+<div class="box ex">
+<ul>
+<li>Refaire le <a href="qcm.html">QCM</a> en mode mélangé jusqu'à zéro faute.</li>
+<li>Refaire l'<a href="pratique.html">examen blanc</a> en temps limité.</li>
+<li>Réécrire de mémoire une requête avec filtre, projection, tri et limite.</li>
+<li>Réciter les 3V, CAP, BASE, ACID.</li>
+</ul>
+</div>
+
+<div class="foot">Basé sur les chapitres 1 à 3 et les TP 2 et 3.</div>
+</main>
+</div>
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

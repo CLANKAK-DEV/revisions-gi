@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Essentiel à retenir PHP</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="shell">
+<aside class="side" id="side"></aside>
+<main>
+<h1>Essentiel à retenir</h1>
+<p class="lead">La page à lire en premier, et à relire la veille. Les priorités sont mon estimation, d'après ce qui se répète dans les cours, les exercices et les TP.</p>
+
+<div class="box">
+<p class="t">Sommaire</p>
+<ul>
+<li><a href="#prio">Que réviser selon le temps disponible</a></li>
+<li><a href="#huit">Le module en 8 phrases</a></li>
+<li><a href="#chaines">Les chaînes logiques</a></li>
+<li><a href="#rel">Si on vous dit... pensez à...</a></li>
+<li><a href="#fonc">Les fonctions à connaître</a></li>
+<li><a href="#cle">Les 15 éléments à connaître par cœur</a></li>
+</ul>
+</div>
+
+<h2 id="prio">Que réviser selon le temps disponible</h2>
+<div class="tw"><table>
+<tr><th>Priorité</th><th>Notions</th><th>Pourquoi</th></tr>
+<tr><td><span class="tag r">Priorité 1</span></td><td>Variables, types, <code>isset</code> et <code>empty</code>, conversions, chaînes dans un calcul ; <code>==</code> et <code>===</code> ; boucles et conditions ; tableaux, tris, <code>map</code> <code>filter</code> <code>reduce</code> ; fonctions (défaut, référence, <code>static</code>, portée) ; formulaires GET et POST, validation, <code>htmlspecialchars</code>, PRG et flash ; cookies, sessions, <code>password_hash</code></td><td>Presque tous les TP et les exercices en dépendent. Ce sont les « Prédire l'affichage » et les petits programmes de contrôle.</td></tr>
+<tr><td><span class="tag y">Priorité 2</span></td><td><code>match</code>, <code>switch</code> et ternaire ; récursivité et closures ; <code>include</code> et <code>require</code> ; fichiers (modes, CSV, JSON) ; client-serveur et codes HTTP ; upload sécurisé</td><td>Tombent souvent en question de cours ou en dernier exercice.</td></tr>
+<tr><td><span class="tag b">Priorité 3</span></td><td>Historique de PHP, XAMPP et ses boutons, <code>php.ini</code>, noms des versions</td><td>Culture générale du module, plutôt pour un QCM.</td></tr>
+</table></div>
+<div class="tw"><table>
+<tr><th>Temps</th><th>Programme</th></tr>
+<tr><td>2 heures</td><td>Cette page, puis QCM « Prédire la sortie », exercices 1.6 et 2.1, TP2 (relevé et ticket).</td></tr>
+<tr><td>Une demi-journée</td><td>Ajouter les chapitres 3 et 5 du résumé, TP3 et TP5, QCM des chapitres 3 et 5.</td></tr>
+<tr><td>Un jour ou plus</td><td>Tout le résumé, tous les TP, le chapitre 4 (sessions), les quiz Wooclap, l'examen blanc chronométré.</td></tr>
+</table></div>
+
+<h2 id="huit">Le module en 8 phrases</h2>
+<ol class="six">
+<li>Un navigateur (client) envoie une requête HTTP, Apache la confie à PHP, qui génère du HTML : le visiteur ne voit jamais le code PHP.</li>
+<li>Les scripts se placent dans <code>htdocs</code> et s'ouvrent par <code>http://localhost/...</code>, jamais par double-clic.</li>
+<li>Les variables commencent par <code>$</code>, leur type est dynamique ; <code>var_dump</code> montre type et valeur.</li>
+<li>Utiliser <code>===</code> plutôt que <code>==</code> ; connaître les valeurs « falsy » ; une chaîne non numérique dans un calcul provoque une TypeError.</li>
+<li>Un tableau associe des clés à des valeurs ; <code>foreach</code>, les tris, <code>array_map</code>, <code>array_filter</code> et <code>array_reduce</code> remplacent la plupart des boucles.</li>
+<li>Une fonction typée renvoie une valeur avec <code>return</code> et n'affiche rien ; ses variables sont locales ; <code>&amp;</code> passe par référence.</li>
+<li>HTTP n'a pas de mémoire : le cookie transporte un identifiant, la session garde les données sur le serveur, les mots de passe sont hachés.</li>
+<li>Tout ce qui vient d'un formulaire est suspect : on valide côté serveur, on échappe à l'affichage, on termine par une redirection (PRG), et on contrôle les uploads par le type réel.</li>
+</ol>
+
+<h2 id="chaines">Les chaînes logiques</h2>
+<h3>Un formulaire de A à Z</h3>
+<div class="flow"><span class="n k">Formulaire POST</span><span class="n">$_POST['champ'] ?? ''</span><span class="n k">trim</span><span class="n">filter_var, règles</span><span class="n k">$erreurs[champ]</span><span class="n">si vide, on enregistre</span><span class="n g">flash en session</span><span class="n">header + exit</span><span class="n g">Page suivante (GET)</span><span class="n">affiche et efface le flash</span></div>
+<h3>Une connexion sécurisée</h3>
+<div class="flow"><span class="n k">Inscription</span><span class="n">password_hash</span><span class="n k">Stockage</span><span class="n">fichier JSON ou base</span><span class="n k">Connexion</span><span class="n">password_verify</span><span class="n g">session_regenerate_id(true)</span><span class="n">$_SESSION['user']</span><span class="n">Page protégée</span><span class="n">si absent, redirection</span><span class="n y">Déconnexion</span><span class="n">vider, détruire, supprimer le cookie</span></div>
+<h3>Un upload sécurisé</h3>
+<div class="flow"><span class="n k">Code d'erreur</span><span class="n k">Taille</span><span class="n k">Type réel (finfo)</span><span class="n k">Nom aléatoire</span><span class="n g">move_uploaded_file</span></div>
+<h3>Cookie, session, fichier</h3>
+<div class="flow"><span class="n y">Préférence du visiteur</span><span class="n">cookie</span><span class="n y">Qui est connecté</span><span class="n">session</span><span class="n y">Données durables du site</span><span class="n">fichier ou base</span></div>
+
+<h2 id="rel">Si on vous dit... pensez à...</h2>
+<div class="tw"><table>
+<tr><th>Si l'énoncé dit</th><th>Pensez à</th></tr>
+<tr><td>« Afficher le type et la valeur »</td><td><code>var_dump()</code></td></tr>
+<tr><td>« La variable existe-t-elle ? »</td><td><code>isset()</code>, sans risque d'avertissement</td></tr>
+<tr><td>« Comparer sans conversion »</td><td><code>===</code></td></tr>
+<tr><td>« Plusieurs intervalles de notes »</td><td><code>match (true)</code> ou <code>if / elseif</code>, jamais un <code>switch</code> classique</td></tr>
+<tr><td>« Valeur par défaut si absente »</td><td><code>??</code></td></tr>
+<tr><td>« Transformer chaque élément »</td><td><code>array_map</code></td></tr>
+<tr><td>« Garder certains éléments »</td><td><code>array_filter</code> (clés conservées)</td></tr>
+<tr><td>« Obtenir une seule valeur (somme, total) »</td><td><code>array_reduce</code>, valeur de départ 0 ou 1</td></tr>
+<tr><td>« Trier selon un champ »</td><td><code>usort</code> avec <code>&lt;=&gt;</code> ; <code>arsort</code> pour garder les clés</td></tr>
+<tr><td>« La fonction modifie l'original »</td><td>passage par référence <code>&amp;</code></td></tr>
+<tr><td>« Compteur qui se souvient entre deux appels »</td><td>variable <code>static</code></td></tr>
+<tr><td>« Nombre de niveaux inconnu »</td><td>récursivité avec cas d'arrêt</td></tr>
+<tr><td>« Journal, ajouter à la fin »</td><td><code>fopen($f, 'a')</code> ou <code>FILE_APPEND</code>, avec <code>LOCK_EX</code></td></tr>
+<tr><td>« Échanger des données structurées »</td><td>JSON : <code>json_encode</code> et <code>json_decode($j, true)</code></td></tr>
+<tr><td>« Se souvenir d'un utilisateur entre deux pages »</td><td>session, ou cookie pour une préférence</td></tr>
+<tr><td>« Stocker un mot de passe »</td><td><code>password_hash</code>, jamais en clair ni MD5</td></tr>
+<tr><td>« Recharger la page renvoie le formulaire »</td><td>Post / Redirect / Get</td></tr>
+<tr><td>« Afficher une saisie dans la page »</td><td><code>htmlspecialchars</code> (protection contre XSS)</td></tr>
+<tr><td>« Case à cocher non cochée »</td><td>absente de <code>$_POST</code> : <code>isset()</code></td></tr>
+<tr><td>« Accepter un fichier »</td><td><code>enctype</code>, <code>$_FILES</code>, type réel avec <code>finfo</code>, nom aléatoire</td></tr>
+</table></div>
+
+<h2 id="fonc">Les fonctions à connaître</h2>
+<div class="tw"><table>
+<tr><th>Domaine</th><th>Fonctions</th></tr>
+<tr><td>Variables</td><td><code>var_dump</code> <code>isset</code> <code>empty</code> <code>unset</code> <code>is_null</code> <code>is_numeric</code> <code>gettype</code> <code>get_debug_type</code> <code>intval</code> <code>settype</code></td></tr>
+<tr><td>Chaînes</td><td><code>strlen</code> <code>strtoupper</code> <code>trim</code> <code>nl2br</code> <code>implode</code> <code>explode</code> <code>stripos</code> <code>htmlspecialchars</code></td></tr>
+<tr><td>Nombres</td><td><code>intdiv</code> <code>round</code> <code>random_int</code> <code>max</code> <code>min</code> <code>array_sum</code></td></tr>
+<tr><td>Tableaux</td><td><code>count</code> <code>in_array</code> <code>array_search</code> <code>array_keys</code> <code>array_values</code> <code>array_merge</code> <code>array_slice</code> <code>array_column</code></td></tr>
+<tr><td>Tris</td><td><code>sort</code> <code>rsort</code> <code>asort</code> <code>arsort</code> <code>ksort</code> <code>usort</code></td></tr>
+<tr><td>Callbacks</td><td><code>array_map</code> <code>array_filter</code> <code>array_reduce</code></td></tr>
+<tr><td>Fichiers</td><td><code>file_get_contents</code> <code>file_put_contents</code> <code>fopen</code> <code>fgets</code> <code>fwrite</code> <code>fclose</code> <code>file_exists</code> <code>is_dir</code> <code>mkdir</code> <code>fputcsv</code> <code>fgetcsv</code> <code>json_encode</code> <code>json_decode</code></td></tr>
+<tr><td>Sessions et cookies</td><td><code>setcookie</code> <code>session_start</code> <code>session_destroy</code> <code>session_regenerate_id</code> <code>password_hash</code> <code>password_verify</code></td></tr>
+<tr><td>Formulaires et upload</td><td><code>filter_var</code> <code>header</code> <code>exit</code> <code>move_uploaded_file</code> <code>finfo</code> <code>random_bytes</code> <code>bin2hex</code></td></tr>
+</table></div>
+
+<h2 id="cle">Les 15 éléments à connaître par cœur</h2>
+<ol class="six">
+<li>Client, serveur, requête, réponse : PHP s'exécute sur le serveur, le navigateur reçoit du HTML.</li>
+<li>GET lit (URL, favori). POST modifie (corps de la requête). POST ne chiffre pas.</li>
+<li>Codes : 200 OK, 301 et 302 redirection, 403 interdit, 404 introuvable, 500 erreur serveur.</li>
+<li>Type dynamique ; <code>isset</code> est false si null ; <code>empty</code> est true pour <code>""</code>, <code>"0"</code>, <code>0</code>, <code>null</code>, <code>false</code>, <code>[]</code>.</li>
+<li>Chaîne dans un calcul : numérique, ça passe ; « 10 pommes », Warning ; « abc », TypeError.</li>
+<li><code>==</code> convertit, <code>===</code> compare type et valeur. Guillemets doubles interpolent, simples non.</li>
+<li><code>switch</code> compare en souple avec <code>break</code> ; <code>match</code> est strict, renvoie une valeur, lève <code>UnhandledMatchError</code>.</li>
+<li><code>for</code> (tours connus), <code>while</code> (condition), <code>do ... while</code> (au moins un tour), <code>foreach</code> (tableaux) ; <code>break</code> et <code>continue</code>.</li>
+<li><code>sort</code> renumérote, <code>asort</code> garde les clés ; <code>$t = sort($t)</code> est une erreur.</li>
+<li><code>array_map(fonction, tableau)</code> mais <code>array_filter(tableau, fonction)</code> ; filter garde les clés.</li>
+<li>Fonction : paramètres typés, valeur par défaut, <code>return</code>, variables locales, <code>&amp;</code> pour la référence, <code>static</code> pour la mémoire, cas d'arrêt pour la récursivité.</li>
+<li>Modes de <code>fopen</code> : <code>r</code> lit, <code>w</code> efface, <code>a</code> ajoute, <code>x</code> exige que le fichier n'existe pas.</li>
+<li>Cookie chez le client (modifiable), session sur le serveur (seul l'identifiant circule) ; <code>httponly</code>, <code>samesite</code> ; <code>session_regenerate_id(true)</code> après la connexion.</li>
+<li><code>password_hash</code> (sel automatique, 60 caractères) et <code>password_verify</code> ; jamais en clair, jamais MD5.</li>
+<li>Validation côté serveur, <code>filter_var</code> testé avec <code>=== false</code>, échappement à l'affichage, PRG avec <code>header</code> + <code>exit</code>, upload : taille, type réel, nom aléatoire.</li>
+</ol>
+
+<div class="box ex">
+<p class="t">Dernier tour avant l'examen</p>
+<ul>
+<li>Refaire le <a href="qcm.html">QCM</a> « Prédire la sortie » jusqu'à zéro faute.</li>
+<li>Refaire sans regarder les corrigés du <a href="tp.html">TP2 et du TP3</a>.</li>
+<li>Passer l'<a href="pratique.html">examen blanc</a> en temps limité.</li>
+<li>Relire les <a href="pieges.html">pièges</a>.</li>
+</ul>
+</div>
+
+<div class="foot">Basé sur les chapitres 1 à 5 et les TP 1 à 5 du Prof. Baqach Adil, INF4041.</div>
+</main>
+</div>
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

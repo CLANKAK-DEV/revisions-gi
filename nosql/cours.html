@@ -1,0 +1,453 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Résumé du cours NoSQL et MongoDB</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="shell">
+<aside class="side" id="side"></aside>
+<main>
+<h1>Résumé du cours</h1>
+<p class="lead">Trois chapitres : pourquoi NoSQL existe, comment fonctionne MongoDB, comment on interroge avec <code>find()</code>. Chaque notion a sa définition, un exemple et ce qu'il faut retenir.</p>
+
+<div class="box">
+<p class="t">Sommaire</p>
+<ul>
+<li><a href="#c1">Chapitre 1 : Les bases de données NoSQL</a></li>
+<li><a href="#c2">Chapitre 2 : MongoDB, concepts et insertion</a></li>
+<li><a href="#c3">Chapitre 3 : Récupérer les documents avec find()</a></li>
+</ul>
+</div>
+
+<!-- ======================= CHAPITRE 1 ======================= -->
+<h2 id="c1">Chapitre 1 : Les bases de données NoSQL</h2>
+
+<h3>1. Pourquoi les bases relationnelles ne suffisent plus</h3>
+<p>Prenons une petite boutique en ligne. Au début, trois tables suffisent (Clients, Produits, Commandes) et SQL répond très bien à « quels produits le client X a-t-il achetés ? ». Puis l'entreprise grandit : paiements, avis clients, images HD, vidéos, tags différents d'un produit à l'autre, logs de navigation (clics, recherches, temps passé). Le nombre de jointures augmente et le schéma devient lourd à faire évoluer.</p>
+
+<h4>Les points forts du relationnel</h4>
+<ul>
+<li>Utilisé depuis les années 1970, structuré en tables liées par des clés.</li>
+<li>Intégrité des données : clé primaire, clé étrangère, unicité.</li>
+<li>Langage standard SQL, gestion des utilisateurs, rôles et droits.</li>
+<li>Transactions fiables grâce aux propriétés ACID.</li>
+</ul>
+
+<div class="box def">
+<p class="t">Définition : ACID</p>
+<div class="tw"><table>
+<tr><th>Lettre</th><th>Propriété</th><th>Idée</th><th>Exemple du cours</th></tr>
+<tr><td>A</td><td>Atomicité</td><td>Tout ou rien</td><td>Virement : si le crédit de B échoue, le débit de A est annulé</td></tr>
+<tr><td>C</td><td>Cohérence</td><td>D'un état valide à un autre état valide</td><td>Pas de commande pour un client inexistant</td></tr>
+<tr><td>I</td><td>Isolation</td><td>Les transactions parallèles n'interfèrent pas</td><td>Le dernier billet n'est pas vendu deux fois</td></tr>
+<tr><td>D</td><td>Durabilité</td><td>Après commit, la donnée est permanente</td><td>Paiement confirmé même si le site plante juste après</td></tr>
+</table></div>
+</div>
+
+<h4>Les limites du relationnel</h4>
+<ul>
+<li>Temps de réponse : les jointures entre grosses tables ralentissent les requêtes. Une forte normalisation (1FN à 5FN) multiplie les tables et donc les accès disque.</li>
+<li>Scalabilité limitée : conçues pour un seul serveur (scale-up).</li>
+<li>Performances dégradées avec le Big Data (milliards d'enregistrements, analyse en temps réel).</li>
+<li>Transactions lourdes : les verrous (locks) ralentissent quand beaucoup d'utilisateurs accèdent en même temps.</li>
+<li>Mauvaise prise en charge des données non structurées : images, vidéos, JSON, logs.</li>
+</ul>
+
+<div class="box ex">
+<p class="t">Exemple chiffré du cours</p>
+<div class="tw"><table>
+<tr><th>Taille des tables</th><th>Sans index</th><th>Avec index optimisés</th></tr>
+<tr><td>1M + 5M + 1M</td><td>20 000 ms</td><td>500 ms</td></tr>
+<tr><td>10M + 50M + 10M</td><td>plus de 60 000 ms</td><td>5 000 ms</td></tr>
+<tr><td>100M + 500M + 100M</td><td>impossible</td><td>60 000 ms</td></tr>
+</table></div>
+<p>Les index aident beaucoup, mais les performances restent limitées quand les tables atteignent des centaines de millions de lignes.</p>
+</div>
+
+<div class="box retenir">
+<p class="t">Rappel : les trois premières formes normales</p>
+<ul>
+<li>1FN : chaque attribut contient une valeur unique et atomique (pas de liste, pas de colonnes répétées).</li>
+<li>2FN : être en 1FN, et chaque attribut non clé dépend de toute la clé primaire, pas d'une partie seulement.</li>
+<li>3FN : être en 2FN, et aucun attribut non clé ne dépend d'un autre attribut non clé (pas de dépendance transitive).</li>
+</ul>
+</div>
+
+<h3>2. Scale-up et scale-out</h3>
+<div class="tw"><table>
+<tr><th></th><th>Scale-up (vertical)</th><th>Scale-out (horizontal)</th></tr>
+<tr><td>Principe</td><td>Rendre un seul serveur plus puissant : plus de RAM, de processeurs, de disques rapides</td><td>Répartir la charge sur plusieurs serveurs</td></tr>
+<tr><td>Limite</td><td>Physique et financière</td><td>Presque aucune : on ajoute des machines</td></tr>
+<tr><td>Exemple</td><td>Un serveur pour 1 milliard de requêtes par jour</td><td>100 serveurs qui se partagent ces requêtes</td></tr>
+<tr><td>Qui l'utilise</td><td>PostgreSQL, MySQL, Oracle, SQL Server (historiquement)</td><td>Bases NoSQL, grandes plateformes (Facebook, Amazon)</td></tr>
+</table></div>
+
+<h3>3. Les 3V : Volume, Vélocité, Variété</h3>
+<p>Le Web a évolué en trois temps. Web 1.0 : pages statiques, le relationnel suffit. Web 2.0 : réseaux sociaux, blogs, e-commerce, les utilisateurs produisent eux-mêmes les données, le volume explose. Web 3.0 : IoT, cloud, streaming, applications en temps réel.</p>
+<div class="grid">
+<div class="card"><h3>Volume</h3><p>Quantité gigantesque : pétaoctets, exaoctets. Facebook génère plusieurs pétaoctets par jour.</p></div>
+<div class="card"><h3>Vélocité</h3><p>Vitesse de génération et de traitement : transactions bancaires, capteurs IoT, streaming vidéo, marchés financiers.</p></div>
+<div class="card"><h3>Variété</h3><p>Formats multiples : structurées (tables), semi-structurées (JSON, XML, logs), non structurées (images, vidéos, sons, emails).</p></div>
+</div>
+<div class="box piege"><p class="t">Piège</p><p>Le cours donne trois V. Si une question demande « les 3V », répondez Volume, Vélocité, Variété. Ne mettez pas Valeur ou Véracité, même si d'autres sources les citent.</p></div>
+
+<h3>4. Définition de NoSQL</h3>
+<div class="box def">
+<p class="t">Définition</p>
+<p>NoSQL signifie « Not Only SQL ». C'est une catégorie de bases de données non relationnelles conçues pour gérer des données non structurées, semi-structurées ou massives, là où SQL montre ses limites. Elles proposent des modèles de stockage flexibles et évolutifs, adaptés au Big Data, aux applications web à grande échelle et à l'IoT.</p>
+</div>
+<p>Les quatre grandes familles (schéma « topologies » du cours) sont : clé-valeur (Redis, DynamoDB), documents (MongoDB, CouchDB), colonnes (Cassandra, HBase) et graphes (Neo4j). Dans ce cours, on étudie MongoDB, donc la famille documents.</p>
+
+<h3>5. Les principes du NoSQL</h3>
+
+<h4>a) Modèle flexible (schema-less)</h4>
+<p>Pas de schéma imposé à l'avance. En SQL, ajouter l'âge d'un client demande <code>ALTER TABLE Clients ADD Age INT;</code>. En NoSQL, un document peut simplement avoir un champ <code>age</code> et un autre non, sans migration.</p>
+
+<h4>b) Scalabilité horizontale : sharding et load balancing</h4>
+<ul>
+<li>Sharding (fragmentation) : la base découpe les données en shards. Serveur A : produits A à M, serveur B : N à Z. Si on ajoute un serveur C, une partie des données est redistribuée.</li>
+<li>Load balancing : un répartiteur envoie chaque requête au bon serveur.</li>
+</ul>
+<div class="box ex"><p class="t">Exemple : plateforme de vidéos</p>
+<p>Trois serveurs : A (profils utilisateurs), B (métadonnées des vidéos), C (logs de visionnage). La sortie d'une série très attendue sature le serveur C. Solution : on ajoute un serveur D, la base redistribue automatiquement une partie des logs de C vers D, et le load balancer équilibre la charge. Aucun serveur n'est saturé et la plateforme reste fluide.</p></div>
+
+<h4>c) Haute disponibilité et performance</h4>
+<ul>
+<li>Réponse rapide même sous forte charge (faible latence).</li>
+<li>Réplication : les données sont copiées sur plusieurs serveurs. Écrite sur A, la donnée est répliquée sur B et C. Si A tombe, B ou C répondent.</li>
+<li>Index et structures adaptées (arbres B+, tables de hachage) : une recherche sur un champ email indexé prend quelques millisecondes, même sur des millions d'enregistrements.</li>
+</ul>
+
+<h4>d) Pas de jointures complexes</h4>
+<p>Pour aller plus vite, on duplique ou on imbrique les données dans un même document JSON. C'est la dénormalisation, à l'opposé de la normalisation du relationnel.</p>
+
+<h4>e) Théorème CAP</h4>
+<div class="box def">
+<p class="t">Définition : CAP (Brewer, 2000)</p>
+<p>Dans un système distribué, il est impossible de garantir en même temps les trois propriétés :</p>
+<ul>
+<li>Consistency (cohérence) : toutes les répliques montrent le même état au même instant, chaque lecture retourne la dernière écriture.</li>
+<li>Availability (disponibilité) : chaque requête reçoit une réponse, même en cas de panne partielle.</li>
+<li>Partition tolerance (tolérance au partitionnement) : le système continue de fonctionner même si le réseau est coupé en plusieurs parties.</li>
+</ul>
+</div>
+<p>Lors d'une partition réseau, il faut sacrifier la cohérence ou la disponibilité :</p>
+<div class="tw"><table>
+<tr><th>Choix</th><th>Ce qu'on garde</th><th>Ce qu'on sacrifie</th><th>Conséquence</th></tr>
+<tr><td>CP</td><td>Cohérence, partition</td><td>Disponibilité</td><td>Données toujours exactes, mais erreur ou attente possible</td></tr>
+<tr><td>AP</td><td>Disponibilité, partition</td><td>Cohérence (temporairement)</td><td>Service toujours là, mais données parfois périmées</td></tr>
+</table></div>
+<div class="box ex"><p class="t">Exemple : hôtel d'Agadir, une seule chambre libre</p>
+<p>Deux serveurs : Paris (touristes européens) et Rome (touristes italiens). Une panne coupe la communication entre eux, et deux clients veulent la dernière chambre.</p>
+<ul>
+<li>Système CP : Paris accepte et bloque la chambre, Rome refuse ou met en attente. Pas de double vente, mais le client de Rome n'est pas servi.</li>
+<li>Système AP : les deux serveurs acceptent. Deux clients croient avoir la chambre (incohérence temporaire). Au retour du réseau, on annule l'une des réservations, on applique « premier arrivé, premier servi » ou on déplace un client dans une chambre équivalente.</li>
+</ul></div>
+
+<h4>f) Modèle BASE</h4>
+<div class="box def">
+<p class="t">Définition : BASE</p>
+<ul>
+<li>Basically Available : le système répond toujours, même si toutes les données ne sont pas immédiatement cohérentes.</li>
+<li>Soft-state : l'état peut changer au fil du temps, même sans nouvelle saisie, car la cohérence se construit progressivement.</li>
+<li>Eventually consistent : les données finiront par être cohérentes, mais pas forcément juste après une mise à jour.</li>
+</ul>
+</div>
+
+<h3>6. ACID contre BASE</h3>
+<div class="tw"><table>
+<tr><th>Critère</th><th>ACID</th><th>BASE</th></tr>
+<tr><td>Priorité</td><td>Cohérence avant disponibilité</td><td>Disponibilité avant cohérence stricte</td></tr>
+<tr><td>Évolutivité</td><td>Verticale</td><td>Horizontale</td></tr>
+<tr><td>Flexibilité</td><td>Moins flexible : bloque des enregistrements pour d'autres applications</td><td>Plus flexible : plusieurs applications peuvent mettre à jour le même enregistrement</td></tr>
+<tr><td>Gros volumes</td><td>Performances en baisse</td><td>Gère de grandes quantités de données non structurées à haut débit</td></tr>
+<tr><td>Synchronisation</td><td>Oui, avec un délai</td><td>Pas de synchronisation stricte</td></tr>
+<tr><td>Avantage</td><td>Données toujours exactes, transactions fiables</td><td>Performance et scalabilité élevées</td></tr>
+<tr><td>Inconvénient</td><td>Moins performant, moins disponible en cas de panne</td><td>Données temporairement incohérentes</td></tr>
+<tr><td>Exemples</td><td>PostgreSQL, MySQL, Oracle</td><td>Cassandra, DynamoDB, MongoDB</td></tr>
+</table></div>
+<div class="box ex"><p class="t">Quel modèle choisir ?</p>
+<ul>
+<li>Acheter le dernier billet de train : ACID (transaction atomique, jamais vendu deux fois).</li>
+<li>Ajouter un article au panier alors qu'il en reste un en stock : BASE (le système accepte tout de suite, la synchronisation vient après).</li>
+<li>Poster un tweet : BASE (des utilisateurs éloignés ne le voient pas au même instant, ce n'est pas grave).</li>
+</ul></div>
+
+<!-- ======================= CHAPITRE 2 ======================= -->
+<h2 id="c2">Chapitre 2 : MongoDB</h2>
+
+<h3>1. Définition et historique</h3>
+<div class="box def">
+<p class="t">Définition</p>
+<p>MongoDB est un SGBD NoSQL orienté documents, créé pour gérer de grandes quantités de données de façon flexible, rapide et évolutive. Au lieu de tables et de lignes, il stocke des documents JSON/BSON (Binary JSON). Un document peut contenir du texte, des nombres, des tableaux, des documents imbriqués, sans schéma rigide défini d'avance.</p>
+</div>
+<div class="tw"><table>
+<tr><th>Année</th><th>Événement</th></tr>
+<tr><td>2007</td><td>Développement lancé par 10gen</td></tr>
+<tr><td>2009</td><td>Version 1.0, open source. Le nom vient de « humongous » (énorme)</td></tr>
+<tr><td>2012</td><td>2.2 : aggregation framework et index géospatiaux</td></tr>
+<tr><td>2013</td><td>10gen devient MongoDB Inc.</td></tr>
+<tr><td>2014-2015</td><td>3.0 : moteur WiredTiger (remplace MMAPv1)</td></tr>
+<tr><td>2018</td><td>4.0 : transactions ACID multi-documents</td></tr>
+<tr><td>2021</td><td>5.0 : Time Series Collections</td></tr>
+<tr><td>2022</td><td>6.0 : requêtes analytiques, scalabilité</td></tr>
+<tr><td>2023</td><td>7.0 : médiane, percentiles, meilleur sharding</td></tr>
+<tr><td>2024</td><td>8.0 : performance, sécurité, évolutivité</td></tr>
+</table></div>
+
+<h3>2. L'écosystème</h3>
+<ul>
+<li>Le cœur : MongoDB Database, en auto-hébergé (Self-Managed / Enterprise), dans le cloud avec Atlas, ou en version mobile.</li>
+<li>Outils autour : Compass (interface graphique officielle), BI Connectors (Tableau, Power BI), Charts (graphiques).</li>
+<li>Realm : plateforme backend (Serverless Query API, Serverless Functions, Database Triggers, Real-Time Sync).</li>
+<li>Utilisateurs connus : eBay, Uber, GitHub, LinkedIn, Adobe, Cisco, IBM, SAP, Forbes, New York Times.</li>
+</ul>
+
+<h3>3. Architecture interne</h3>
+<ol>
+<li>Client : votre programme (Python, Java, Node.js) qui parle à MongoDB via un driver officiel.</li>
+<li>Serveur : le processus <code>mongod</code> reçoit et route les requêtes. Le Query Engine analyse, optimise et exécute, avec les index et les pipelines d'agrégation. Le moteur WiredTiger (par défaut) gère lecture et écriture avec un cache en RAM, un journal (Write Ahead Log) pour la durabilité et la compression.</li>
+<li>Disque : documents en BSON, chacun avec son <code>_id</code>, collections, index stockés à côté.</li>
+<li>Réplication et sharding : replica set (copies synchronisées pour la tolérance aux pannes) et sharding (partitionnement horizontal pour les très gros volumes).</li>
+</ol>
+
+<h3>4. Local ou cloud (Atlas)</h3>
+<div class="tw"><table>
+<tr><th>Aspect</th><th>MongoDB local</th><th>MongoDB Atlas</th></tr>
+<tr><td>Installation</td><td>Manuelle, sur votre machine ou serveur</td><td>Aucune, tout est géré</td></tr>
+<tr><td>Ressources</td><td>Vous contrôlez tout</td><td>Mise à l'échelle automatique ou serverless</td></tr>
+<tr><td>Sécurité</td><td>À configurer vous-même</td><td>Sécurisé automatiquement</td></tr>
+<tr><td>Disponibilité</td><td>À gérer (replica sets, clusters)</td><td>Haute disponibilité et réplication intégrées</td></tr>
+<tr><td>Maintenance</td><td>Mises à jour manuelles</td><td>Automatiques</td></tr>
+<tr><td>Coût</td><td>Matériel</td><td>À l'usage, plans gratuits</td></tr>
+<tr><td>Sauvegarde</td><td>Manuelle</td><td>Automatique, restauration point-in-time</td></tr>
+</table></div>
+<p>En local, deux éditions : Community Server (licence SSPL, libre, sans support officiel, pour projets personnels ou académiques) et Enterprise Server (licence payante, support officiel, sécurité et monitoring avancés, production à grande échelle).</p>
+
+<h3>5. Avantages de MongoDB</h3>
+<ul>
+<li>Flexibilité du schéma : des documents différents dans la même collection, idéal pour les projets agiles.</li>
+<li>Scalabilité horizontale par sharding.</li>
+<li>Haute disponibilité par replica sets : le primaire reçoit les écritures, les secondaires sont des copies. Si le primaire tombe, un secondaire prend le relais automatiquement.</li>
+<li>Multi-plateforme : drivers (Java, Python, Node.js, C#), cloud (Atlas) ou local, Compass et Charts.</li>
+<li>Richesse : index avancés (simples, composés, géospatiaux, textuels, TTL), pipeline d'agrégation, transactions ACID depuis la version 4.0.</li>
+</ul>
+
+<h3>6. Les concepts de base</h3>
+<div class="box def">
+<p class="t">Hiérarchie</p>
+<p>SQL : Base, Tables, Lignes, Colonnes.<br>MongoDB : Base, Collections, Documents, Champs.</p>
+</div>
+<ul>
+<li>Base de données : le conteneur principal, indépendant des autres. Un serveur en héberge plusieurs (shop, school), chacune avec ses collections.</li>
+<li>Bases système : <code>admin</code> (administration), <code>local</code> (réplication), <code>config</code> (sharding). Ne pas y toucher.</li>
+<li>Collection : équivalent d'une table, sans schéma fixe, indexable, jusqu'à de très gros volumes grâce au sharding. Collections spéciales : <code>system.indexes</code> et <code>system.profile</code> (créées automatiquement).</li>
+<li>Document : équivalent d'une ligne, paires clé/valeur, maximum 16 Mo, champ <code>_id</code> unique et obligatoire (généré automatiquement si absent).</li>
+<li>Champ : équivalent d'une colonne. Types : string, nombre (int, double, decimal128), booléen, date, tableau (array), sous-document.</li>
+</ul>
+<pre><code>// Même collection "produits", deux documents différents
+{ "id": 1, "nom": "Laptop X", "prix": 1200, "categorie": "Informatique" }
+{ "id": 2, "nom": "Smartphone Y", "prix": 800, "marque": "Y", "stock": 25 }
+
+// Document imbriqué : plus besoin de table Avis ni de jointure
+{ "nom": "Laptop X", "prix": 1200,
+  "avis": [ { "client": "Sara", "note": 5 }, { "client": "Omar", "note": 4 } ] }</code></pre>
+
+<h3>7. Installation et connexion</h3>
+<ul>
+<li>MongoDB Community Server (MSI sous Windows) inclut Compass. Répertoire par défaut : <code>C:\Program Files\MongoDB\Server\8.0\bin</code>.</li>
+<li><code>mongod</code> manuel : démarre dans un terminal, s'arrête quand on le ferme, bon pour les tests. Service MongoDB : démarre avec le système, adapté à la production.</li>
+<li>Compass : on saisit <code>mongodb://localhost:27017</code>, on clique Connect, puis Create Database (nom de la base et de la première collection), puis Insert Document.</li>
+<li>mongosh : shell interactif (REPL) pour tester les requêtes. On le lance avec <code>mongosh</code>, connexion locale par défaut.</li>
+</ul>
+
+<h3>8. Commandes de base avec mongosh</h3>
+<pre><code>use G_Informatique        // sélectionne la base
+show dbs                  // liste les bases
+db.createCollection("Etudiants")
+show collections</code></pre>
+<div class="box piege"><p class="t">Piège</p><p><code>use MaBase</code> ne crée pas vraiment la base. Elle n'existe sur le disque qu'à l'ajout d'une première collection ou d'un premier document.</p></div>
+<p>Deux façons de créer une collection : explicitement avec <code>db.createCollection("Nom")</code>, ou implicitement à la première insertion (<code>db.MaCollection.insertOne({...})</code>).</p>
+
+<h4>Options de createCollection</h4>
+<pre><code>db.createCollection("Etudiants", { capped: true, size: 1048576, max: 100 })</code></pre>
+<div class="tw"><table>
+<tr><th>Paramètre</th><th>Rôle</th></tr>
+<tr><td>capped</td><td>Collection à taille fixe : les anciens documents sont remplacés par les nouveaux (FIFO)</td></tr>
+<tr><td>size</td><td>Taille maximale en octets, obligatoire si capped est vrai</td></tr>
+<tr><td>max</td><td>Nombre maximal de documents, optionnel, seulement avec capped</td></tr>
+<tr><td>validator</td><td>Schéma de validation des documents</td></tr>
+<tr><td>validationLevel</td><td>"off", "moderate" ou "strict"</td></tr>
+<tr><td>validationAction</td><td>"error" ou "warn" si la validation échoue</td></tr>
+<tr><td>viewOn, pipeline</td><td>Créer une vue à partir d'une collection avec un pipeline d'agrégation</td></tr>
+<tr><td>timeseries, expireAfterSeconds</td><td>Collection de séries temporelles et durée d'expiration</td></tr>
+<tr><td>collation</td><td>Règles de comparaison (casse, accents, ordre alphabétique)</td></tr>
+</table></div>
+
+<h4>insertOne et insertMany</h4>
+<pre><code>db.Etudiants.insertOne({ id: 1, nom: "Omar", ville: "Agadir" })
+// { acknowledged: true, insertedId: ObjectId("...") }
+
+db.Etudiants.insertMany([
+  { id: 2, nom: "Sara", ville: "Rabat", email: "sara@mail.ma" },
+  { id: 3, nom: "Amine", ville: "Marrakech" }
+])
+// { acknowledged: true, insertedIds: { '0': ObjectId(...), '1': ObjectId(...) } }</code></pre>
+<p>Le deuxième document de l'exemple a un champ <code>email</code> que le premier n'a pas : c'est la flexibilité du modèle, sans modification de schéma.</p>
+
+<!-- ======================= CHAPITRE 3 ======================= -->
+<h2 id="c3">Chapitre 3 : Récupérer les documents avec find()</h2>
+
+<div class="box def">
+<p class="t">Syntaxe</p>
+<p><code>db.collection.find(query, projection, options)</code></p>
+<p>Équivalent de SELECT ... WHERE. Renvoie un curseur vers les documents qui correspondent. Les trois paramètres sont optionnels : pas de paramètre ou <code>{}</code> = tous les documents.</p>
+</div>
+
+<h3>1. Filtres simples</h3>
+<pre><code>db.Films.find()                                   // tous les documents
+db.Films.find({ titre: "Titanic" })               // égalité
+db.Films.find({ _id: ObjectId("68e975d6b51b450edacebea4") })
+db.Films.find({ titre: "Inception", annee: 2010 })  // ET implicite</code></pre>
+<p>Plusieurs champs dans le même objet = ET logique. C'est l'équivalent de <code>$and</code>.</p>
+
+<h3>2. Opérateurs logiques et de comparaison</h3>
+<pre><code>db.Films.find({ $and: [ { titre: "Inception" }, { annee: 2010 } ] })
+db.Films.find({ $or: [ { realisateur: "Christopher Nolan" }, { genre: "Science-fiction" } ] })</code></pre>
+<div class="tw"><table>
+<tr><th>Opérateur</th><th>Signification</th><th>Exemple</th></tr>
+<tr><td>$eq</td><td>égal</td><td><code>{ annee: { $eq: 2010 } }</code></td></tr>
+<tr><td>$gt / $gte</td><td>supérieur / supérieur ou égal</td><td><code>{ annee: { $gt: 2010 } }</code></td></tr>
+<tr><td>$lt / $lte</td><td>inférieur / inférieur ou égal</td><td><code>{ annee: { $lt: 2010 } }</code></td></tr>
+<tr><td>$in</td><td>dans une liste de valeurs</td><td><code>{ realisateur: { $in: ["Christopher Nolan", "James Cameron"] } }</code></td></tr>
+<tr><td>$ne, $nin</td><td>différent, pas dans la liste (non détaillés dans le cours, mais utiles)</td><td><code>{ annee: { $ne: 2010 } }</code></td></tr>
+</table></div>
+<p>Intervalle (entre 15 et 18 inclus) : deux opérateurs dans le même sous-objet.</p>
+<pre><code>db.Etudiants.find({ moyenne: { $gte: 15, $lte: 18 } })</code></pre>
+
+<h3>3. Expressions régulières</h3>
+<pre><code>db.Films.find({ $and: [ { annee: { $gt: 2000 } }, { titre: /ar/i } ] })
+db.Films.find({ titre: { $regex: "Love" } })      // forme équivalente avec $regex</code></pre>
+<div class="tw"><table>
+<tr><th>Symbole</th><th>Sens</th><th>Exemple</th></tr>
+<tr><td>i</td><td>insensible à la casse</td><td><code>/star/i</code> trouve Star Wars, STAR TREK, starlight</td></tr>
+<tr><td>^</td><td>début de chaîne</td><td><code>/^In/</code> : Inception, Inside Out</td></tr>
+<tr><td>$</td><td>fin de chaîne</td><td><code>/ar$/</code> : Avatar</td></tr>
+<tr><td>.</td><td>un caractère quelconque</td><td><code>/a.a/</code> : Avatar, Adam</td></tr>
+<tr><td>.*</td><td>n'importe quelle suite</td><td><code>/Star.*Wars/</code></td></tr>
+<tr><td>?</td><td>partie précédente optionnelle</td><td><code>/colou?r/</code> : color ou colour</td></tr>
+<tr><td>[]</td><td>un caractère parmi un ensemble</td><td><code>/[AEIOU]/</code></td></tr>
+<tr><td>|</td><td>OU logique</td><td><code>/(Star|Moon)/</code></td></tr>
+<tr><td>m</td><td>mode multi-ligne</td><td><code>/^Intro/m</code></td></tr>
+</table></div>
+
+<h3>4. Documents imbriqués : la notation pointée</h3>
+<pre><code>db.Etudiants.find({ "adresse.ville": "Agadir" })
+db.Etudiants2.find({ "resultats.module3": { $gte: 15 } })</code></pre>
+<div class="box piege"><p class="t">Piège</p><p>Les guillemets autour de <code>"adresse.ville"</code> sont obligatoires. Sans eux, c'est une erreur de syntaxe.</p></div>
+
+<h3>5. Projection</h3>
+<p>La projection est le deuxième argument : 1 pour inclure un champ, 0 pour l'exclure.</p>
+<pre><code>db.Etudiants2.find({}, { nom: 1, "adresse.ville": 1, _id: 0 })
+
+// filtre + projection
+db.Etudiants2.find(
+  { "resultats.module3": { $gte: 15 } },
+  { nom: 1, "resultats.module3": 1, _id: 0 }
+)</code></pre>
+<div class="box retenir"><p class="t">À retenir</p><ul><li>L'<code>_id</code> s'affiche par défaut : écrire <code>_id: 0</code> pour le cacher.</li><li>On ne mélange pas inclusion et exclusion, sauf pour <code>_id</code>.</li></ul></div>
+
+<h3>6. Tableaux</h3>
+<div class="tw"><table>
+<tr><th>Opérateur</th><th>Rôle</th><th>Exemple</th></tr>
+<tr><td>(valeur seule)</td><td>Le tableau contient cette valeur</td><td><code>find({ notes: 15 })</code></td></tr>
+<tr><td>$in</td><td>Au moins une des valeurs</td><td><code>find({ notes: { $in: [16, 18] } })</code></td></tr>
+<tr><td>$all</td><td>Toutes les valeurs</td><td><code>find({ modules: { $all: ["Base de données", "Réseaux"] } })</code></td></tr>
+<tr><td>$size</td><td>Exactement N éléments</td><td><code>find({ modules: { $size: 3 } })</code></td></tr>
+<tr><td>$elemMatch</td><td>Un même élément vérifie plusieurs conditions</td><td>voir ci-dessous</td></tr>
+</table></div>
+
+<h4>$elemMatch sur un tableau de sous-documents</h4>
+<pre><code>// étudiants ayant au moins une note >= 16 en Statistiques
+db.Etudiants4.find({
+  resultats: { $elemMatch: { module: "Statistiques", note: { $gte: 16 } } }
+})</code></pre>
+<p>MongoDB parcourt le tableau <code>resultats</code> de chaque étudiant et cherche au moins un élément qui vérifie toutes les conditions. Si oui, il renvoie le document entier, pas seulement l'élément.</p>
+
+<h4>Afficher seulement l'élément trouvé : l'opérateur positionnel $</h4>
+<pre><code>db.Etudiants4.find(
+  { "resultats.module": "Statistiques", "resultats.note": { $gte: 16 } },
+  { "resultats.$": 1, nom: 1, _id: 0 }
+)</code></pre>
+<p>Le <code>$</code> ne s'applique qu'aux tableaux. Il ne marche pas sur un champ simple ni sur un sous-document qui n'est pas un tableau.</p>
+
+<h4>$all sur un tableau d'objets</h4>
+<pre><code>db.Etudiants4.find({ "resultats.module": { $all: ["Base de données", "Réseaux"] } })
+
+db.Etudiants4.find({
+  resultats: { $all: [
+    { $elemMatch: { module: "Base de données" } },
+    { $elemMatch: { module: "Réseaux" } }
+  ] }
+})</code></pre>
+
+<h4>$size</h4>
+<pre><code>db.Classes.find({ etudiants: { $size: 2 } })
+db.Classes.find({ etudiants: { $elemMatch: { modules: { $size: 3 } } } })  // tableau imbriqué</code></pre>
+<p>$size ne fait que de l'égalité. Quand le tableau est plus profondément imbriqué (<code>etudiants.modules</code>), on passe par $elemMatch.</p>
+
+<h3>7. Trier, limiter, ignorer</h3>
+<pre><code>db.Etudiants.find().sort({ nom: 1 })               // croissant
+db.Etudiants.find().sort({ nom: -1 })              // décroissant
+db.Etudiants.find().sort({ filiere: 1, nom: 1 })   // filière puis nom
+db.Etudiants.find().limit(2)
+db.Etudiants.find({ filiere: "Informatique" }).skip(2)
+db.Etudiants.find().sort({ nom: 1 }).skip(2).limit(2)   // pagination
+
+// filtre + projection + tri
+db.Etudiants.find({ filiere: "Informatique" }, { _id: 0, nom: 1, modules: 1 }).sort({ nom: 1 })</code></pre>
+<ul>
+<li>Sans <code>sort()</code>, MongoDB ne garantit aucun ordre.</li>
+<li>Trier sur un champ tableau utilise la première valeur du tableau, sans trier à l'intérieur.</li>
+<li>L'ordre réel est toujours tri, puis skip, puis limit.</li>
+</ul>
+
+<h3>8. Valeurs nulles, présence, type, comptage</h3>
+<pre><code>db.users.insertMany([
+  { _id: 1, nom: "Omar", notes: [12, 15, 14] },
+  { _id: 2, nom: "Sara", notes: null },
+  { _id: 3, nom: "Yassine" }
+])
+
+db.users.find({ notes: null })              // Sara (null) ET Yassine (absent)
+db.users.find({ notes: { $exists: true } }) // Omar et Sara (le champ existe)
+db.users.find({ notes: { $exists: true, $type: "array" } })   // Omar seul</code></pre>
+<div class="tw"><table>
+<tr><th>Type</th><th>Nom</th><th>Code</th></tr>
+<tr><td>Texte</td><td>"string"</td><td>2</td></tr>
+<tr><td>Nombre</td><td>"number"</td><td>1, 16, 18</td></tr>
+<tr><td>Booléen</td><td>"bool"</td><td>8</td></tr>
+<tr><td>Tableau</td><td>"array"</td><td>4</td></tr>
+<tr><td>Objet</td><td>"object"</td><td>3</td></tr>
+<tr><td>Null</td><td>"null"</td><td>10</td></tr>
+<tr><td>Date</td><td>"date"</td><td>9</td></tr>
+</table></div>
+<pre><code>db.Etudiants6.countDocuments()
+db.Etudiants6.countDocuments({ filiere: "Informatique" })
+db.Etudiants6.find({ filiere: "Informatique" }).count()</code></pre>
+
+<div class="box retenir">
+<p class="t">Pour réviser vite</p>
+<p>Passez maintenant à la page <a href="tp.html">TP corrigés et exercices</a>, puis faites le <a href="qcm.html">QCM</a>.</p>
+</div>
+
+<div class="foot">Contenu tiré des supports de cours de Dr. Y. Oukdach (chapitres 1, 2, 3, TP2, TP3).</div>
+</main>
+</div>
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

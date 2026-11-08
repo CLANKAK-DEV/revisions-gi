@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Questions de cours PHP</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="shell">
+<aside class="side" id="side"></aside>
+<main>
+<h1>Questions de cours probables</h1>
+<p class="lead">Les questions les plus susceptibles de tomber, avec une réponse courte à apprendre. Répondez à voix haute avant d'ouvrir la réponse.</p>
+
+<div class="bar">
+<button class="btn on" data-qa-ch="0">Tout</button>
+<button class="btn" data-qa-ch="1">Introduction</button>
+<button class="btn" data-qa-ch="2">Contrôle</button>
+<button class="btn" data-qa-ch="3">Tableaux et fonctions</button>
+<button class="btn" data-qa-ch="4">Fichiers et sessions</button>
+<button class="btn" data-qa-ch="5">Formulaires</button>
+<button class="btn" data-toggle-all="open">Tout ouvrir</button>
+<button class="btn" data-toggle-all="close">Tout fermer</button>
+</div>
+
+<div id="qa-list"></div>
+
+<div class="foot">Ces questions sont mon estimation de ce qui peut être demandé à partir du cours, pas le sujet réel.</div>
+</main>
+</div>
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

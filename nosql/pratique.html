@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Examen blanc pratique</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="shell">
+<aside class="side" id="side"></aside>
+<main>
+<h1>Examen blanc pratique</h1>
+<p class="lead">Un sujet complet dans l'esprit des TP et du cours : cours, écriture de documents, requêtes find(), lecture de requêtes. Chronométrez-vous, écrivez vos réponses sur papier, puis comparez.</p>
+
+<div class="box">
+<p class="t">Chronomètre (durée indicative : 1 heure)</p>
+<p class="timer" id="timer">60:00</p>
+<div class="bar">
+<button class="btn" id="t-start">Démarrer</button>
+<button class="btn" id="t-stop">Pause</button>
+<button class="btn" id="t-reset">Remettre à zéro</button>
+<button class="btn" data-toggle-all="close">Refermer toutes les solutions</button>
+</div>
+<p>Je ne connais pas la durée réelle de votre examen. Adaptez ce chronomètre à la vôtre.</p>
+</div>
+
+<div class="box retenir">
+<p class="t">Règles du jeu</p>
+<ul>
+<li>Pas de notes, pas de mongosh ouvert. Écrivez les requêtes à la main.</li>
+<li>Pour chaque requête, notez aussi le résultat attendu avant de regarder la solution.</li>
+<li>Barème indicatif : partie 1 sur 5, partie 2 sur 4, partie 3 sur 8, partie 4 sur 3. Total sur 20.</li>
+</ul>
+</div>
+
+<h2>Données du sujet</h2>
+<p>Base <code>Entreprise</code>, collection <code>Employes</code>.</p>
+<pre><code>db.Employes.insertMany([
+  { _id: 1, nom: "Karim", poste: "Développeur", salaire: 12000,
+    adresse: { ville: "Agadir", cp: 80000 }, competences: ["JS", "Python", "SQL"] },
+  { _id: 2, nom: "Leila", poste: "Data Analyst", salaire: 14000,
+    adresse: { ville: "Casablanca", cp: 20000 }, competences: ["Python", "SQL"] },
+  { _id: 3, nom: "Mehdi", poste: "Développeur", salaire: 10000,
+    adresse: { ville: "Agadir", cp: 80000 }, competences: ["JS", "Java"] },
+  { _id: 4, nom: "Nora", poste: "Chef de projet", salaire: 18000,
+    adresse: { ville: "Rabat", cp: 10000 }, competences: ["Gestion", "SQL", "Agile", "JS"] },
+  { _id: 5, nom: "Youssef", poste: "Stagiaire",
+    adresse: { ville: "Agadir", cp: 80000 }, competences: [] }
+])</code></pre>
+
+<h2>Partie 1 : questions de cours (5 points)</h2>
+<div class="exo">
+<p class="q">1.1 (1 pt) Donnez les 3V du Big Data et un exemple pour chacun.</p>
+<details class="sol"><summary>Réponse</summary><div class="in">
+<p>Volume : des pétaoctets de données par jour (Facebook). Vélocité : données produites et traitées en continu (capteurs IoT, transactions bancaires). Variété : tables, JSON/XML, images et vidéos.</p>
+</div></details>
+
+<p class="q">1.2 (1 pt) Que dit le théorème CAP ? Qu'est-ce qu'un système CP ?</p>
+<details class="sol"><summary>Réponse</summary><div class="in">
+<p>Un système distribué ne peut pas garantir en même temps cohérence, disponibilité et tolérance au partitionnement. En cas de partition, il choisit la cohérence ou la disponibilité. Un système CP garde la cohérence et la tolérance au partitionnement et sacrifie la disponibilité : il peut refuser ou retarder des requêtes pour ne pas renvoyer de données incohérentes.</p>
+</div></details>
+
+<p class="q">1.3 (1 pt) Comparez ACID et BASE en trois critères.</p>
+<details class="sol"><summary>Réponse</summary><div class="in">
+<p>Priorité : ACID privilégie la cohérence, BASE la disponibilité. Évolutivité : ACID verticale, BASE horizontale. Cohérence : stricte et immédiate en ACID, éventuelle en BASE. Exemples : PostgreSQL, MySQL, Oracle contre Cassandra, DynamoDB, MongoDB.</p>
+</div></details>
+
+<p class="q">1.4 (1 pt) Donnez la correspondance entre les termes SQL et MongoDB.</p>
+<details class="sol"><summary>Réponse</summary><div class="in">
+<p>Base de données = base de données ; table = collection ; ligne = document ; colonne = champ.</p>
+</div></details>
+
+<p class="q">1.5 (1 pt) Que fait <code>use Entreprise</code> si la base n'existe pas ? Quelle propriété de <code>_id</code> faut-il connaître ?</p>
+<details class="sol"><summary>Réponse</summary><div class="in">
+<p>Elle sélectionne la base sans la créer vraiment ; elle n'existe qu'après la première insertion. Le champ <code>_id</code> est obligatoire et unique : MongoDB génère un ObjectId si on n'en donne pas.</p>
+</div></details>
+</div>
+
+<h2>Partie 2 : création et insertion (4 points)</h2>
+<div class="exo">
+<p class="q">2.1 (1 pt) Créez explicitement une collection capped <code>Journal</code> de 1 Mo maximum et 500 documents maximum.</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<pre><code>db.createCollection("Journal", { capped: true, size: 1048576, max: 500 })</code></pre>
+<p>1 Mo = 1 048 576 octets. <code>size</code> est obligatoire avec <code>capped</code>.</p>
+</div></details>
+
+<p class="q">2.2 (1 pt) Insérez un employé « Salma », développeuse à Tanger, avec le salaire 11000 et les compétences JS et PHP.</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<pre><code>db.Employes.insertOne({
+  nom: "Salma", poste: "Développeur", salaire: 11000,
+  adresse: { ville: "Tanger" }, competences: ["JS", "PHP"]
+})</code></pre>
+<p>Pas de problème si on n'a pas d'<code>_id</code> ni de code postal : MongoDB crée l'_id, et le sous-document peut avoir moins de champs.</p>
+</div></details>
+
+<p class="q">2.3 (2 pts) Insérez en une seule commande deux projets : le premier avec titre, année et membres (tableau) ; le second avec en plus un encadrant (objet avec nom et email).</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<pre><code>db.Projets.insertMany([
+  { titre: "Site e-commerce", annee: 2025, membres: ["Karim", "Leila"] },
+  { titre: "Application mobile", annee: 2026, membres: ["Mehdi"],
+    encadrant: { nom: "Dr. Alaoui", email: "alaoui@exemple.ma" } }
+])</code></pre>
+<p>Une seule commande pour plusieurs documents : insertMany avec un tableau entre crochets.</p>
+</div></details>
+</div>
+
+<h2>Partie 3 : requêtes sur Employes (8 points)</h2>
+<p>Écrivez la requête et donnez le résultat attendu (les _id suffisent).</p>
+<div class="exo">
+<p class="q">3.1 Les développeurs d'Agadir.</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<pre><code>db.Employes.find({ poste: "Développeur", "adresse.ville": "Agadir" })</code></pre>
+<p>Résultat : _id 1 (Karim) et 3 (Mehdi). Youssef est à Agadir mais stagiaire.</p>
+</div></details>
+
+<p class="q">3.2 Les employés dont le salaire est entre 10000 et 14000 inclus.</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<pre><code>db.Employes.find({ salaire: { $gte: 10000, $lte: 14000 } })</code></pre>
+<p>Résultat : _id 1 (12000), 2 (14000), 3 (10000). Youssef n'a pas de salaire, donc il est exclu. Nora (18000) aussi.</p>
+</div></details>
+
+<p class="q">3.3 Les employés qui maîtrisent à la fois SQL et JS.</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<pre><code>db.Employes.find({ competences: { $all: ["SQL", "JS"] } })</code></pre>
+<p>Résultat : _id 1 (Karim) et 4 (Nora). Leila a SQL mais pas JS, Mehdi a JS mais pas SQL.</p>
+</div></details>
+
+<p class="q">3.4 Les employés qui connaissent Java ou Python.</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<pre><code>db.Employes.find({ competences: { $in: ["Java", "Python"] } })</code></pre>
+<p>Résultat : _id 1 (Python), 2 (Python), 3 (Java).</p>
+</div></details>
+
+<p class="q">3.5 Les employés qui ont exactement 4 compétences.</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<pre><code>db.Employes.find({ competences: { $size: 4 } })</code></pre>
+<p>Résultat : _id 4 (Nora).</p>
+</div></details>
+
+<p class="q">3.6 Les employés sans champ salaire. Puis ceux dont la liste de compétences est vide.</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<pre><code>db.Employes.find({ salaire: { $exists: false } })   // _id 5
+db.Employes.find({ competences: { $size: 0 } })     // _id 5</code></pre>
+</div></details>
+
+<p class="q">3.7 Les deux employés les mieux payés, nom et salaire uniquement.</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<pre><code>db.Employes.find({}, { nom: 1, salaire: 1, _id: 0 }).sort({ salaire: -1 }).limit(2)</code></pre>
+<p>Résultat : Nora 18000, Leila 14000. Un champ absent compte comme null, plus petit qu'un nombre, donc Youssef serait en dernier en tri décroissant et premier en tri croissant.</p>
+</div></details>
+
+<p class="q">3.8 Les employés dont le nom commence par K ou L ; leur nombre.</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<pre><code>db.Employes.find({ nom: /^[KL]/ })
+db.Employes.countDocuments({ nom: /^[KL]/ })</code></pre>
+<p>Résultat : Karim et Leila, donc 2.</p>
+</div></details>
+
+<p class="q">3.9 Le nom et la ville de tous les employés d'Agadir, triés par nom décroissant.</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<pre><code>db.Employes.find({ "adresse.ville": "Agadir" }, { nom: 1, "adresse.ville": 1, _id: 0 }).sort({ nom: -1 })</code></pre>
+<p>Résultat : Youssef, Mehdi, Karim, chacun avec <code>adresse: { ville: "Agadir" }</code>.</p>
+</div></details>
+
+<p class="q">3.10 Vérifiez que tous les salaires présents sont de type numérique.</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<pre><code>db.Employes.find({ salaire: { $exists: true, $type: "number" } })   // _id 1, 2, 3, 4
+db.Employes.find({ salaire: { $exists: true, $not: { $type: "number" } } })   // aucun résultat attendu</code></pre>
+</div></details>
+</div>
+
+<h2>Partie 4 : lire et corriger des requêtes (3 points)</h2>
+<div class="exo">
+<p class="q">4.1 Que renvoie <code>db.Employes.find({ competences: { $size: 2 } })</code> ?</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<p>Les employés qui ont exactement deux compétences : Leila (Python, SQL) et Mehdi (JS, Java).</p>
+</div></details>
+
+<p class="q">4.2 Que renvoie <code>db.Employes.find({ competences: ["SQL", "JS"] })</code> ? Est-ce la même chose que la question 3.3 ?</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<p>Aucun document. Passer un tableau comme valeur teste l'égalité exacte du tableau, avec le même ordre et sans autre élément. Karim a ["JS", "Python", "SQL"], Nora a quatre éléments. Ce n'est pas la même chose que <code>$all</code>, qui accepte d'autres éléments et ne demande pas d'ordre.</p>
+</div></details>
+
+<p class="q">4.3 Trouvez l'erreur dans chacune de ces trois requêtes :</p>
+<pre><code>a) db.Employes.find({ adresse.ville: "Agadir" })
+b) db.Employes.find({ poste: "Développeur" }, { nom: 1, salaire: 0 })
+c) db.Employes.find({ $or: { poste: "Stagiaire", salaire: 10000 } })</code></pre>
+<details class="sol"><summary>Solution</summary><div class="in">
+<ul>
+<li>a) La notation pointée doit être entre guillemets : <code>"adresse.ville"</code>.</li>
+<li>b) On ne mélange pas inclusion (<code>nom: 1</code>) et exclusion (<code>salaire: 0</code>). Garder <code>{ nom: 1 }</code> seul, ou exclure seulement.</li>
+<li>c) <code>$or</code> attend un tableau : <code>{ $or: [ { poste: "Stagiaire" }, { salaire: 10000 } ] }</code>.</li>
+</ul>
+</div></details>
+
+<p class="q">4.4 Que renvoie <code>db.Employes.find({ salaire: null })</code> ?</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<p>Youssef (_id 5) : null correspond aussi aux champs absents. Personne n'a <code>salaire</code> explicitement à null, mais le champ manque chez lui.</p>
+</div></details>
+</div>
+
+<h2>Correction rapide : points à vérifier avant de rendre</h2>
+<div class="box ex">
+<ul>
+<li>Toutes les clés avec un point sont entre guillemets.</li>
+<li>Pas de mélange 1 et 0 dans la projection, et <code>_id: 0</code> si on ne veut pas l'_id.</li>
+<li><code>$or</code>, <code>$and</code>, <code>$in</code>, <code>$all</code> reçoivent un tableau.</li>
+<li>Bornes inclusives : <code>$gte</code> et <code>$lte</code>.</li>
+<li>Tableau d'objets avec deux conditions : <code>$elemMatch</code>.</li>
+<li><code>sort</code> avant <code>limit</code> dans votre tête.</li>
+</ul>
+</div>
+
+<div class="foot">Résultats du sujet vérifiés par exécution sur une bibliothèque qui reproduit le langage de requête MongoDB.</div>
+</main>
+</div>
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

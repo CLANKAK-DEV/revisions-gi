@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QCM de révision</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="shell">
+<aside class="side" id="side"></aside>
+<main>
+<h1>QCM de révision</h1>
+<p class="lead">Une seule bonne réponse par question. Cliquez sur une réponse : la correction et l'explication s'affichent tout de suite. Le meilleur score complet est gardé dans votre navigateur.</p>
+
+<div class="bar">
+<button class="btn on" data-qcm-ch="0">Tout</button>
+<button class="btn" data-qcm-ch="1">Chapitre 1</button>
+<button class="btn" data-qcm-ch="2">Chapitre 2</button>
+<button class="btn" data-qcm-ch="3">Chapitre 3</button>
+<button class="btn" data-qcm-ch="4">TP</button>
+<button class="btn" id="qcm-shuffle">Mélanger</button>
+<button class="btn" id="qcm-reset">Recommencer</button>
+<span class="score" id="score"></span>
+</div>
+
+<div id="qcm"></div>
+
+<div class="foot">Les chiffres et les exemples viennent des supports de cours et des TP.</div>
+</main>
+</div>
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

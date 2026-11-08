@@ -1,0 +1,541 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TD, TP et exercices corrigés</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="shell">
+<aside class="side" id="side"></aside>
+<main>
+<h1>TD, TP et exercices corrigés</h1>
+<p class="lead">Les trois TD et les deux TP du cours, avec une correction détaillée ou une méthode, puis des exercices supplémentaires dans le même style. Cherchez avant d'ouvrir la solution.</p>
+
+<div class="bar">
+<button class="btn" data-toggle-all="open">Tout ouvrir</button>
+<button class="btn" data-toggle-all="close">Tout fermer</button>
+</div>
+
+<div class="box">
+<p class="t">Sommaire</p>
+<ul>
+<li><a href="#cas">Étude de cas du cours : évaluation pondérée d'un module</a></li>
+<li><a href="#td1">TD1 : autopsie d'un échec logiciel (rapport modèle)</a></li>
+<li><a href="#td2">TD2 : modèle de qualité (calcul complet)</a></li>
+<li><a href="#td3">TD3 : McCabe et Halstead sur calcul_moyenne</a></li>
+<li><a href="#tp1">TP : métriques orientées objet avec CKJM</a></li>
+<li><a href="#tp2">TP : analyse avec SonarQube</a></li>
+<li><a href="#plus">Exercices supplémentaires</a></li>
+</ul>
+</div>
+
+<div class="box retenir">
+<p class="t">Ce que je ne peux pas vous donner</p>
+<p>Les TP se font sur du code (gestion_Bib) et un dashboard que je n'ai pas. Je donne donc la méthode, les formules et les critères d'interprétation, pas les valeurs exactes de votre projet. Pour le TD1, je fournis un rapport modèle que vous adaptez au cas de votre choix.</p>
+</div>
+
+<!-- ============ ETUDE DE CAS ============ -->
+<h2 id="cas">Étude de cas du cours : évaluation pondérée</h2>
+<p>Valeurs lues sur un logiciel X : commentaires 10 sur 100, noms de variables incompréhensibles, complexité 3, nombre de lignes par module entre 50 et 100. Notes possibles : 2, 1, 0.</p>
+<div class="tw"><table>
+<tr><th>Métrique</th><th>Mesure</th><th>Note 2</th><th>Note 1</th><th>Note 0</th></tr>
+<tr><td>Commentaires</td><td>10 %</td><td>[100 ; 20]</td><td>]20 ; 10]</td><td>]10 ; 0]</td></tr>
+<tr><td>Noms de variables</td><td>Incompréhensibles</td><td>Significatifs</td><td>Moyens</td><td>Incompréhensibles</td></tr>
+<tr><td>Complexité</td><td>3</td><td>[0 ; 3]</td><td>]3 ; 5]</td><td>]5 ; ...]</td></tr>
+<tr><td>Lignes par module</td><td>entre 50 et 100</td><td>[0 ; 50]</td><td>]50 ; 100]</td><td>]100 ; ...]</td></tr>
+</table></div>
+<p>Pondérations : Auto-documentation = 0,5 Commentaires + 0,5 Noms. Simplicité = 0,4 Commentaires + 0,4 Complexité + 0,2 Lignes. Maintenabilité = 0,6 Simplicité + 0,4 Auto-documentation. Fiabilité = 1 × Simplicité.</p>
+<div class="exo">
+<details class="sol"><summary>Solution détaillée</summary><div class="in">
+<ol>
+<li>Arborescence : Qualité, puis deux facteurs (Maintenabilité, Fiabilité). Maintenabilité a deux critères (Simplicité, Auto-documentation). Fiabilité a un critère (Simplicité). Chaque critère a ses métriques : Auto-documentation (Commentaires, Noms), Simplicité (Commentaires, Complexité, Lignes).</li>
+<li>Notes des métriques : Commentaires 10 % est dans ]20 ; 10] donc 1. Noms incompréhensibles donc 0. Complexité 3 est dans [0 ; 3] donc 2. Lignes 50 à 100 est dans ]50 ; 100] donc 1.</li>
+<li>Critères : Auto-documentation = 0,5 × 1 + 0,5 × 0 = <strong>0,5</strong>. Simplicité = 0,4 × 1 + 0,4 × 2 + 0,2 × 1 = 0,4 + 0,8 + 0,2 = <strong>1,4</strong>.</li>
+<li>Facteurs : Maintenabilité = 0,6 × 1,4 + 0,4 × 0,5 = 0,84 + 0,2 = <strong>1,04</strong>. Fiabilité = 1 × 1,4 = <strong>1,4</strong>.</li>
+<li>Qualité mesurée : moyenne des deux facteurs (poids égaux) = (1,04 + 1,4) / 2 = <strong>1,22</strong>.</li>
+<li>Qualité totale : la note maximale possible est 3, donc 1,22 / 3 ≈ <strong>40,7 %</strong>. Le logiciel est en dessous de la moyenne : améliorer d'abord la lisibilité des noms et le nombre de commentaires.</li>
+</ol>
+<p>Le cours ne définit pas explicitement « qualité mesurée » et « qualité totale ». Mon interprétation : mesurée = moyenne pondérée des facteurs, totale = rapport à la note maximale en pourcentage. Écrivez votre définition en tête de réponse.</p>
+</div></details>
+</div>
+
+<!-- ============ TD1 ============ -->
+<h2 id="td1">TD1 : autopsie d'un échec logiciel</h2>
+<p>Consigne : choisir un cas, puis rédiger un rapport d'une page en PDF : présentation, chaîne causale (erreur, défaut, défaillance), impacts, mesures SQA liées aux phases du SDLC, références.</p>
+<div class="exo">
+<details class="sol"><summary>Rapport modèle : Mariner 1 (1962)</summary><div class="in">
+<h4>1. Présentation du cas</h4>
+<p>Mariner 1 est la première sonde du programme Mariner, lancée le 22 juillet 1962 pour survoler Vénus. Domaine : aérospatiale, calcul de trajectoire et guidage.</p>
+<h4>2. Chaîne causale</h4>
+<div class="tw"><table>
+<tr><th>Étape</th><th>Constat</th></tr>
+<tr><td>Erreur (humaine)</td><td>Un programmeur a mal transcrit une formule manuscrite en code (erreur de transcription, symbole manquant).</td></tr>
+<tr><td>Défaut (dans le produit)</td><td>L'équation implémentée dans le logiciel de guidage ne correspond pas à la formule voulue : mauvaise estimation de la trajectoire.</td></tr>
+<tr><td>Défaillance (en exploitation)</td><td>La sonde dévie de sa trajectoire et est détruite environ 294,5 secondes (5 minutes) après le décollage.</td></tr>
+</table></div>
+<h4>3. Impacts</h4>
+<ul>
+<li>Financier : 18,5 millions de dollars, mission perdue.</li>
+<li>Humain et opérationnel : mission scientifique vers Vénus manquée (sonde sans équipage, d'après le cours aucune perte humaine n'est citée).</li>
+<li>Réputation et juridique : atteinte à la crédibilité du programme. Aucune conséquence juridique n'est mentionnée dans le cours.</li>
+</ul>
+<h4>4. Mesures SQA reliées au SDLC</h4>
+<div class="tw"><table>
+<tr><th>Phase</th><th>Mesure qui aurait prévenu ou détecté le problème</th></tr>
+<tr><td>Exigences et spécification</td><td>Formules validées et signées par les scientifiques, spécification sans ambiguïté, traçabilité formule vers code.</td></tr>
+<tr><td>Conception</td><td>Revue de conception du module de trajectoire, par un relecteur indépendant.</td></tr>
+<tr><td>Codage</td><td>Revue de code par les pairs et double vérification de chaque transcription de formule, standards de codage.</td></tr>
+<tr><td>Tests</td><td>Tests unitaires et simulations de trajectoire sur des cas connus, comparaison avec des valeurs de référence.</td></tr>
+<tr><td>Exploitation</td><td>Surveillance de la trajectoire et procédure de correction en vol.</td></tr>
+</table></div>
+<p>Principe : plus on détecte tôt, moins l'erreur coûte cher. Chaque mesure est une pratique d'assurance qualité indépendante de l'équipe de développement (objectivité de la SQA).</p>
+<h4>5. Références</h4>
+<p>Cours de qualité logicielle du Pr. Qazdar (chapitre concepts de base) ; page Wikipédia « Mariner 1 » citée dans la slide.</p>
+</div></details>
+
+<details class="sol"><summary>Autres cas du cours en un tableau (pour choisir)</summary><div class="in">
+<div class="tw"><table>
+<tr><th>Cas</th><th>Erreur</th><th>Défaut</th><th>Défaillance</th><th>Mesure SQA clé</th></tr>
+<tr><td>Patriot (1991)</td><td>Arithmétique du temps mal maîtrisée</td><td>Horloge qui dérive depuis le démarrage</td><td>Scud non intercepté, 28 morts</td><td>Tests de longue durée, revue des calculs numériques</td></tr>
+<tr><td>Pentium (1994)</td><td>Initialisation incomplète d'une table</td><td>Valeurs fausses dans la table de division</td><td>Divisions erronées, 475 M$</td><td>Tests exhaustifs de l'unité de division, revue de conception</td></tr>
+<tr><td>Radiothérapie (2000)</td><td>Dépendance à l'ordre de saisie non prévue</td><td>Calcul de dose faux si double saisie</td><td>8 morts, 20 blessés graves</td><td>Exigences de sûreté, tests de scénarios de saisie, contrôle indépendant</td></tr>
+<tr><td>Heartbleed (2014)</td><td>Contrôle de limites oublié (faille OpenSSL)</td><td>Lecture mémoire possible</td><td>500 000 serveurs exposés</td><td>Revue de sécurité, analyse statique, tests de robustesse</td></tr>
+</table></div>
+<p>Pour Patriot, Pentium, radiothérapie et Heartbleed, la colonne Erreur et Défaut est ma reformulation à partir de la cause donnée par le cours ; vérifiez-la avec votre source avant de la mettre dans un rapport.</p>
+</div></details>
+</div>
+
+<!-- ============ TD2 ============ -->
+<h2 id="td2">TD2 : modèle de qualité</h2>
+<p>Le tableau donne les valeurs mesurées et les barèmes (1 à 4). Facteurs, critères et métriques ont le même poids.</p>
+<div class="tw"><table>
+<tr><th>Métrique</th><th>Valeur mesurée</th><th>1</th><th>2</th><th>3</th><th>4</th></tr>
+<tr><td>Attractivité</td><td>Attractive</td><td>Non attractive</td><td>Attractive</td><td>Plus attractive</td><td></td></tr>
+<tr><td>Nombre de lignes de code</td><td>150</td><td>plus de 500</td><td>[250 ; 500[</td><td>[100 ; 250[</td><td>[0 ; 100[</td></tr>
+<tr><td>Nombre cyclomatique</td><td>25</td><td>G &gt; 30 : non testable</td><td>15 &lt; G &lt; 30 : test difficile</td><td>G &lt; 15 : testable</td><td></td></tr>
+<tr><td>Documentation</td><td>88 pages</td><td>[0 ; 50[</td><td>[50 ; 100[</td><td>[100 ; 150[</td><td>plus de 150</td></tr>
+<tr><td>Commandes par fonction</td><td>4</td><td>plus de 10</td><td>7 à 9</td><td>4 à 6</td><td>1 à 3</td></tr>
+<tr><td>% de données cryptées</td><td>25 %</td><td>[0 ; 25[</td><td>[25 ; 50[</td><td>[50 ; 75[</td><td>[75 ; 100]</td></tr>
+<tr><td>Formats de données acceptés</td><td>5</td><td>1 à 2</td><td>3 à 4</td><td>5 à 6</td><td></td></tr>
+<tr><td>Protocoles implémentés</td><td>3</td><td>1 à 2</td><td></td><td></td><td>3 à 4</td></tr>
+</table></div>
+<p>Modèle : Maintenabilité (Testabilité {nombre cyclomatique} ; Facilité de modification {cyclomatique, lignes de code}). Utilisabilité (Attractivité {attractivité} ; Facilité d'apprentissage {documentation, commandes} ; Facilité d'exploitation {commandes}). Fonctionnalité (Sécurité {données cryptées} ; Interopérabilité {formats, protocoles}).</p>
+<div class="exo">
+<details class="sol"><summary>Solution détaillée</summary><div class="in">
+<h4>1. Représentation hiérarchique</h4>
+<pre><code>Qualité
+├─ Maintenabilité
+│  ├─ Testabilité : {nombre cyclomatique}
+│  └─ Facilité de modification : {nombre cyclomatique, lignes de code}
+├─ Utilisabilité
+│  ├─ Attractivité : {attractivité}
+│  ├─ Facilité d'apprentissage : {documentation, commandes}
+│  └─ Facilité d'exploitation : {commandes}
+└─ Fonctionnalité
+   ├─ Sécurité : {données cryptées}
+   └─ Interopérabilité : {formats, protocoles}</code></pre>
+<h4>2. Note de chaque métrique (colonne « valeur de métrique »)</h4>
+<div class="tw"><table>
+<tr><th>Métrique</th><th>Mesure</th><th>Raisonnement</th><th>Note</th></tr>
+<tr><td>Attractivité</td><td>Attractive</td><td>Colonne 2</td><td>2</td></tr>
+<tr><td>Lignes de code</td><td>150</td><td>[100 ; 250[</td><td>3</td></tr>
+<tr><td>Nombre cyclomatique</td><td>25</td><td>Entre 15 et 30 : test difficile</td><td>2</td></tr>
+<tr><td>Documentation</td><td>88 pages</td><td>[50 ; 100[</td><td>2</td></tr>
+<tr><td>Commandes</td><td>4</td><td>4 à 6</td><td>3</td></tr>
+<tr><td>Données cryptées</td><td>25 %</td><td>[25 ; 50[ (25 inclus)</td><td>2</td></tr>
+<tr><td>Formats</td><td>5</td><td>5 à 6</td><td>3</td></tr>
+<tr><td>Protocoles</td><td>3</td><td>3 à 4</td><td>4</td></tr>
+</table></div>
+<h4>3. Valeur de chaque critère (moyenne de ses métriques, poids égaux)</h4>
+<ul>
+<li>Testabilité = 2.</li>
+<li>Facilité de modification = (2 + 3) / 2 = 2,5.</li>
+<li>Attractivité = 2.</li>
+<li>Facilité d'apprentissage = (2 + 3) / 2 = 2,5.</li>
+<li>Facilité d'exploitation = 3.</li>
+<li>Sécurité = 2.</li>
+<li>Interopérabilité = (3 + 4) / 2 = 3,5.</li>
+</ul>
+<h4>4. Valeur de chaque facteur (moyenne de ses critères)</h4>
+<ul>
+<li>Maintenabilité = (2 + 2,5) / 2 = <strong>2,25</strong>.</li>
+<li>Utilisabilité = (2 + 2,5 + 3) / 3 = <strong>2,5</strong>.</li>
+<li>Fonctionnalité = (2 + 3,5) / 2 = <strong>2,75</strong>.</li>
+</ul>
+<h4>5. Qualité mesurée du système</h4>
+<p>Moyenne des trois facteurs : (2,25 + 2,5 + 2,75) / 3 = 7,5 / 3 = <strong>2,5</strong>.</p>
+<h4>6. Qualité totale</h4>
+<p>Note maximale = 4, donc 2,5 / 4 = <strong>62,5 %</strong>.</p>
+<h4>7. Interprétation</h4>
+<p>62,5 % : qualité correcte mais perfectible. Point fort : fonctionnalité (interopérabilité 3,5). Points faibles : maintenabilité (nombre cyclomatique de 25, test difficile) et sécurité (seulement 25 % de données cryptées). Actions : découper les fonctions complexes pour passer sous 15, augmenter le chiffrement des données.</p>
+<p>« Qualité mesurée » et « qualité totale » ne sont pas définies dans le cours ; mon interprétation est indiquée ci-dessus.</p>
+</div></details>
+</div>
+
+<!-- ============ TD3 ============ -->
+<h2 id="td3">TD3 : McCabe et Halstead sur calcul_moyenne</h2>
+<pre><code>def calcul_moyenne(liste):
+    # Ceci est un commentaire.
+
+    total = 0
+    nombre_elements = 0
+
+    for element in liste:
+        total += element
+        nombre_elements += 1
+
+    if nombre_elements == 0:
+        return 0
+    else:
+        return total / nombre_elements</code></pre>
+
+<div class="exo">
+<p class="q">Partie 1 : métriques de code (LOCphy, LOCpro, LOCcom, LOCbl, DC)</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<p>On compte les lignes du bloc tel qu'il est écrit : 14 lignes.</p>
+<ul>
+<li>LOCphy = 14.</li>
+<li>LOCbl = 3 (une après le commentaire, une après nombre_elements = 0, une après la boucle).</li>
+<li>LOCcom = 1 (la ligne « # Ceci est un commentaire. »).</li>
+<li>LOCpro = 14 - 3 - 1 = 10.</li>
+<li>DC = LOCcom / LOCphy = 1 / 14 ≈ 0,07 (7 %).</li>
+</ul>
+<p>Interprétation : DC est bien inférieure à la norme 0,2 à 0,3, la fonction est très peu commentée. Les lignes vides représentent 3 / 14 ≈ 21 %, un peu au-dessus de la plage de 10 à 20 %. Si vous ne comptez pas la dernière ligne ou comptez autrement la ligne « def », vos chiffres varient d'une unité : précisez votre règle de comptage.</p>
+</div></details>
+
+<p class="q">Partie 2 : complexité de McCabe</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<p>Décisions : le for (1) et le if (1). Le else ne compte pas. π = 2, donc <strong>C = π + 1 = 3</strong>.</p>
+<p>Vérification avec le graphe de contrôle :</p>
+<ul>
+<li>Nœuds : 1 initialisations (total, nombre), 2 test du for, 3 corps de la boucle, 4 test du if, 5 return 0, 6 return total / nombre, 7 sortie. N = 7.</li>
+<li>Arcs : 1 vers 2, 2 vers 3, 3 vers 2, 2 vers 4, 4 vers 5, 4 vers 6, 5 vers 7, 6 vers 7. E = 8.</li>
+<li>V(G) = E - N + 2P = 8 - 7 + 2 = <strong>3</strong>.</li>
+</ul>
+<p>Les deux méthodes donnent 3 : trois chemins indépendants (liste vide, liste non vide avec boucle, et le cas du if), donc au moins 3 cas de test.</p>
+</div></details>
+
+<p class="q">Partie 2 bis : métriques de Halstead</p>
+<details class="sol"><summary>Solution (règle de comptage indiquée)</summary><div class="in">
+<p>Règle de comptage retenue : les mots-clés (def, for, in, if, else, return), les symboles (=, +=, ==, /, deux-points) et la paire de parenthèses () sont des opérateurs. Les noms, les nombres et les constantes sont des opérandes. Le commentaire est ignoré. L'énoncé du TD inverse les noms n et N ; j'utilise ceux du cours : n est le vocabulaire, N la longueur.</p>
+<div class="tw"><table>
+<tr><th>Opérateur</th><th>def</th><th>()</th><th>:</th><th>=</th><th>for</th><th>in</th><th>+=</th><th>if</th><th>==</th><th>return</th><th>else</th><th>/</th></tr>
+<tr><td>Occurrences</td><td>1</td><td>1</td><td>4</td><td>2</td><td>1</td><td>1</td><td>2</td><td>1</td><td>1</td><td>2</td><td>1</td><td>1</td></tr>
+</table></div>
+<div class="tw"><table>
+<tr><th>Opérande</th><th>calcul_moyenne</th><th>liste</th><th>total</th><th>0</th><th>nombre_elements</th><th>element</th><th>1</th></tr>
+<tr><td>Occurrences</td><td>1</td><td>2</td><td>3</td><td>4</td><td>4</td><td>2</td><td>1</td></tr>
+</table></div>
+<p>n1 = 12, N1 = 18, n2 = 7, N2 = 17.</p>
+<ul>
+<li>Vocabulaire n = 12 + 7 = <strong>19</strong>. Longueur N = 18 + 17 = <strong>35</strong>.</li>
+<li>Volume V = 35 × log2(19) = 35 × 4,248 ≈ <strong>148,7 bits</strong>.</li>
+<li>Longueur estimée N* = n1 log2(n1) + n2 log2(n2) = 12 × 3,585 + 7 × 2,807 ≈ <strong>62,7</strong> (formule de Halstead usuelle, absente de vos slides).</li>
+<li>Difficulté D = (12 / 2) × (17 / 7) = 6 × 2,43 ≈ 14,57.</li>
+<li>Effort E = V × D = 148,7 × 14,57 ≈ <strong>2166</strong>.</li>
+<li>Temps T = E / 18 ≈ <strong>120 s</strong> (environ 2 minutes).</li>
+<li>Bugs B = E^(2/3) / 3000 = 167,4 / 3000 ≈ <strong>0,056</strong>.</li>
+</ul>
+<p>Une autre règle de comptage donne d'autres nombres, mais le même ordre de grandeur. L'important est d'annoncer la règle et de l'appliquer partout.</p>
+</div></details>
+
+<p class="q">Partie 3 : interprétation et comparaison</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<ul>
+<li>McCabe : V(G) = 3, dans la plage 1 à 10 : procédure simple, risque faible, 3 cas de test minimum.</li>
+<li>Halstead : peu de bugs estimés (0,056), environ 2 minutes d'effort, difficulté moyenne (14,6) pour une fonction de 14 lignes.</li>
+<li>Conclusion : la fonction est simple et facile à tester. Les deux mesures concordent.</li>
+<li>Corrélation : les deux augmentent quand on ajoute des branches et des instructions, donc elles évoluent ensemble ici. Mais elles mesurent des choses différentes : McCabe compte les chemins d'exécution, Halstead compte le vocabulaire et la taille. Une fonction longue sans branche aurait un McCabe de 1 et un Halstead élevé.</li>
+</ul>
+</div></details>
+
+<p class="q">Partie 4 : version optimisée</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<pre><code>def calcul_moyenne(liste):
+    return sum(liste) / len(liste) if liste else 0</code></pre>
+<ul>
+<li>La boucle for et les deux compteurs disparaissent : sum et len les remplacent. Il reste une seule décision (liste vide ou non).</li>
+<li>McCabe : π = 1 (l'expression conditionnelle), donc <strong>C = 2</strong> au lieu de 3.</li>
+<li>Halstead (même règle de comptage) : opérateurs def, (), :, return, /, if, else : n1 = 7, N1 = 9 (() compte 3 fois). Opérandes calcul_moyenne, liste (4 fois), sum, len, 0 : n2 = 5, N2 = 8. Donc n = 12, N = 17, V ≈ 60,9, D = 3,5 × 1,6 = 5,6, E ≈ 341, T ≈ 19 s, B ≈ 0,016.</li>
+<li>Gain : volume divisé par 2,4, effort divisé par 6,3, et une décision en moins.</li>
+</ul>
+<p>Cas limite : « liste vide » est traité par la condition, comme avant (division par zéro évitée).</p>
+</div></details>
+
+<p class="q">Partie 5 : réflexion</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<p>Pourquoi mesurer la complexité ? Pour estimer l'effort de test (nombre de cas de test selon McCabe), prévoir la maintenance et le risque de bugs, repérer le code critique, piloter les revues de code et fixer un seuil dans le plan qualité. Une complexité plus faible rend le code plus lisible, plus facile à tester et à corriger sans régression.</p>
+<p>Limites :</p>
+<ul>
+<li>McCabe ignore la complexité des données, l'imbrication des blocs et la lisibilité (c'est une raison d'être de la complexité cognitive de SonarQube). Un long switch donne un nombre élevé alors qu'il est facile à lire.</li>
+<li>Halstead dépend des règles de comptage des opérateurs et opérandes, ignore la structure de contrôle, et ses constantes (18, 3000) sont empiriques.</li>
+<li>Aucune des deux ne dit si le code est correct, bien conçu ou bien documenté. Il faut les combiner avec des tests, des revues et d'autres métriques.</li>
+</ul>
+</div></details>
+</div>
+
+<!-- ============ TP CKJM ============ -->
+<h2 id="tp1">TP : métriques orientées objet avec CKJM</h2>
+<div class="exo">
+<details class="sol"><summary>Méthode pas à pas</summary><div class="in">
+<ol>
+<li>Télécharger gestion_Bib_V2. Les sources sont dans <code>src/library/</code> avec trois packages : model (Book, DigitalBook, Lendable), service (Library, Customer), app (LibraryApp).</li>
+<li>Compiler vers bin/ (compatibilité JVM 8) : <code>javac -source 1.8 -target 1.8 -d bin src\library\app\*.java src\library\model\*.java src\library\service\*.java</code></li>
+<li>Lancer CKJM sur les .class : <code>java -cp bin;ckjm-1.8.jar -jar ckjm-1.8.jar bin\library\app\LibraryApp.class ... &gt; metrics.txt</code></li>
+<li>Lire metrics.txt : une ligne par classe avec WMC, DIT, NOC, CBO, RFC, LCOM, Ca, NPM.</li>
+</ol>
+</div></details>
+
+<p class="q">Exercice 1 : compléter le tableau</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<div class="tw"><table>
+<tr><th>Métrique</th><th>Nom complet</th><th>Ce qu'elle mesure</th></tr>
+<tr><td>WMC</td><td>Weighted Methods per Class</td><td>Complexité interne de la classe</td></tr>
+<tr><td>DIT</td><td>Depth of Inheritance Tree</td><td>Profondeur d'héritage</td></tr>
+<tr><td>NOC</td><td>Number of Children</td><td>Nombre de sous-classes directes</td></tr>
+<tr><td>CBO</td><td>Coupling Between Objects</td><td>Couplage avec d'autres classes</td></tr>
+<tr><td>RFC</td><td>Response For a Class</td><td>Méthodes pouvant être exécutées en réponse à un message</td></tr>
+<tr><td>LCOM</td><td>Lack of Cohesion of Methods</td><td>Manque de cohésion interne</td></tr>
+<tr><td>Ca</td><td>Afferent Coupling</td><td>Couplages entrants (stabilité)</td></tr>
+<tr><td>Ce</td><td>Efferent Coupling</td><td>Couplages sortants (instabilité)</td></tr>
+</table></div>
+<p>Question 2 : on lit chaque colonne de metrics.txt et on repère les valeurs au-dessus des seuils du cours : WMC supérieur à 20, CBO supérieur à 10, RFC supérieur à 50, LCOM supérieur à 1.</p>
+</div></details>
+
+<p class="q">Exercice 2 : analyse critique (méthode de réponse)</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<ul>
+<li>Classe la plus complexe : celle qui a le WMC le plus élevé. Justifier avec le nombre de méthodes et leurs complexités, et vérifier RFC et CBO.</li>
+<li>Classe la plus cohérente : celle qui a le LCOM le plus bas (0 ou proche de 0).</li>
+<li>Corrélation WMC et RFC : en général oui, plus de méthodes donne plus de réponses possibles (RFC compte les méthodes de la classe plus celles qu'elles appellent). Confirmer en comparant les colonnes classe par classe.</li>
+<li>Risque de faible réutilisabilité : CBO élevé (fort couplage), LCOM élevé (faible cohésion), DIT élevé.</li>
+<li>Package le plus stable : celui dont Ca est élevé et Ce faible (instabilité I = Ce / (Ca + Ce) proche de 0). Dans l'esprit du cours, le package model (Book, Lendable), dont dépendent les autres, doit sortir plus stable que service, à confirmer avec vos valeurs.</li>
+</ul>
+</div></details>
+
+<p class="q">Exercice 3 : refactoring</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<p>Trois pistes (celles suggérées par le TP) : extraire les blocs répétitifs dans des méthodes utilitaires, séparer les responsabilités multiples (principe SRP), réduire le couplage (par exemple Library vers Book).</p>
+<div class="tw"><table>
+<tr><th>Opération de refactoring</th><th>Effet sur les métriques</th></tr>
+<tr><td>Extraction de méthode</td><td>WMC diminue (chaque méthode est plus simple)</td></tr>
+<tr><td>Encapsulation d'attributs</td><td>CBO diminue</td></tr>
+<tr><td>Fusion ou découpage de classes</td><td>LCOM diminue (méthodes qui partagent les mêmes attributs regroupées)</td></tr>
+<tr><td>Introduction d'interfaces</td><td>Abstraction A augmente et instabilité I diminue</td></tr>
+</table></div>
+<p>Le compte-rendu doit comparer avant et après : valeurs CKJM, évolution de WMC, CBO, LCOM, RFC, et conclure sur la maintenabilité.</p>
+</div></details>
+</div>
+
+<!-- ============ TP SONAR ============ -->
+<h2 id="tp2">TP : analyse avec SonarQube</h2>
+<div class="exo">
+<details class="sol"><summary>Méthode pas à pas</summary><div class="in">
+<ol>
+<li>Prérequis : Java 17 ou plus, SonarQube Community 25.10.0 ou plus, SonarScanner, projet gestion_Bib.</li>
+<li>Démarrer le serveur : dossier <code>bin\windows-x86-64</code>, lancer <code>StartSonar.bat</code>, ouvrir <code>http://localhost:9000/</code>.</li>
+<li>Créer le projet : nom, clé, branche principale, token (à copier dans un fichier séparé), Java et système d'exploitation.</li>
+<li>Préparer le code : tous les .java dans src/, compiler vers bin/, ouvrir sonar-project.properties et remplacer <code>&lt;VOTRE_TOKEN_SONAR&gt;</code> par le token.</li>
+<li>Lancer <code>sonar-scanner.bat</code> depuis la racine du projet et vérifier qu'il n'y a pas d'erreur.</li>
+<li>Lire le dashboard : bugs, code smells, duplications, vulnérabilités.</li>
+</ol>
+</div></details>
+
+<p class="q">Q1 et Q2 : trois problèmes dans Book.java ou Library.java, pourquoi, quelle solution</p>
+<details class="sol"><summary>Méthode de réponse</summary><div class="in">
+<p>Ouvrez le projet dans le dashboard, onglet Issues, filtrez sur le fichier. Pour chaque problème, notez la règle, la gravité (bloquant, critique, majeur, mineur, info), la ligne, puis écrivez : pourquoi c'est un problème, comment le corriger. Les corrections demandées par le TP donnent déjà des pistes à chercher :</p>
+<ul>
+<li>Commentaires inutiles (par exemple « //classe Book ») : bruit, code mort. Solution : supprimer.</li>
+<li>Doublons de code : risque d'incohérence, maintenance double. Solution : extraire une méthode.</li>
+<li>Attributs privés sans getters (title, author, borrowed) : classe inutilisable ou accès contourné. Solution : ajouter getTitle(), getAuthor(), isBorrowed().</li>
+<li>getAvailableItems() qui ne reflète pas l'état des livres empruntés : bug de logique. Solution : filtrer sur l'état emprunté.</li>
+</ul>
+<p>Je n'ai pas votre rapport Sonar : les messages exacts viennent de votre analyse.</p>
+</div></details>
+
+<p class="q">Q3 : après correction, que doit-on observer ?</p>
+<details class="sol"><summary>Réponse</summary><div class="in">
+<p>Relancer sonar-scanner. Les code smells et les bugs liés aux corrections diminuent, la duplication baisse, le Quality Gate peut passer de FAILED à PASSED. Comparer les chiffres avant et après dans le rapport.</p>
+</div></details>
+
+<p class="q">Q4 et Q5 : complexité cyclomatique et cognitive</p>
+<details class="sol"><summary>Réponse</summary><div class="in">
+<p>Dans la vue Measures du projet, triez les méthodes par complexité cyclomatique, puis par complexité cognitive, et relevez les deux plus élevées de chaque. Stratégie de réduction : découper en sous-méthodes, remplacer les if imbriqués par des retours anticipés, extraire les conditions complexes, remplacer un long switch par du polymorphisme. Après correction, relancer : la complexité de ces méthodes diminue et celle de la classe aussi.</p>
+</div></details>
+</div>
+
+<!-- ============ PLUS ============ -->
+<h2 id="plus">Exercices supplémentaires</h2>
+
+<h3>Exercice 1 : McCabe sur un algorithme</h3>
+<div class="exo">
+<pre><code>1  lire a, b
+2  si a &gt; b alors
+3     max = a
+4  sinon
+5     max = b
+6  fin_si
+7  i = 0
+8  tant que i &lt; max faire
+9     si i mod 2 = 0 alors
+10       s = s + i
+11    fin_si
+12    i = i + 1
+13 fin_faire
+14 ecrire s</code></pre>
+<p class="q">Calculer la complexité de McCabe avec les deux formules.</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<ol>
+<li>Décisions : si (ligne 2), tant que (ligne 8), si (ligne 9). π = 3, donc C = π + 1 = <strong>4</strong>.</li>
+<li>Graphe : 8 nœuds (lire et test a &gt; b ; max = a ; max = b ; i = 0 et test tant que ; test mod ; s = s + i ; i = i + 1 ; écrire). 10 arcs. V(G) = 10 - 8 + 2 = <strong>4</strong>.</li>
+</ol>
+<p>Au moins 4 cas de test pour couvrir les chemins indépendants. Niveau : procédure simple (1 à 10).</p>
+</div></details>
+</div>
+
+<h3>Exercice 2 : Halstead sur deux lignes</h3>
+<div class="exo">
+<pre><code>a = b + c;
+d = a * 2;</code></pre>
+<p class="q">Calculer n, N, V, D, E, T, B.</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<ul>
+<li>Opérateurs : = (2), + (1), * (1), ; (2). n1 = 4, N1 = 6.</li>
+<li>Opérandes : a (2), b (1), c (1), d (1), 2 (1). n2 = 5, N2 = 6.</li>
+<li>n = 9, N = 12.</li>
+<li>V = 12 × log2(9) = 12 × 3,17 ≈ 38,0 bits.</li>
+<li>D = (4 / 2) × (6 / 5) = 2 × 1,2 = 2,4.</li>
+<li>E = 38,04 × 2,4 ≈ 91,3. T = 91,3 / 18 ≈ 5,1 s. B = 91,3^(2/3) / 3000 ≈ 0,007.</li>
+</ul>
+</div></details>
+</div>
+
+<h3>Exercice 3 : métriques de lignes de code</h3>
+<div class="exo">
+<p class="q">Un fichier compte 30 lignes physiques : 5 lignes vides, 6 lignes de commentaires, le reste en code. Calculer LOCpro et DC. Comparer aux normes.</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<ul>
+<li>LOCpro = 30 - 5 - 6 = <strong>19</strong>.</li>
+<li>DC = 6 / 30 = <strong>0,20</strong>, au bas de la plage 0,2 à 0,3 : acceptable.</li>
+<li>Lignes vides : 5 / 30 ≈ 17 %, dans la plage 10 à 20 %. Lignes de commentaires : 20 %, dans la plage 10 à 30 %.</li>
+<li>LOCphy = 30 : bien en dessous de 200 à 500, aucun fractionnement nécessaire.</li>
+</ul>
+</div></details>
+</div>
+
+<h3>Exercice 4 : métriques CK sur une classe</h3>
+<div class="exo">
+<pre><code>class Compte extends Produit {
+    double solde; String titulaire;
+    void depot(double m)   { solde += m; }
+    void retrait(double m) { solde -= m; Journal.ecrire("retrait"); Banque.verifier(this); }
+    String afficher()      { return titulaire; }
+    double interets()      { return solde * 0.02; }
+}</code></pre>
+<p>Complexités des méthodes : depot 1, retrait 2, afficher 1, interets 1. Produit hérite directement de Object. Calculer WMC, DIT, RFC, CBO (en comptant Produit, Journal, Banque) et LCOM.</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<ul>
+<li>WMC = 1 + 2 + 1 + 1 = <strong>5</strong> (faible, entre 0 et 10).</li>
+<li>DIT : Object, Produit, Compte : <strong>2</strong> (acceptable, de 0 à 4).</li>
+<li>RFC = 4 méthodes + 2 méthodes externes appelées (Journal.ecrire, Banque.verifier) = <strong>6</strong> (faible).</li>
+<li>CBO : Produit, Journal, Banque = <strong>3</strong> (faible, de 0 à 5).</li>
+<li>LCOM : attributs utilisés : depot {solde}, retrait {solde}, afficher {titulaire}, interets {solde}. Paires (6) : (depot, retrait) partage, (depot, afficher) non, (depot, interets) partage, (retrait, afficher) non, (retrait, interets) partage, (afficher, interets) non. Q = 3, P = 3. Comme P n'est pas supérieur à Q, <strong>LCOM = 0</strong>.</li>
+</ul>
+<p>Lecture : classe plutôt saine. La méthode afficher est isolée (elle utilise un autre attribut), signe qu'on pourrait séparer le titulaire dans une classe Client.</p>
+</div></details>
+</div>
+
+<h3>Exercice 5 : métriques de packages</h3>
+<div class="exo">
+<div class="tw"><table>
+<tr><th>Package</th><th>Ca</th><th>Ce</th><th>A</th></tr>
+<tr><td>X</td><td>4</td><td>1</td><td>0,6</td></tr>
+<tr><td>Y</td><td>0</td><td>5</td><td>0</td></tr>
+<tr><td>Z</td><td>6</td><td>0</td><td>0</td></tr>
+</table></div>
+<p class="q">Calculer I et D de chaque package, puis la distance moyenne, et interpréter.</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<ul>
+<li>X : I = 1 / (4 + 1) = 0,2. D = |0,6 + 0,2 - 1| = 0,2. Bien conçu, stable et assez abstrait.</li>
+<li>Y : I = 5 / 5 = 1. D = |0 + 1 - 1| = 0. Concret et instable, acceptable pour du code applicatif qui dépend des autres.</li>
+<li>Z : I = 0 / 6 = 0. D = |0 + 0 - 1| = 1. Concret et stable : très rigide, tout le monde en dépend et il est impossible à faire évoluer sans casser. À refactoriser (introduire des interfaces).</li>
+<li>Distance moyenne : (0,2 + 0 + 1) / 3 = 0,4 : architecture acceptable mais améliorable, à cause de Z.</li>
+</ul>
+</div></details>
+</div>
+
+<h3>Exercice 6 : types de mesure</h3>
+<div class="exo">
+<p class="q">Donner le type d'échelle : (a) langage de programmation utilisé, (b) sévérité d'un bug, (c) température du serveur en degrés Celsius, (d) taux de couverture des tests, (e) nombre de bugs détectés, (f) score de qualité normalisé de 0 à 100.</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<ul>
+<li>(a) Nominal.</li>
+<li>(b) Ordinal.</li>
+<li>(c) Intervalle (zéro arbitraire).</li>
+<li>(d) Ratio (zéro absolu).</li>
+<li>(e) Absolu (comptage).</li>
+<li>(f) Intervalle (score sur échelle normalisée).</li>
+</ul>
+</div></details>
+</div>
+
+<h3>Exercice 7 : évaluation pondérée</h3>
+<div class="exo">
+<p class="q">Facteur Fiabilité = 0,7 × Testabilité + 0,3 × Maturité. Testabilité = 2, Maturité = 3 (notes sur 3). Calculer la fiabilité et l'exprimer en pourcentage.</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<p>Fiabilité = 0,7 × 2 + 0,3 × 3 = 1,4 + 0,9 = <strong>2,3</strong>. En pourcentage : 2,3 / 3 ≈ <strong>76,7 %</strong>. Les poids d'un même niveau doivent faire 1 (0,7 + 0,3).</p>
+</div></details>
+</div>
+
+<h3>Exercice 8 : GQM</h3>
+<div class="exo">
+<p class="q">Un responsable veut réduire le temps de correction des bugs. Construire l'arbre GQM.</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<ul>
+<li>Goal : réduire le temps de correction des bugs dans l'application.</li>
+<li>Question 1 : le code est-il facile à analyser ? Métriques : complexité cyclomatique moyenne, densité de commentaires, LCOM.</li>
+<li>Question 2 : le code est-il facile à tester ? Métriques : couverture des tests (A / B), nombre de tests automatisés.</li>
+<li>Question 3 : combien de temps prend une correction aujourd'hui ? Métriques : durée moyenne entre ouverture et fermeture d'un bug, nombre de régressions.</li>
+</ul>
+<p>Chaque métrique répond à une question, chaque question à l'objectif. On ne mesure rien qui ne serve pas le but.</p>
+</div></details>
+</div>
+
+<h3>Exercice 9 : erreur, défaut, défaillance</h3>
+<div class="exo">
+<p class="q">Un développeur écrit <code>if (a = b)</code> au lieu de <code>if (a == b)</code>. Identifier l'erreur, le défaut et la défaillance, et dire quelle pratique SQA l'aurait détecté.</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<ul>
+<li>Erreur : la faute de frappe du développeur.</li>
+<li>Défaut : le code contient une affectation à la place d'un test, la condition est mal formée.</li>
+<li>Défaillance : en exploitation, le programme prend la mauvaise branche (par exemple un solde affiché faux).</li>
+<li>Détection : revue de code, analyse statique (SonarQube signale ce type d'anomalie), tests unitaires du cas concerné.</li>
+</ul>
+</div></details>
+</div>
+
+<h3>Exercice 10 : associer scénario et caractéristique ISO 25010</h3>
+<div class="exo">
+<p class="q">Pour chaque scénario, donner la caractéristique (et la sous-caractéristique) : (a) la page met 8 secondes à répondre ; (b) l'application ne peut pas lire les fichiers d'un partenaire ; (c) un utilisateur non autorisé lit des données ; (d) un robot s'arrête en sécurité quand un capteur tombe en panne ; (e) l'installation sur un nouveau système se fait sans effort ; (f) le système redémarre seul après une panne ; (g) les tests peuvent être automatisés facilement.</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<ul>
+<li>(a) Efficacité des performances, comportement temporel.</li>
+<li>(b) Compatibilité, interopérabilité.</li>
+<li>(c) Sécurité, confidentialité.</li>
+<li>(d) Sécurité des personnes et des biens (safety), comportement fail-safe.</li>
+<li>(e) Flexibilité, facilité d'installation (adaptabilité).</li>
+<li>(f) Fiabilité, capacité de récupération.</li>
+<li>(g) Maintenabilité, testabilité.</li>
+</ul>
+</div></details>
+</div>
+
+<div class="foot">Les valeurs numériques de cette page ont été recalculées avec Python.</div>
+</main>
+</div>
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

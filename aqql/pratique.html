@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Examen blanc pratique</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="shell">
+<aside class="side" id="side"></aside>
+<main>
+<h1>Examen blanc pratique</h1>
+<p class="lead">Un sujet de 20 points : QCM, questions de cours, calculs de métriques. Chronométrez-vous, répondez sur papier, puis comparez avec le corrigé.</p>
+
+<div class="box">
+<p class="t">Chronomètre (durée indicative : 1 heure)</p>
+<p class="timer" id="timer">60:00</p>
+<div class="bar">
+<button class="btn" id="t-start">Démarrer</button>
+<button class="btn" id="t-stop">Pause</button>
+<button class="btn" id="t-reset">Remettre à zéro</button>
+<button class="btn" data-toggle-all="close">Refermer toutes les solutions</button>
+</div>
+<p>Je ne connais pas la durée ni le barème réels de votre contrôle. Adaptez le chronomètre.</p>
+</div>
+
+<div class="box retenir">
+<p class="t">Règles du jeu</p>
+<ul>
+<li>Sans cours, avec calculatrice. Pour chaque calcul : formule, remplacement, résultat, interprétation.</li>
+<li>Barème : partie 1 sur 4, partie 2 sur 5, partie 3 sur 11.</li>
+</ul>
+</div>
+
+<h2>Partie 1 : QCM (4 points)</h2>
+<div class="exo">
+<p class="q">1. Quelle est la relation correcte ? A. Défaut, erreur, défaillance. B. Erreur, défaut, défaillance. C. Défaillance, défaut, erreur. D. Erreur, défaillance, défaut.</p>
+<p class="q">2. Un critère de qualité correspond à : A. La vision externe, celle de l'utilisateur. B. La vision interne, celle du développeur. C. Une mesure brute. D. Une norme ISO.</p>
+<p class="q">3. ISO/IEC 25010:2023 remplace la portabilité par : A. La compatibilité. B. La flexibilité. C. La capacité d'interaction. D. La sécurité.</p>
+<p class="q">4. Une complexité cyclomatique de 12 indique : A. Procédure simple. B. Procédure plus complexe, risque modéré. C. Procédure complexe, risque élevé. D. Code non testable.</p>
+<p class="q">5. Un package avec A = 0 et I = 0,1 a une distance D = 0,9 : il est : A. Idéal. B. Abstrait et instable. C. Concret et stable, donc rigide. D. Sans dépendance.</p>
+<p class="q">6. Le niveau de sévérité d'un bug (mineur, majeur, critique) est une mesure : A. Nominale. B. Ordinale. C. Intervalle. D. Absolue.</p>
+<p class="q">7. Dans la formule de Halstead D = (n1 / 2) × (N2 / n2), n2 désigne : A. Les opérateurs uniques. B. Les opérandes uniques. C. Le nombre total d'opérandes. D. Le vocabulaire.</p>
+<p class="q">8. Que vérifie le Quality Gate de SonarQube ? A. Le nombre de lignes. B. Si le projet peut être livré en production (anomalies bloquantes, couverture supérieure à 80 %). C. Le nom des développeurs. D. La version de Java.</p>
+<details class="sol"><summary>Corrigé de la partie 1</summary><div class="in">
+<ol>
+<li>B : erreur, puis défaut, puis défaillance.</li>
+<li>B : critère = vision interne. Facteur = vision externe.</li>
+<li>B : flexibilité. L'utilisabilité devient capacité d'interaction.</li>
+<li>B : de 11 à 20, plus complexe, risque modéré.</li>
+<li>C : concret (A = 0) et stable (I proche de 0), donc rigide.</li>
+<li>B : ordinale (un ordre, pas d'écart mesurable).</li>
+<li>B : n2 est le nombre d'opérandes uniques. N2 est leur nombre total.</li>
+<li>B.</li>
+</ol>
+</div></details>
+</div>
+
+<h2>Partie 2 : questions de cours (5 points)</h2>
+<div class="exo">
+<p class="q">2.1 (1,5 pt) Définissez erreur, défaut et défaillance. Illustrez avec un cas réel.</p>
+<details class="sol"><summary>Réponse</summary><div class="in">
+<p>Erreur : faute humaine (documentation, code, logique). Défaut : erreur non détectée lors du développement, de l'AQ ou des tests, présente dans le produit. Défaillance : manifestation du défaut en exploitation. Les erreurs créent des défauts, qui causent des échecs s'ils ne sont pas corrigés.</p>
+<p>Exemple : Mariner 1 (1962). Erreur : une formule manuscrite mal transcrite en code. Défaut : l'équation de guidage est fausse. Défaillance : la sonde dévie et est détruite après environ 294,5 s (18,5 M$).</p>
+</div></details>
+
+<p class="q">2.2 (1,5 pt) Sur quels piliers repose la qualité logicielle ? Quels sont les quatre niveaux de besoins ?</p>
+<details class="sol"><summary>Réponse</summary><div class="in">
+<p>Deux piliers : la qualité du produit (fonctionnalités, fiabilité, efficacité, utilisabilité, maintenabilité, portabilité) et la qualité du processus (pratiques, méthodes, outils, rigueur). Besoins : vrais (esprit des parties prenantes), exprimés (formulés par les utilisateurs), spécifiés (document de spécification), réalisés (documents et code produits). Les écarts entre niveaux viennent de la méconnaissance des besoins, d'une spécification incomplète, de tests ou de contrôles insuffisants.</p>
+</div></details>
+
+<p class="q">2.3 (1 pt) Facteur, critère, métrique : donnez la définition et la vision (interne ou externe) de chacun.</p>
+<details class="sol"><summary>Réponse</summary><div class="in">
+<p>Facteur : caractéristique ressentie par l'utilisateur, vision externe. Critère : attribut par lequel un facteur est obtenu, sur lequel le développeur agit, vision interne. Métrique : mesure d'une propriété d'un critère (par exemple la taille d'un module pour le critère simplicité).</p>
+</div></details>
+
+<p class="q">2.4 (1 pt) Quelles évolutions apporte ISO/IEC 25010:2023 par rapport à ISO 9126 et à 25010:2011 ?</p>
+<details class="sol"><summary>Réponse</summary><div class="in">
+<p>ISO 9126 : 6 caractéristiques, 27 sous-caractéristiques. 25010:2011 : 8 caractéristiques (compatibilité et sécurité ajoutées). 25010:2023 : 9 caractéristiques, 38 sous-caractéristiques : l'utilisabilité devient capacité d'interaction, la portabilité devient flexibilité, et la sécurité des personnes et des biens (safety) s'ajoute pour encadrer les risques opérationnels et l'IA.</p>
+</div></details>
+</div>
+
+<h2>Partie 3 : calculs (11 points)</h2>
+
+<h3>Exercice A (5 points) : McCabe, Halstead, LOC</h3>
+<pre><code>def prix_total(articles, client_vip):
+    total = 0
+    for a in articles:
+        if a &gt; 0:
+            total += a
+    if client_vip:
+        total = total * 0.9
+    return total</code></pre>
+<div class="exo">
+<p class="q">A1 (1 pt) Donner LOCphy, LOCpro, LOCcom, LOCbl, DC. Commenter.</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<p>8 lignes, sans ligne vide ni commentaire : LOCphy = 8, LOCpro = 8, LOCcom = 0, LOCbl = 0, DC = 0 / 8 = 0. DC est bien inférieure à 0,2 : aucune documentation. Taille raisonnable.</p>
+</div></details>
+<p class="q">A2 (1 pt) Calculer la complexité de McCabe par les deux formules.</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<p>Décisions : for, if, if. π = 3, donc C = 4. Graphe : nœuds 1 (total = 0), 2 (test for), 3 (test if a &gt; 0), 4 (total += a), 5 (test if vip), 6 (total = total * 0,9), 7 (return). N = 7. Arcs : 1 vers 2, 2 vers 3, 3 vers 4, 3 vers 2, 4 vers 2, 2 vers 5, 5 vers 6, 5 vers 7, 6 vers 7. E = 9. V(G) = 9 - 7 + 2 = 4. Procédure simple, risque faible, 4 cas de test minimum.</p>
+</div></details>
+<p class="q">A3 (3 pts) Calculer n, N, V, D, E, T, B (règle de comptage à préciser).</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<p>Opérateurs : def (1), () (1), virgule (1), deux-points (4), = (2), for (1), in (1), if (2), &gt; (1), += (1), * (1), return (1). n1 = 12, N1 = 17.</p>
+<p>Opérandes : prix_total (1), articles (2), client_vip (2), total (5), 0 (2), a (3), 0,9 (1). n2 = 7, N2 = 16.</p>
+<ul>
+<li>n = 19. N = 33.</li>
+<li>V = 33 × log2(19) ≈ 140,2 bits.</li>
+<li>D = (12 / 2) × (16 / 7) ≈ 13,7.</li>
+<li>E = V × D ≈ 1922.</li>
+<li>T = E / 18 ≈ 107 s.</li>
+<li>B = E^(2/3) / 3000 ≈ 0,05.</li>
+</ul>
+</div></details>
+</div>
+
+<h3>Exercice B (3 points) : métriques objet</h3>
+<p>Une classe Panier a quatre méthodes : M1 utilise {items}, M2 utilise {items, total}, M3 utilise {total}, M4 utilise {client}. M2 appelle Stock.verifier() et Paiement.payer() ; M3 appelle Paiement.valider(). La classe a deux sous-classes directes, hérite de Commande (qui hérite de Object), et redéfinit 1 méthode sur 5 (NOM = 5). Deux packages : P1 (Ca = 2, Ce = 2, A = 0,25) et P2 (Ca = 0, Ce = 4, A = 0).</p>
+<div class="exo">
+<p class="q">B1 (2 pts) Calculer LCOM, RFC, NOC, DIT, SI.</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<ul>
+<li>LCOM : paires (M1,M2) partage items, (M1,M3) non, (M1,M4) non, (M2,M3) partage total, (M2,M4) non, (M3,M4) non. Q = 2, P = 4. LCOM = 4 - 2 = <strong>2</strong> : cohésion faible (supérieure à 1), refactorisation conseillée.</li>
+<li>RFC = 4 méthodes + 3 méthodes externes (Stock.verifier, Paiement.payer, Paiement.valider) = <strong>7</strong>, faible (0 à 20).</li>
+<li>NOC = <strong>2</strong>, normal (0 à 3).</li>
+<li>DIT : Object, Commande, Panier : <strong>2</strong>, acceptable.</li>
+<li>SI = NORM × DIT / NOM = 1 × 2 / 5 = <strong>0,4</strong>, faible : classe générique.</li>
+</ul>
+</div></details>
+<p class="q">B2 (1 pt) Calculer I et D de P1 et P2. Interpréter.</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<p>P1 : I = 2 / (2 + 2) = 0,5. D = |0,25 + 0,5 - 1| = 0,25 : proche de la séquence principale, bien conçu. P2 : I = 4 / 4 = 1. D = |0 + 1 - 1| = 0 : concret et instable, sur la séquence principale, acceptable pour du code applicatif. Distance moyenne : 0,125, très bonne architecture (moins de 0,3).</p>
+</div></details>
+</div>
+
+<h3>Exercice C (3 points) : évaluation pondérée</h3>
+<p>Facteur Maintenabilité = 0,5 Testabilité + 0,5 Analysabilité. Testabilité = note de la complexité cyclomatique (1 à 10 : 3, 11 à 20 : 2, 21 à 50 : 1, plus de 50 : 0). Analysabilité = 0,5 Commentaires + 0,5 SLOC. Commentaires : DC de 20 % ou plus : 2 ; de 10 à 20 % : 1 ; moins de 10 % : 0. SLOC : au plus 35 : 3 ; ]35 ; 70] : 2 ; ]70 ; 160] : 1 ; plus de 160 : 0. Mesures : complexité 12, DC = 7 %, SLOC = 120.</p>
+<div class="exo">
+<p class="q">C1 (3 pts) Représenter l'arbre, calculer les notes, le facteur, et le pourcentage de qualité (note maximale 3).</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<p>Arbre : Qualité, puis facteur Maintenabilité, puis critères Testabilité (métrique complexité) et Analysabilité (métriques commentaires, SLOC).</p>
+<ul>
+<li>Notes : complexité 12 donne 2. DC 7 % donne 0. SLOC 120 est dans ]70 ; 160] donc 1.</li>
+<li>Testabilité = 2. Analysabilité = 0,5 × 0 + 0,5 × 1 = 0,5.</li>
+<li>Maintenabilité = 0,5 × 2 + 0,5 × 0,5 = 1,25.</li>
+<li>Qualité = 1,25 / 3 ≈ 41,7 %.</li>
+</ul>
+<p>Interprétation : qualité insuffisante, surtout à cause du manque de commentaires et d'une taille déjà problématique ; actions : documenter, découper les fonctions.</p>
+</div></details>
+</div>
+
+<div class="box ex">
+<p class="t">Avant de rendre la copie</p>
+<ul>
+<li>McCabe : le else ne compte pas, un CASE à N cas compte N - 1.</li>
+<li>Halstead : n2 est le nombre d'opérandes uniques, N2 le nombre total.</li>
+<li>LCOM : 0 si P est inférieur ou égal à Q.</li>
+<li>I = Ce / (Ca + Ce). D = |A + I - 1|.</li>
+<li>Écrivez votre règle de comptage et votre interprétation.</li>
+</ul>
+</div>
+
+<div class="foot">Sujet écrit à partir des cours et TD. Les résultats numériques ont été recalculés.</div>
+</main>
+</div>
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

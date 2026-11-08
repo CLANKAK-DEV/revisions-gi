@@ -1,0 +1,1142 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TP corrigés PHP</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="shell">
+<aside class="side" id="side"></aside>
+<main>
+<h1>TP 1 à 5 corrigés</h1>
+<p class="lead">Chaque exercice a une solution complète, les valeurs de contrôle de l'énoncé et les réponses aux questions de réflexion. Essayez seul, puis ouvrez la solution.</p>
+
+<div class="box retenir">
+<p class="t">Comment ces corrigés ont été vérifiés</p>
+<p>Tout le code de cette page a été exécuté, pas seulement écrit : avec PHP 8.0 de XAMPP et PHP 8.5. Les scripts sans formulaire ont été lancés en ligne de commande. Les pages avec formulaire, cookies, session et upload ont été testées avec le serveur intégré de PHP (<code>php -S</code>) et des requêtes réelles. Toutes les valeurs de contrôle des énoncés sont retrouvées.</p>
+<p>Si votre résultat diffère, comparez d'abord avec les valeurs de contrôle, puis cherchez la différence ligne par ligne.</p>
+</div>
+
+<div class="bar">
+<button class="btn" data-toggle-all="open">Tout ouvrir</button>
+<button class="btn" data-toggle-all="close">Tout fermer</button>
+</div>
+
+<div class="box">
+<p class="t">Sommaire</p>
+<ul>
+<li><a href="#tp1">TP1 : premiers scripts et variables</a></li>
+<li><a href="#tp2">TP2 : structures de contrôle</a></li>
+<li><a href="#tp3">TP3 : tableaux et fonctions</a></li>
+<li><a href="#tp4">TP4 : fichiers, cookies et sessions</a></li>
+<li><a href="#tp5">TP5 : formulaires et validation</a></li>
+</ul>
+</div>
+<h2 id="tp1">TP1 : premiers scripts et variables</h2><div class="exo"><h4>Exercice 1 : ma première page dynamique</h4><p>phpinfo(), page HTML complète, balise courte, echo, print, date(), commentaires.</p><details class="sol"><summary>Solution détaillée</summary><div class="in"><p><strong>Q1.</strong> <code>info.php</code> contient uniquement <code>&lt;?php phpinfo();</code>. La ligne « PHP Version » donne la version (8.2.12 avec le XAMPP du cours) et « Loaded Configuration File » donne <code>C:\xampp\php\php.ini</code>. Notez ces deux informations en commentaire dans le fichier suivant.</p><p class="q">presentation.php</p><pre><code>&lt;?php
+// PHP 8.2.12 | Loaded Configuration File : C:\xampp\php\php.ini   (relevés avec info.php)
+$prenom  = "Sara";
+$nom     = "Ouali";
+$filiere = "Génie Informatique";            // à remplacer par vos informations
+?&gt;
+&lt;!DOCTYPE html&gt;
+&lt;html lang="fr"&gt;
+&lt;head&gt;
+    &lt;meta charset="utf-8"&gt;
+    &lt;title&gt;&lt;?= $prenom ?&gt;&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;?php
+// commentaire de type //
+# commentaire de type #
+/* commentaire
+   sur plusieurs lignes */
+echo "&lt;h1&gt;" . $prenom . " " . $nom . "&lt;/h1&gt;";            // concaténation avec le point
+print "&lt;p&gt;$filiere&lt;/p&gt;";                                  // print : un seul argument
+echo "&lt;p&gt;", date("d/m/Y"), " ", date("H:i"), "&lt;/p&gt;";      // echo à plusieurs arguments
+echo "INF4041", " - ", "Technologies Web Avancées", " - ", "2026-2027";
+?&gt;
+&lt;!-- commentaire HTML : lui, il est visible dans le code source --&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre><p><strong>Q7.</strong> Dans le code source (Ctrl + U), seul le commentaire HTML apparaît. Les commentaires PHP (<code>//</code>, <code>#</code>, <code>/* */</code>) et les variables n'apparaissent pas : PHP s'exécute sur le serveur et n'envoie au navigateur que du HTML.</p></div></details></div><div class="exo"><h4>Exercice 2 : la fiche produit</h4><p>Total, interpolation, modification d'une variable à partir d'elle-même, var_dump, changement de type.</p><details class="sol"><summary>Solution détaillée</summary><div class="in"><p class="q">produit.php</p><pre><code>&lt;?php
+$produit = "Clavier sans fil";
+$prixUnitaire = 150;
+$quantite = 3;
+$enStock = true;
+$codePromo = null;
+
+$total = $prixUnitaire * $quantite;                  // 450
+echo "Vous commandez $quantite x $produit pour $total DH.&lt;br&gt;";
+
+$quantite = $quantite + 2;                           // 5
+$total = $prixUnitaire * $quantite;                  // 750
+echo "Vous commandez $quantite x $produit pour $total DH.&lt;br&gt;";
+
+var_dump($produit);      echo "&lt;br&gt;";
+var_dump($prixUnitaire); echo "&lt;br&gt;";
+var_dump($quantite);     echo "&lt;br&gt;";
+var_dump($enStock);      echo "&lt;br&gt;";
+var_dump($codePromo);    echo "&lt;br&gt;";
+var_dump($total);        echo "&lt;br&gt;";
+
+$prixUnitaire = 149.90;
+$total = $prixUnitaire * $quantite;                  // 749.5
+echo get_debug_type($prixUnitaire), " et ", get_debug_type($total);  // float et float</code></pre><div class="box ex"><p class="t">Valeurs de contrôle retrouvées</p><p>« Vous commandez 3 x Clavier sans fil pour 450 DH. » puis « Vous commandez 5 x Clavier sans fil pour 750 DH. »</p></div><p><strong>Q5.</strong> Avec <code>$prixUnitaire = 149.90</code>, deux variables changent de type : <code>$prixUnitaire</code> (int devient float) et <code>$total</code> (int devient float). <code>get_debug_type()</code> affiche « float » pour les deux. Les autres variables ne bougent pas.</p></div></details></div><div class="exo"><h4>Exercice 3 : l'inspecteur de variables</h4><p>Un tableau HTML qui compare var_dump, get_debug_type, isset, empty et is_numeric.</p><details class="sol"><summary>Solution détaillée</summary><div class="in"><p class="q">inspecteur.php</p><pre><code>&lt;?php
+$age = 21; $moyenne = "14.5"; $prenom = ""; $note = 0; $ville = null; $admis = false;
+
+function bool(bool $b): string { return $b ? 'true' : 'false'; }
+
+function ligne(string $nom, mixed $v): string
+{
+    ob_start();
+    var_dump($v);
+    $dump = trim(ob_get_clean());
+    return "&lt;tr&gt;&lt;td&gt;\$$nom&lt;/td&gt;&lt;td&gt;$dump&lt;/td&gt;&lt;td&gt;" . get_debug_type($v) . "&lt;/td&gt;&lt;td&gt;"
+         . bool(isset($v)) . "&lt;/td&gt;&lt;td&gt;" . bool(empty($v)) . "&lt;/td&gt;&lt;td&gt;"
+         . bool(is_numeric($v)) . "&lt;/td&gt;&lt;/tr&gt;";
+}
+
+echo "&lt;table border='1'&gt;&lt;tr&gt;&lt;th&gt;Nom&lt;/th&gt;&lt;th&gt;var_dump&lt;/th&gt;&lt;th&gt;get_debug_type&lt;/th&gt;"
+   . "&lt;th&gt;isset&lt;/th&gt;&lt;th&gt;empty&lt;/th&gt;&lt;th&gt;is_numeric&lt;/th&gt;&lt;/tr&gt;";
+echo ligne('age', $age), ligne('moyenne', $moyenne), ligne('prenom', $prenom),
+     ligne('note', $note), ligne('ville', $ville), ligne('admis', $admis);
+echo "&lt;/table&gt;";
+// Q2 : get_debug_type($moyenne) répond "string" (le type), is_numeric($moyenne) répond true
+//      (le contenu est un nombre). Le type et le contenu sont deux questions différentes.
+// Q3 : après unset($age), var_dump / get_debug_type / is_numeric donnent un Warning
+//      "Undefined variable $age" ; isset() et empty() fonctionnent sans message.
+// Q4 : même comportement pour $telephone jamais déclarée : isset() et empty() sont sûrs.</code></pre><div class="tw"><table>
+<tr><th>Variable</th><th>get_debug_type</th><th>isset</th><th>empty</th><th>is_numeric</th></tr>
+<tr><td><code>$age = 21</code></td><td>int</td><td>true</td><td>false</td><td>true</td></tr>
+<tr><td><code>$moyenne = "14.5"</code></td><td>string</td><td>true</td><td>false</td><td>true</td></tr>
+<tr><td><code>$prenom = ""</code></td><td>string</td><td>true</td><td>true</td><td>false</td></tr>
+<tr><td><code>$note = 0</code></td><td>int</td><td>true</td><td>true</td><td>true</td></tr>
+<tr><td><code>$ville = null</code></td><td>null</td><td>false</td><td>true</td><td>false</td></tr>
+<tr><td><code>$admis = false</code></td><td>bool</td><td>true</td><td>true</td><td>false</td></tr>
+</table></div><ol><li><code>$moyenne</code> : <code>get_debug_type</code> répond « string » (le type de la variable) alors que <code>is_numeric</code> répond true (son contenu est un nombre). Un type et un contenu sont deux questions différentes.</li><li>Après <code>unset($age)</code> : <code>var_dump</code>, <code>get_debug_type</code> et <code>is_numeric</code> provoquent un Warning « Undefined variable $age ». <code>isset</code> (false) et <code>empty</code> (true) fonctionnent sans message.</li><li>Pour <code>$telephone</code>, jamais déclarée : même comportement. Les fonctions sans risque sur une variable qui n'existe peut-être pas sont <code>isset()</code> et <code>empty()</code>.</li></ol><div class='box piege'><p class='t'>Piège</p><p><code>$note = 0</code> est « empty » alors que 0 est une note valide. N'utilisez pas <code>empty()</code> pour tester qu'un champ numérique a été rempli.</p></div></div></details></div><div class="exo"><h4>Bonus : le bulletin de notes</h4><p>Notes reçues sous forme de chaînes, moyenne pondérée, type du résultat, note nécessaire.</p><details class="sol"><summary>Solution détaillée</summary><div class="in"><p class="q">bulletin.php</p><pre><code>&lt;?php
+$notePhp = "15"; $noteReseaux = "12"; $noteAnglais = "18";
+$coefPhp = 3;    $coefReseaux = 2;     $coefAnglais = 1;
+
+var_dump($notePhp, is_numeric($notePhp));              // string(2) "15" puis true
+
+$somCoef = $coefPhp + $coefReseaux + $coefAnglais;     // 6
+$moyenne = ($notePhp * $coefPhp + $noteReseaux * $coefReseaux + $noteAnglais * $coefAnglais) / $somCoef;
+
+echo "&lt;table border='1'&gt;&lt;tr&gt;&lt;th&gt;Module&lt;/th&gt;&lt;th&gt;Note&lt;/th&gt;&lt;th&gt;Coefficient&lt;/th&gt;&lt;/tr&gt;";
+echo "&lt;tr&gt;&lt;td&gt;PHP&lt;/td&gt;&lt;td&gt;$notePhp&lt;/td&gt;&lt;td&gt;$coefPhp&lt;/td&gt;&lt;/tr&gt;";
+echo "&lt;tr&gt;&lt;td&gt;Réseaux&lt;/td&gt;&lt;td&gt;$noteReseaux&lt;/td&gt;&lt;td&gt;$coefReseaux&lt;/td&gt;&lt;/tr&gt;";
+echo "&lt;tr&gt;&lt;td&gt;Anglais&lt;/td&gt;&lt;td&gt;$noteAnglais&lt;/td&gt;&lt;td&gt;$coefAnglais&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;";
+echo "&lt;p&gt;Moyenne : $moyenne&lt;/p&gt;";                                      // 14.5
+echo "&lt;p&gt;Type de la moyenne : " . get_debug_type($moyenne) . "&lt;/p&gt;";  // float : l'opérateur / donne un float
+
+// Note d'Anglais pour 15 de moyenne : 15 x 6 moins les deux autres points pondérés
+$noteNecessaire = 15 * $somCoef - ($notePhp * $coefPhp + $noteReseaux * $coefReseaux);
+echo "&lt;p&gt;Note nécessaire en Anglais : $noteNecessaire&lt;/p&gt;";            // 21 : impossible (maximum 20)</code></pre><div class="box ex"><p class="t">Valeurs de contrôle retrouvées</p><p>Moyenne 14.5 | type float | note nécessaire en Anglais pour 15 de moyenne : 21</p></div><p><strong>Pourquoi float ?</strong> L'opérateur <code>/</code> renvoie un float quand la division ne tombe pas juste (87 / 6 = 14.5). <strong>Pourquoi 21 est impossible ?</strong> Pour obtenir 15 de moyenne, il faudrait 21 sur 20 : la note maximale est 20, donc cette moyenne est inatteignable.</p></div></details></div><h2 id="tp2">TP2 : structures de contrôle</h2><div class="exo"><h4>Exercice 1 : la table de multiplication</h4><p>Deux boucles for imbriquées, ternaire pour colorer, compteur de produits pairs, syntaxe alternative.</p><details class="sol"><summary>Solution détaillée</summary><div class="in"><p class="q">table.php (version avec accolades)</p><pre><code>&lt;?php
+$choisi = 7;
+$pairs = 0;
+echo "&lt;table border='1'&gt;";
+echo "&lt;tr&gt;&lt;th&gt;&lt;/th&gt;";
+for ($colonne = 1; $colonne &lt;= 10; $colonne++) { echo "&lt;th&gt;$colonne&lt;/th&gt;"; }
+echo "&lt;/tr&gt;";
+for ($ligne = 1; $ligne &lt;= 10; $ligne++) {
+    echo "&lt;tr&gt;&lt;th&gt;$ligne&lt;/th&gt;";
+    for ($colonne = 1; $colonne &lt;= 10; $colonne++) {
+        $produit = $ligne * $colonne;
+        $style  = ($ligne === $choisi || $colonne === $choisi) ? "background:lightblue;" : "";
+        $style .= ($ligne === $colonne) ? "font-weight:bold;" : "";
+        echo "&lt;td style='$style'&gt;$produit&lt;/td&gt;";
+        if ($produit % 2 === 0) { $pairs++; }
+    }
+    echo "&lt;/tr&gt;";
+}
+echo "&lt;/table&gt;";
+echo "&lt;p&gt;Nombre de produits pairs : $pairs&lt;/p&gt;";   // 75</code></pre><p class="q">Version avec la syntaxe alternative (for ... endfor)</p><pre><code>&lt;?php $choisi = 7; $pairs = 0; ?&gt;
+&lt;table border="1"&gt;
+&lt;?php for ($ligne = 1; $ligne &lt;= 10; $ligne++): ?&gt;
+    &lt;tr&gt;
+    &lt;?php for ($colonne = 1; $colonne &lt;= 10; $colonne++):
+        $produit = $ligne * $colonne;
+        if ($produit % 2 === 0) { $pairs++; }
+        $style = ($ligne === $choisi || $colonne === $choisi) ? 'background:lightblue;' : '';
+        $style .= ($ligne === $colonne) ? 'font-weight:bold;' : '';
+    ?&gt;
+        &lt;td style="&lt;?= $style ?&gt;"&gt;&lt;?= $produit ?&gt;&lt;/td&gt;
+    &lt;?php endfor; ?&gt;
+    &lt;/tr&gt;
+&lt;?php endfor; ?&gt;
+&lt;/table&gt;
+&lt;p&gt;Nombre de produits pairs : &lt;?= $pairs ?&gt;&lt;/p&gt;</code></pre><div class="box ex"><p class="t">Valeurs de contrôle retrouvées</p><p>Nombre de produits pairs : 75 (100 produits moins les 25 produits de deux impairs)</p></div><p><strong>Quelle version est la plus lisible ?</strong> Dans un fichier qui mélange beaucoup de HTML et un peu de PHP, la syntaxe alternative : <code>endfor;</code> dit quelle boucle se ferme, alors que les accolades se ressemblent toutes. C'est la forme des vues (comme Blade en Laravel).</p></div></details></div><div class="exo"><h4>Exercice 2 : mini-algorithmes</h4><p>Somme des multiples, factorielles, chiffres d'un nombre, nombre premier.</p><details class="sol"><summary>Solution détaillée</summary><div class="in"><p class="q">algos.php</p><pre><code>&lt;?php
+// 1. somme des multiples de 3 ou 5 inférieurs à 1000
+$somme = 0;
+for ($i = 1; $i &lt; 1000; $i++) {
+    if ($i % 3 === 0 || $i % 5 === 0) { $somme += $i; }
+}
+echo "Somme : $somme\n";                                   // 233168
+
+// 2. factorielles de 0 à 12, puis plus petit n tel que n! &gt; 1 000 000
+$f = 1;
+for ($n = 0; $n &lt;= 12; $n++) {
+    if ($n &gt; 0) { $f *= $n; }
+    echo "$n! = $f\n";
+}
+$n = 0; $f = 1;
+while (true) {
+    $n++; $f *= $n;
+    if ($f &gt; 1000000) { break; }
+}
+echo "Plus petit n : $n ($n! = $f)\n";                      // 10 (3628800)
+
+// 3. chiffres d'un nombre (do ... while : un nombre a au moins un chiffre, même 0)
+foreach ([12345, 0] as $nombre) {
+    $reste = $nombre; $nbChiffres = 0; $somChiffres = 0;
+    do {
+        $somChiffres += $reste % 10;
+        $reste = intdiv($reste, 10);
+        $nbChiffres++;
+    } while ($reste &gt; 0);
+    echo "$nombre : $nbChiffres chiffre(s), somme = $somChiffres\n";  // 5 et 15 ; puis 1 et 0
+}
+
+// 4. nombre premier
+foreach ([97, 91] as $p) {
+    $premier = $p &gt;= 2; $diviseur = null;
+    for ($d = 2; $d &lt; $p; $d++) {
+        if ($p % $d === 0) { $premier = false; $diviseur = $d; break; }
+    }
+    echo $premier ? "$p est premier.\n" : "$p n'est pas premier (divisible par $diviseur).\n";
+}</code></pre><div class="box ex"><p class="t">Valeurs de contrôle retrouvées</p><p>Somme des multiples de 3 ou 5 : 233168 | plus petit n tel que n! dépasse un million : 10 (3628800) | 12345 : 5 chiffres, somme 15 | 97 est premier | 91 n'est pas premier (divisible par 7)</p></div><p><strong>Pourquoi do ... while pour les chiffres ?</strong> Tout nombre a au moins un chiffre, même 0 : le bloc doit s'exécuter une fois avant de tester. Avec <code>$nombre = 0</code>, on obtient 1 chiffre et une somme de 0 (un <code>while</code> donnerait 0 chiffre).</p></div></details></div><div class="exo"><h4>Exercice 3 : le relevé de notes</h4><p>foreach, continue pour ignorer les notes invalides, match(true), ternaire, calculs sans max().</p><details class="sol"><summary>Solution détaillée</summary><div class="in"><p class="q">releve.php</p><pre><code>&lt;?php
+$notes = [18, 9, 14, 12.5, 20, -2, 10.5, 22];
+$valides = 0; $admis = 0; $somme = 0; $meilleure = null; $ignorees = 0;
+
+echo "&lt;table border='1'&gt;&lt;tr&gt;&lt;th&gt;Note&lt;/th&gt;&lt;th&gt;Mention&lt;/th&gt;&lt;th&gt;Résultat&lt;/th&gt;&lt;/tr&gt;";
+foreach ($notes as $note) {
+    if ($note &lt; 0 || $note &gt; 20) {
+        echo "&lt;tr&gt;&lt;td colspan='3'&gt;Note invalide ignorée : $note&lt;/td&gt;&lt;/tr&gt;";
+        $ignorees++;
+        continue;
+    }
+    $mention = match (true) {
+        $note &gt;= 16 =&gt; "Très bien",
+        $note &gt;= 14 =&gt; "Bien",
+        $note &gt;= 12 =&gt; "Assez bien",
+        $note &gt;= 10 =&gt; "Passable",
+        default     =&gt; "Ajourné",
+    };
+    $resultat = ($note &gt;= 10) ? "Admis" : "Ajourné";
+    echo "&lt;tr&gt;&lt;td&gt;$note&lt;/td&gt;&lt;td&gt;$mention&lt;/td&gt;&lt;td&gt;$resultat&lt;/td&gt;&lt;/tr&gt;";
+
+    $valides++;
+    $somme += $note;
+    if ($note &gt;= 10) { $admis++; }
+    if ($meilleure === null || $note &gt; $meilleure) { $meilleure = $note; }
+}
+echo "&lt;/table&gt;";
+echo "&lt;p&gt;Notes invalides ignorées : $ignorees&lt;/p&gt;";
+echo "&lt;p&gt;Notes valides : $valides | Admis : $admis&lt;/p&gt;";
+echo "&lt;p&gt;Moyenne : " . ($somme / $valides) . " | Meilleure note : $meilleure&lt;/p&gt;";</code></pre><div class="box ex"><p class="t">Valeurs de contrôle retrouvées</p><p>Notes invalides ignorées : 2 | notes valides : 6 | admis : 5 | moyenne : 14 | meilleure note : 20</p></div><p><strong>Q6.</strong> La version <code>if / elseif / else</code> donne le même résultat ; <code>match (true)</code> est plus court et renvoie directement une valeur, donc on le préfère pour attribuer une mention. Un <code>switch</code> classique compare à des valeurs exactes (<code>==</code>) : il ne sait pas tester des intervalles comme « au moins 16 ». Il faudrait <code>switch (true)</code>, moins lisible.</p></div></details></div><div class="exo"><h4>Bonus 1 : le nombre mystère</h4><p>Recherche par dichotomie avec do ... while.</p><details class="sol"><summary>Solution détaillée</summary><div class="in"><p class="q">mystere.php</p><pre><code>&lt;?php
+$secret = random_int(1, 100);
+$min = 1; $max = 100; $essais = 0;
+do {
+    $essais++;
+    $essai = intdiv($min + $max, 2);
+    if ($essai &lt; $secret) {
+        echo "Essai $essais : $essai, trop petit&lt;br&gt;";
+        $min = $essai + 1;
+    } elseif ($essai &gt; $secret) {
+        echo "Essai $essais : $essai, trop grand&lt;br&gt;";
+        $max = $essai - 1;
+    } else {
+        echo "Trouvé $secret en $essais essais !&lt;br&gt;";
+    }
+    if ($essais &gt; 10) { echo "Erreur : trop d'essais"; break; }   // sécurité
+} while ($essai !== $secret);</code></pre><p><strong>Q5.</strong> Non, le nombre d'essais ne dépasse jamais 7 : l'intervalle possible est divisé par deux à chaque essai (100, 50, 25, 13, 7, 4, 2, 1). La sécurité <code>$essais &gt; 10</code> évite une boucle infinie si une erreur de logique se glisse dans le code.</p></div></details></div><div class="exo"><h4>Bonus 2 : le ticket de caisse</h4><p>Trois listes parallèles, continue, remise avec match(true), livraison avec ternaire.</p><details class="sol"><summary>Solution détaillée</summary><div class="in"><p class="q">ticket.php</p><pre><code>&lt;?php
+$produits  = ["Clavier", "Souris", "Écran", "Câble HDMI"];
+$prix      = [150, 80, 1200, 45];
+$quantites = [2, 3, 1, 0];
+
+$sousTotal = 0; $articles = 0;
+echo "&lt;table border='1'&gt;&lt;tr&gt;&lt;th&gt;Produit&lt;/th&gt;&lt;th&gt;Quantité&lt;/th&gt;&lt;th&gt;Prix unitaire&lt;/th&gt;&lt;th&gt;Total&lt;/th&gt;&lt;/tr&gt;";
+foreach ($produits as $i =&gt; $produit) {
+    if ($quantites[$i] === 0) { continue; }
+    $total = $prix[$i] * $quantites[$i];
+    $fond = ($i % 2 === 1) ? "background:#eee" : "";
+    echo "&lt;tr style='$fond'&gt;&lt;td&gt;$produit&lt;/td&gt;&lt;td&gt;{$quantites[$i]}&lt;/td&gt;&lt;td&gt;{$prix[$i]}&lt;/td&gt;&lt;td&gt;$total&lt;/td&gt;&lt;/tr&gt;";
+    $sousTotal += $total;
+    $articles  += $quantites[$i];
+}
+echo "&lt;/table&gt;";
+
+$taux = match (true) { $sousTotal &gt;= 1500 =&gt; 10, $sousTotal &gt;= 500 =&gt; 5, default =&gt; 0 };
+$remise = $sousTotal * $taux / 100;
+$apresRemise = $sousTotal - $remise;
+$livraison = ($apresRemise &gt;= 1000) ? 0 : 30;
+$aPayer = $apresRemise + $livraison;
+
+echo "Articles : $articles\n";
+echo "Sous-total : $sousTotal DH\n";
+echo "Remise ($taux %) : -$remise DH\n";
+echo "Livraison : " . ($livraison === 0 ? "offerte" : "$livraison DH") . "\n";
+echo "Total à payer : $aPayer DH\n";</code></pre><div class="box ex"><p class="t">Valeurs de contrôle retrouvées</p><p>Départ : 6 articles, sous-total 1740 DH, remise 10 % : -174 DH, livraison offerte, total 1566 DH. Sans l'écran : 5 articles, 540 DH, remise 5 % : -27 DH, livraison 30 DH, total 543 DH</p></div><p>Pour tester le cas sans écran, mettez <code>$quantites[2]</code> à 0 : les montants se recalculent car tout dépend de la boucle.</p></div></details></div><h2 id="tp3">TP3 : tableaux et fonctions</h2><div class="exo"><h4>Exercice 1 : le carnet de notes</h4><p>Tableaux imbriqués, fonctions typées, usort avec &lt;=&gt;, major par filière, array_map.</p><details class="sol"><summary>Solution détaillée</summary><div class="in"><p class="q">carnet.php</p><pre><code>&lt;?php
+$coefs = ["PHP" =&gt; 3, "SQL" =&gt; 2, "Réseaux" =&gt; 1];
+$promo = [
+    ["nom" =&gt; "Sara Ouali",    "filiere" =&gt; "GI", "notes" =&gt; ["PHP" =&gt; 17, "SQL" =&gt; 15, "Réseaux" =&gt; 12]],
+    ["nom" =&gt; "Amine Benali",  "filiere" =&gt; "GI", "notes" =&gt; ["PHP" =&gt; 12, "SQL" =&gt; 9,  "Réseaux" =&gt; 14]],
+    ["nom" =&gt; "Hiba Idrissi",  "filiere" =&gt; "GC", "notes" =&gt; ["PHP" =&gt; 14, "SQL" =&gt; 16, "Réseaux" =&gt; 11]],
+    ["nom" =&gt; "Omar Tazi",     "filiere" =&gt; "GC", "notes" =&gt; ["PHP" =&gt; 8,  "SQL" =&gt; 11, "Réseaux" =&gt; 10]],
+    ["nom" =&gt; "Rim Alaoui",    "filiere" =&gt; "GE", "notes" =&gt; ["PHP" =&gt; 19, "SQL" =&gt; 13, "Réseaux" =&gt; 15]],
+];
+
+// 1. moyenne pondérée
+function moyennePonderee(array $notes, array $coefs): float
+{
+    $somme = 0; $total = 0;
+    foreach ($notes as $module =&gt; $note) {
+        $somme += $note * $coefs[$module];
+        $total += $coefs[$module];
+    }
+    return $total === 0 ? 0 : $somme / $total;
+}
+
+// 2. mention
+function mention(float $moyenne): string
+{
+    return match (true) {
+        $moyenne &gt;= 16 =&gt; "Très bien",
+        $moyenne &gt;= 14 =&gt; "Bien",
+        $moyenne &gt;= 12 =&gt; "Assez bien",
+        $moyenne &gt;= 10 =&gt; "Passable",
+        default        =&gt; "Non validé",
+    };
+}
+
+// 3. ajouter la moyenne : on modifie $promo[$i], pas la copie $e
+foreach ($promo as $i =&gt; $e) {
+    $promo[$i]["moyenne"] = round(moyennePonderee($e["notes"], $coefs), 2);
+}
+
+// 4. tri décroissant par moyenne, puis tableau
+usort($promo, fn($a, $b) =&gt; $b["moyenne"] &lt;=&gt; $a["moyenne"]);
+
+echo "&lt;table border='1'&gt;&lt;tr&gt;&lt;th&gt;Rang&lt;/th&gt;&lt;th&gt;Nom&lt;/th&gt;&lt;th&gt;Filière&lt;/th&gt;";
+foreach ($coefs as $module =&gt; $c) { echo "&lt;th&gt;$module&lt;/th&gt;"; }
+echo "&lt;th&gt;Moyenne&lt;/th&gt;&lt;th&gt;Mention&lt;/th&gt;&lt;/tr&gt;";
+foreach ($promo as $i =&gt; $e) {
+    echo "&lt;tr&gt;&lt;td&gt;" . ($i + 1) . "&lt;/td&gt;&lt;td&gt;{$e['nom']}&lt;/td&gt;&lt;td&gt;{$e['filiere']}&lt;/td&gt;";
+    foreach ($coefs as $module =&gt; $c) { echo "&lt;td&gt;{$e['notes'][$module]}&lt;/td&gt;"; }
+    echo "&lt;td&gt;{$e['moyenne']}&lt;/td&gt;&lt;td&gt;" . mention($e['moyenne']) . "&lt;/td&gt;&lt;/tr&gt;";
+}
+echo "&lt;/table&gt;";
+
+// 5. major de chaque filière : la promo est triée, le premier rencontré est le major
+$majors = [];
+foreach ($promo as $e) {
+    if (!isset($majors[$e["filiere"]])) { $majors[$e["filiere"]] = $e["nom"]; }
+}
+
+// 6. moyenne d'un module avec array_map
+function moyenneModule(array $promo, string $module): float
+{
+    $notes = array_map(fn($e) =&gt; $e["notes"][$module], $promo);
+    return array_sum($notes) / count($notes);
+}
+
+echo "Majors : ";
+foreach ($majors as $f =&gt; $nom) { echo "$f : $nom | "; }
+echo "\nMoyennes par module : ";
+foreach ($coefs as $module =&gt; $c) { echo "$module " . moyenneModule($promo, $module) . " | "; }
+echo "\n";</code></pre><div class="box ex"><p class="t">Valeurs de contrôle retrouvées</p><p>1. Rim Alaoui GE 16.33 Très bien | 2. Sara Ouali GI 15.5 Bien | 3. Hiba Idrissi GC 14.17 Bien | 4. Amine Benali GI 11.33 Passable | 5. Omar Tazi GC 9.33 Non validé. Majors : GE Rim Alaoui, GI Sara Ouali, GC Hiba Idrissi. Moyennes : PHP 14, SQL 12.8, Réseaux 12.4</p></div><div class='box piege'><p class='t'>Piège de la copie</p><p>Dans <code>foreach ($promo as $e)</code>, <code>$e</code> est une copie : modifier <code>$e['moyenne']</code> ne change pas <code>$promo</code>. Il faut la clé : <code>foreach ($promo as $i => $e)</code> puis <code>$promo[$i]['moyenne'] = ...</code>.</p></div></div></details></div><div class="exo"><h4>Exercice 2 : la boutique et son stock</h4><p>Passage par référence, validations dans l'ordre, array_reduce sur array_keys, array_filter.</p><details class="sol"><summary>Solution détaillée</summary><div class="in"><p class="q">boutique.php</p><pre><code>&lt;?php
+$stock = [
+    "CLV" =&gt; ["nom" =&gt; "Clavier",    "prix" =&gt; 150,  "qte" =&gt; 10],
+    "SOU" =&gt; ["nom" =&gt; "Souris",     "prix" =&gt; 80,   "qte" =&gt; 8],
+    "ECR" =&gt; ["nom" =&gt; "Écran",      "prix" =&gt; 1200, "qte" =&gt; 2],
+    "CAB" =&gt; ["nom" =&gt; "Câble HDMI", "prix" =&gt; 45,   "qte" =&gt; 0],
+];
+$commandes = [["CLV", 2], ["ECR", 1], ["XXX", 1], ["SOU", 50], ["CAB", 1], ["CLV", 3], ["ECR", 1], ["SOU", 0]];
+$panier = [];
+
+// 1. &amp; : la fonction doit MODIFIER le panier et le stock de l'appelant, pas des copies
+function ajouterAuPanier(array &amp;$panier, array &amp;$stock, string $ref, int $qte): string
+{
+    if (!isset($stock[$ref])) {
+        return "Référence inconnue : $ref";
+    }
+    $nom = $stock[$ref]["nom"];
+    if ($qte &lt;= 0) {
+        return "Quantité invalide pour $nom";
+    }
+    if ($qte &gt; $stock[$ref]["qte"]) {
+        return "Stock insuffisant pour $nom ({$stock[$ref]['qte']} disponible(s))";
+    }
+    $stock[$ref]["qte"] -= $qte;
+    $panier[$ref] = ($panier[$ref] ?? 0) + $qte;      // cumul si déjà présent
+    return "OK : $qte x $nom";
+}
+
+// 3. traitement des commandes
+foreach ($commandes as [$ref, $qte]) {
+    $msg = ajouterAuPanier($panier, $stock, $ref, $qte);
+    $couleur = str_starts_with($msg, "OK") ? "green" : "red";
+    echo "&lt;p style='color:$couleur'&gt;$msg&lt;/p&gt;";
+}
+
+// 4. total avec array_reduce sur les clés du panier
+function totalPanier(array $panier, array $stock): float
+{
+    return array_reduce(array_keys($panier),
+        fn($acc, $ref) =&gt; $acc + $panier[$ref] * $stock[$ref]["prix"], 0);
+}
+
+$sousTotal = totalPanier($panier, $stock);
+// 5. remise
+$taux = match (true) { $sousTotal &gt;= 2000 =&gt; 10, $sousTotal &gt;= 1000 =&gt; 5, default =&gt; 0 };
+$remise = $sousTotal * $taux / 100;
+echo "Panier : ";
+foreach ($panier as $ref =&gt; $q) { echo "$q {$stock[$ref]['nom']}, "; }
+echo "| " . array_sum($panier) . " articles\n";
+echo "Sous-total : $sousTotal DH | Remise ($taux %) : -$remise DH | Total : " . ($sousTotal - $remise) . " DH\n";
+
+// 6. produits en rupture
+$rupture = array_filter($stock, fn($p) =&gt; $p["qte"] === 0);
+echo "En rupture : " . implode(", ", array_column($rupture, "nom")) . "\n";</code></pre><div class="box ex"><p class="t">Valeurs de contrôle retrouvées</p><p>OK : 2 x Clavier | OK : 1 x Écran | Référence inconnue : XXX | Stock insuffisant pour Souris (8 disponible(s)) | Stock insuffisant pour Câble HDMI (0 disponible(s)) | OK : 3 x Clavier | OK : 1 x Écran | Quantité invalide pour Souris | 7 articles, sous-total 3150 DH, remise 10 % : -315 DH, total 2835 DH | en rupture : Écran, Câble HDMI</p></div><p><strong>Pourquoi <code>&amp;</code> sur le panier et le stock ?</strong> Par défaut PHP passe une copie. La fonction doit modifier les tableaux de l'appelant (diminuer le stock, augmenter le panier) : sans <code>&amp;</code>, elle modifierait des copies qui disparaissent à la fin de la fonction, et le stock ne baisserait jamais.</p></div></details></div><div class="exo"><h4>Exercice 3 : le tableau de bord des ventes</h4><p>Une fonction générique, match, array_filter, explode, array_reverse, implode, usort sur une copie.</p><details class="sol"><summary>Solution détaillée</summary><div class="in"><p class="q">ventes.php</p><pre><code>&lt;?php
+$ventes = [
+    ["date" =&gt; "2026-09-28", "vendeur" =&gt; "Karim",   "produit" =&gt; "Clavier",    "montant" =&gt; 450],
+    ["date" =&gt; "2026-09-30", "vendeur" =&gt; "Nadia",   "produit" =&gt; "Écran",      "montant" =&gt; 1200],
+    ["date" =&gt; "2026-10-02", "vendeur" =&gt; "Karim",   "produit" =&gt; "Souris",     "montant" =&gt; 160],
+    ["date" =&gt; "2026-10-03", "vendeur" =&gt; "Youssef", "produit" =&gt; "Écran",      "montant" =&gt; 2400],
+    ["date" =&gt; "2026-10-05", "vendeur" =&gt; "Nadia",   "produit" =&gt; "Clavier",    "montant" =&gt; 300],
+    ["date" =&gt; "2026-10-08", "vendeur" =&gt; "Karim",   "produit" =&gt; "Écran",      "montant" =&gt; 1200],
+    ["date" =&gt; "2026-10-12", "vendeur" =&gt; "Nadia",   "produit" =&gt; "Souris",     "montant" =&gt; 240],
+    ["date" =&gt; "2026-10-15", "vendeur" =&gt; "Youssef", "produit" =&gt; "Câble HDMI", "montant" =&gt; 90],
+    ["date" =&gt; "2026-10-16", "vendeur" =&gt; "Karim",   "produit" =&gt; "Clavier",    "montant" =&gt; 150],
+];
+
+// 1 et 2. une seule fonction, deux modes
+function grouperPar(array $ventes, string $champ, string $mode = "somme"): array
+{
+    $res = [];
+    foreach ($ventes as $v) {
+        $cle = $v[$champ];
+        $res[$cle] = ($res[$cle] ?? 0) + match ($mode) {
+            "somme"  =&gt; $v["montant"],
+            "nombre" =&gt; 1,
+        };                       // autre mode : UnhandledMatchError (match n'a pas de default)
+    }
+    arsort($res);
+    return $res;
+}
+
+function ligne(array $t): string
+{
+    $s = "";
+    foreach ($t as $k =&gt; $v) { $s .= "$k $v | "; }
+    return $s;
+}
+echo "Par vendeur : ", ligne(grouperPar($ventes, "vendeur")), "\n";
+echo "Par produit : ", ligne(grouperPar($ventes, "produit")), "\n";
+
+// 3. meilleur vendeur
+$parVendeur = grouperPar($ventes, "vendeur");
+$total = array_sum($parVendeur);
+$meilleur = array_key_first($parVendeur);
+printf("Meilleur vendeur : %s (%d DH, %.1f %% du total de %d DH)\n",
+    $meilleur, $parVendeur[$meilleur], $parVendeur[$meilleur] / $total * 100, $total);
+
+// 4. ventes d'un mois
+function ventesDuMois(array $ventes, int $mois): array
+{
+    return array_filter($ventes, fn($v) =&gt; (int) explode("-", $v["date"])[1] === $mois);
+}
+$oct = ventesDuMois($ventes, 10);
+echo "Octobre : " . count($oct) . " ventes, " . array_sum(array_column($oct, "montant")) . " DH\n";
+
+// 5. date française et trois plus grosses ventes
+function dateFr(string $date): string { return implode("/", array_reverse(explode("-", $date))); }
+$copie = $ventes;                                     // on trie une copie
+usort($copie, fn($a, $b) =&gt; $b["montant"] &lt;=&gt; $a["montant"]);
+foreach (array_slice($copie, 0, 3) as $i =&gt; $v) {
+    echo ($i + 1) . ". {$v['montant']} DH : {$v['produit']} ({$v['vendeur']}, " . dateFr($v['date']) . ")\n";
+}
+
+// 6. moyenne par vente
+$nb = grouperPar($ventes, "vendeur", "nombre");
+echo "Moyenne par vente : ";
+foreach ($parVendeur as $nom =&gt; $somme) { echo "$nom " . $somme / $nb[$nom] . " | "; }
+echo "\n";</code></pre><div class="box ex"><p class="t">Valeurs de contrôle retrouvées</p><p>Par vendeur : Youssef 2490, Karim 1960, Nadia 1740 | par produit : Écran 4800, Clavier 900, Souris 400, Câble HDMI 90 | meilleur vendeur : Youssef (2490 DH, 40.2 % du total de 6190 DH) | octobre : 7 ventes, 4540 DH | moyenne par vente : Youssef 1245, Karim 490, Nadia 580</p></div><p><strong>Que se passe-t-il avec <code>grouperPar($ventes, "vendeur", "moyenne")</code> ?</strong> Le <code>match</code> n'a ni branche « moyenne » ni <code>default</code> : PHP lève une <code>UnhandledMatchError</code>. C'est voulu : <code>match</code> est strict et refuse les cas imprévus, au contraire d'un <code>switch</code> qui ne ferait rien.</p></div></details></div><div class="exo"><h4>Bonus 1 : le menu à plusieurs niveaux</h4><p>Récursivité sur une arborescence : affichage, comptage, profondeur, chemin.</p><details class="sol"><summary>Solution détaillée</summary><div class="in"><p class="q">menu.php</p><pre><code>&lt;?php
+$menu = [
+    ["titre" =&gt; "Accueil", "lien" =&gt; "index.php"],
+    ["titre" =&gt; "Formations", "enfants" =&gt; [
+        ["titre" =&gt; "Génie informatique", "enfants" =&gt; [
+            ["titre" =&gt; "Cycle ingénieur", "lien" =&gt; "gi-ing.php"],
+            ["titre" =&gt; "Master", "lien" =&gt; "gi-master.php"],
+        ]],
+        ["titre" =&gt; "Génie civil", "lien" =&gt; "gc.php"],
+    ]],
+    ["titre" =&gt; "Vie étudiante", "enfants" =&gt; [
+        ["titre" =&gt; "Clubs", "lien" =&gt; "clubs.php"],
+    ]],
+    ["titre" =&gt; "Contact", "lien" =&gt; "contact.php"],
+];
+
+// 1. cas d'arrêt : un élément sans enfants (un simple lien) ne rappelle pas la fonction
+function afficherMenu(array $elements): string
+{
+    $html = "&lt;ul&gt;";
+    foreach ($elements as $el) {
+        if (isset($el["enfants"])) {
+            $html .= "&lt;li&gt;{$el['titre']}" . afficherMenu($el["enfants"]) . "&lt;/li&gt;";   // appel récursif
+        } else {
+            $html .= "&lt;li&gt;&lt;a href=\"{$el['lien']}\"&gt;{$el['titre']}&lt;/a&gt;&lt;/li&gt;";
+        }
+    }
+    return $html . "&lt;/ul&gt;";
+}
+
+// 2. compter les liens
+function compterLiens(array $elements): int
+{
+    $n = 0;
+    foreach ($elements as $el) {
+        $n += isset($el["enfants"]) ? compterLiens($el["enfants"]) : 1;
+    }
+    return $n;
+}
+
+// 3. profondeur
+function profondeur(array $elements): int
+{
+    $max = 0;
+    foreach ($elements as $el) {
+        $p = isset($el["enfants"]) ? profondeur($el["enfants"]) : 0;
+        $max = max($max, $p);
+    }
+    return $max + 1;
+}
+
+// 4. chemin vers un titre (null si absent)
+function chemin(array $elements, string $titre): ?array
+{
+    foreach ($elements as $el) {
+        if ($el["titre"] === $titre) { return [$el["titre"]]; }
+        if (isset($el["enfants"])) {
+            $sous = chemin($el["enfants"], $titre);
+            if ($sous !== null) { return [$el["titre"], ...$sous]; }
+        }
+    }
+    return null;
+}
+
+echo afficherMenu($menu), "\n";
+echo "Nombre de liens : " . compterLiens($menu) . " | Profondeur : " . profondeur($menu) . "\n";
+echo implode(" &gt; ", chemin($menu, "Master")) . "\n";
+var_dump(chemin($menu, "Sport"));
+// 5. troisième niveau sous Clubs : aucune modification, la récursivité s'adapte
+$menu[2]["enfants"][0] = ["titre" =&gt; "Clubs", "enfants" =&gt; [
+    ["titre" =&gt; "Robotique", "lien" =&gt; "robotique.php"], ["titre" =&gt; "Musique", "lien" =&gt; "musique.php"]]];
+echo "Après ajout : " . compterLiens($menu) . " liens, profondeur " . profondeur($menu) . "\n";</code></pre><div class="box ex"><p class="t">Valeurs de contrôle retrouvées</p><p>Nombre de liens : 6 | profondeur : 3 | Formations &gt; Génie informatique &gt; Master | chemin($menu, "Sport") donne NULL</p></div><p><strong>Cas d'arrêt :</strong> un élément sans <code>enfants</code> (un simple lien) ne rappelle pas la fonction. Après l'ajout d'un troisième niveau sous « Clubs », les quatre fonctions marchent sans modification (7 liens, profondeur 3), preuve que la récursivité s'adapte à n'importe quelle profondeur.</p></div></details></div><div class="exo"><h4>Bonus 2 : les fonctions qui fabriquent des fonctions</h4><p>Closures, fonctions fléchées, use, argument nommé, tri multi-critères, variable static.</p><details class="sol"><summary>Solution détaillée</summary><div class="in"><p class="q">catalogue.php</p><pre><code>&lt;?php
+$produits = [
+    ["nom" =&gt; "Clavier",    "categorie" =&gt; "Périphérique", "prix" =&gt; 150],
+    ["nom" =&gt; "Écran",      "categorie" =&gt; "Affichage",    "prix" =&gt; 1200],
+    ["nom" =&gt; "Souris",     "categorie" =&gt; "Périphérique", "prix" =&gt; 80],
+    ["nom" =&gt; "Projecteur", "categorie" =&gt; "Affichage",    "prix" =&gt; 3500],
+    ["nom" =&gt; "Webcam",     "categorie" =&gt; "Périphérique", "prix" =&gt; 80],
+    ["nom" =&gt; "Câble HDMI", "categorie" =&gt; "Connectique",  "prix" =&gt; 45],
+];
+
+// 1. une fonction qui renvoie une fonction
+function creerRemise(float $taux): callable
+{
+    return fn(float $prix) =&gt; $prix * (1 - $taux);
+}
+$soldes = creerRemise(0.20);
+echo $soldes(150), "\n";                                              // 120
+echo "Prix soldés : " . implode(", ", array_map($soldes, array_column($produits, "prix"))) . "\n";
+
+// 2. filtre paramétrable
+function creerFiltrePrix(float $min, float $max): callable
+{
+    return fn(array $p) =&gt; $p["prix"] &gt;= $min &amp;&amp; $p["prix"] &lt;= $max;
+}
+echo "Entre 50 et 1500 DH : " . implode(", ", array_column(array_filter($produits, creerFiltrePrix(50, 1500)), "nom")) . "\n";
+
+// 3. tri selon un champ ($champ et $desc capturés avec use)
+function trierPar(array &amp;$liste, string $champ, bool $desc = false): void
+{
+    usort($liste, function ($a, $b) use ($champ, $desc) {
+        return $desc ? $b[$champ] &lt;=&gt; $a[$champ] : $a[$champ] &lt;=&gt; $b[$champ];
+    });
+}
+$copie = $produits;
+trierPar($copie, "prix", desc: true);
+echo "Par prix décroissant : " . implode(", ", array_column($copie, "nom")) . "\n";
+
+// 4. tri multi-critères avec un seul usort : &lt;=&gt; compare deux tableaux élément par élément
+$copie = $produits;
+usort($copie, fn($a, $b) =&gt; [$a["categorie"], $a["prix"], $a["nom"]] &lt;=&gt; [$b["categorie"], $b["prix"], $b["nom"]]);
+echo "Catégorie, prix, nom : " . implode(", ", array_column($copie, "nom")) . "\n";
+
+// 5. variable static : conserve sa valeur d'un appel à l'autre
+function numeroCommande(): string
+{
+    static $n = 0;
+    $n++;
+    return "CMD-2026-$n";
+}
+echo numeroCommande(), " ", numeroCommande(), " ", numeroCommande(), "\n";
+// Sans static, $n repart à 0 à chaque appel : on obtiendrait toujours CMD-2026-1.</code></pre><div class="box ex"><p class="t">Valeurs de contrôle retrouvées</p><p>$soldes(150) donne 120 | prix soldés : 120, 960, 64, 2800, 64, 36 | entre 50 et 1500 DH : Clavier, Écran, Souris, Webcam | par prix décroissant : Projecteur, Écran, Clavier, Souris, Webcam, Câble HDMI | catégorie, prix, nom : Écran, Projecteur, Câble HDMI, Souris, Webcam, Clavier | CMD-2026-1, CMD-2026-2, CMD-2026-3</p></div><p><strong>Sans <code>static</code> ?</strong> <code>$n</code> repart à 0 à chaque appel : on obtient toujours « CMD-2026-1 ». <strong>Pourquoi <code>use ($champ, $desc)</code> ?</strong> Une fonction anonyme ne voit pas les variables extérieures : <code>use</code> les importe (la fonction fléchée <code>fn</code> les capture seule).</p></div></details></div><h2 id="tp4">TP4 : fichiers, cookies et sessions</h2><div class="exo"><h4>Exercice 1 : le journal des visites</h4><p>Inclusions avec __DIR__, fichier CSV en mode a, statistiques relues avec fgetcsv.</p><details class="sol"><summary>Solution détaillée</summary><div class="in"><p>Arborescence : <code>index.php</code>, <code>contact.php</code> (même code que <code>index.php</code> avec <code>$page = 'contact'</code>), <code>stats.php</code>, <code>inc/config.php</code>, <code>inc/fonctions.php</code>, <code>inc/header.php</code>, <code>inc/footer.php</code>. Le dossier <code>data/</code> est créé par le script.</p><p class="q">inc/config.php</p><pre><code>&lt;?php
+// Chemin absolu du journal, construit avec __DIR__ : correct quel que soit le script appelant
+const JOURNAL = __DIR__ . '/../data/visites.csv';</code></pre><p class="q">inc/fonctions.php</p><pre><code>&lt;?php
+function enregistrerVisite(string $page): bool
+{
+    $dossier = dirname(JOURNAL);
+    if (!is_dir($dossier)) {
+        mkdir($dossier, 0755, true);
+    }
+    $f = fopen(JOURNAL, 'a');                         // mode a : ajoute à la fin
+    if ($f === false) {
+        return false;
+    }
+    fputcsv($f, [date('Y-m-d H:i:s'), $page], escape: '');
+    fclose($f);
+    return true;
+}
+
+function lireVisites(): array
+{
+    if (!file_exists(JOURNAL)) {
+        return [];
+    }
+    $visites = [];
+    $f = fopen(JOURNAL, 'r');
+    while (($ligne = fgetcsv($f, escape: '')) !== false) {
+        $visites[] = ["date" =&gt; $ligne[0], "page" =&gt; $ligne[1]];
+    }
+    fclose($f);
+    return $visites;
+}</code></pre><p class="q">inc/header.php</p><pre><code>&lt;?php enregistrerVisite($page); ?&gt;
+&lt;!DOCTYPE html&gt;
+&lt;html lang="fr"&gt;
+&lt;head&gt;&lt;meta charset="utf-8"&gt;&lt;title&gt;Mon site&lt;/title&gt;&lt;/head&gt;
+&lt;body&gt;
+&lt;nav&gt;
+    &lt;a href="index.php"&gt;Accueil&lt;/a&gt; |
+    &lt;a href="contact.php"&gt;Contact&lt;/a&gt; |
+    &lt;a href="stats.php"&gt;Statistiques&lt;/a&gt;
+&lt;/nav&gt;</code></pre><p class="q">inc/footer.php</p><pre><code>&lt;footer&gt;&lt;p&gt;INF4041 - TP4&lt;/p&gt;&lt;/footer&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre><p class="q">index.php</p><pre><code>&lt;?php
+$page = 'index';
+require_once __DIR__ . '/inc/config.php';       // indispensable, à charger une seule fois
+require_once __DIR__ . '/inc/fonctions.php';
+require __DIR__ . '/inc/header.php';            // fragment d'affichage : on peut le réinclure
+?&gt;
+&lt;h1&gt;Accueil&lt;/h1&gt;
+&lt;?php require __DIR__ . '/inc/footer.php';</code></pre><p class="q">stats.php</p><pre><code>&lt;?php
+$page = 'stats';
+require_once __DIR__ . '/inc/config.php';
+require_once __DIR__ . '/inc/fonctions.php';
+require __DIR__ . '/inc/header.php';
+
+$visites = lireVisites();
+$parPage = [];
+foreach ($visites as $v) {
+    $parPage[$v['page']] = ($parPage[$v['page']] ?? 0) + 1;
+}
+arsort($parPage);
+
+$aujourdhui = date('Y-m-d');
+$duJour = count(array_filter($visites, fn($v) =&gt; explode(' ', $v['date'])[0] === $aujourdhui));
+$dernieres = array_slice(array_reverse($visites), 0, 5);        // la plus récente en premier
+?&gt;
+&lt;h1&gt;Statistiques&lt;/h1&gt;
+&lt;p&gt;Total : &lt;?= count($visites) ?&gt; visites | Aujourd'hui : &lt;?= $duJour ?&gt;&lt;/p&gt;
+&lt;h2&gt;Par page&lt;/h2&gt;
+&lt;ul&gt;
+&lt;?php foreach ($parPage as $nom =&gt; $n): ?&gt;
+    &lt;li&gt;&lt;?= htmlspecialchars($nom) ?&gt; : &lt;?= $n ?&gt;&lt;/li&gt;
+&lt;?php endforeach; ?&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Dernières visites&lt;/h2&gt;
+&lt;ul&gt;
+&lt;?php foreach ($dernieres as $v): ?&gt;
+    &lt;li&gt;&lt;?= $v['date'] ?&gt; &lt;?= htmlspecialchars($v['page']) ?&gt;&lt;/li&gt;
+&lt;?php endforeach; ?&gt;
+&lt;/ul&gt;
+&lt;?php require __DIR__ . '/inc/footer.php';</code></pre><div class="box ex"><p class="t">Valeurs de contrôle retrouvées</p><p>Après les visites index, contact, index, stats, index puis l'ouverture de stats : total 6 (la page de statistiques se compte elle-même), index 3, stats 2, contact 1, toutes les visites du jour comptées. Le fichier <code>data/visites.csv</code> contient une ligne par visite.</p></div><p><strong>Q1.</strong> <code>require_once</code> pour <code>config.php</code> et <code>fonctions.php</code> : ils sont indispensables (erreur fatale s'ils manquent) et ne doivent être chargés qu'une fois (redéfinir une fonction ou une constante provoque une erreur). <code>require</code> pour <code>header.php</code> : c'est un fragment d'affichage, il est inclus à chaque page et peut l'être plusieurs fois.</p><p><strong>Q6.</strong> Avec le mode <code>w</code>, chaque ouverture vide le fichier : après deux visites, le journal ne contient plus que la dernière ligne. Le mode <code>a</code> ajoute à la fin sans rien effacer.</p><div class='box piege'><p class='t'>Version de PHP</p><p>Depuis PHP 8.4, <code>fputcsv</code> et <code>fgetcsv</code> signalent une dépréciation si le paramètre <code>escape</code> n'est pas précisé. J'ai écrit <code>escape: ''</code>, ce qui fonctionne aussi avec PHP 8.0 et 8.2 de XAMPP.</p></div></div></details></div><div class="exo"><h4>Exercice 2 : les préférences du visiteur</h4><p>Cookies : thème, langue, dernière visite, suppression, liste blanche.</p><details class="sol"><summary>Solution détaillée</summary><div class="in"><p class="q">accueil.php</p><pre><code>&lt;?php
+$textes = [
+    "fr" =&gt; ["titre" =&gt; "Bienvenue", "theme" =&gt; "Changer de thème", "langue" =&gt; "English",
+             "oubli" =&gt; "Effacer mes préférences", "visite" =&gt; "Votre dernière visite :", "premiere" =&gt; "Première visite !"],
+    "en" =&gt; ["titre" =&gt; "Welcome", "theme" =&gt; "Switch theme", "langue" =&gt; "Français",
+             "oubli" =&gt; "Forget my preferences", "visite" =&gt; "Your last visit:", "premiere" =&gt; "First visit!"],
+];
+
+// Liste blanche : une valeur falsifiée (langue = de) retombe sur la valeur par défaut
+$langue = $_COOKIE['langue'] ?? 'fr';
+$theme  = $_COOKIE['theme'] ?? 'clair';
+if (!in_array($langue, ['fr', 'en'], true))      { $langue = 'fr'; }
+if (!in_array($theme, ['clair', 'sombre'], true)) { $theme = 'clair'; }
+$t = $textes[$langue];
+
+// On lit l'ancienne date AVANT d'appeler setcookie(), puis on enregistre la nouvelle
+$derniere = $_COOKIE['derniere_visite'] ?? null;
+setcookie('derniere_visite', date('d/m/Y à H:i'), [
+    'expires' =&gt; time() + 30 * 24 * 3600, 'path' =&gt; '/', 'httponly' =&gt; true, 'samesite' =&gt; 'Lax',
+]);
+$fond = ($theme === 'sombre') ? 'background:#222;color:#eee' : 'background:#fff;color:#222';
+?&gt;
+&lt;!DOCTYPE html&gt;
+&lt;html lang="&lt;?= $langue ?&gt;"&gt;
+&lt;head&gt;&lt;meta charset="utf-8"&gt;&lt;title&gt;&lt;?= $t['titre'] ?&gt;&lt;/title&gt;&lt;/head&gt;
+&lt;body style="&lt;?= $fond ?&gt;"&gt;
+&lt;h1&gt;&lt;?= $t['titre'] ?&gt;&lt;/h1&gt;
+&lt;p&gt;&lt;?= $derniere ? $t['visite'] . ' ' . htmlspecialchars($derniere) : $t['premiere'] ?&gt;&lt;/p&gt;
+&lt;a href="basculer-theme.php"&gt;&lt;?= $t['theme'] ?&gt;&lt;/a&gt; |
+&lt;a href="basculer-langue.php"&gt;&lt;?= $t['langue'] ?&gt;&lt;/a&gt; |
+&lt;a href="oublier.php"&gt;&lt;?= $t['oubli'] ?&gt;&lt;/a&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre><p class="q">basculer-theme.php (basculer-langue.php est identique avec le cookie langue, fr et en)</p><pre><code>&lt;?php
+$actuel  = $_COOKIE['theme'] ?? 'clair';
+$nouveau = ($actuel === 'clair') ? 'sombre' : 'clair';
+setcookie('theme', $nouveau, [
+    'expires' =&gt; time() + 30 * 24 * 3600, 'path' =&gt; '/', 'httponly' =&gt; true, 'samesite' =&gt; 'Lax',
+]);
+header('Location: accueil.php');
+exit;                                  // sans exit, le script continuerait de s'exécuter</code></pre><p class="q">oublier.php</p><pre><code>&lt;?php
+foreach (['theme', 'langue', 'derniere_visite'] as $nom) {
+    setcookie($nom, '', time() - 3600, '/');          // date passée : le navigateur supprime le cookie
+}
+header('Location: accueil.php');
+exit;</code></pre><div class="box ex"><p class="t">Valeurs de contrôle retrouvées</p><p>Première visite : « Première visite ! ». Visite suivante : « Votre dernière visite : 08/11/2026 à 14:32 ». Après basculer-theme : fond #222. Après basculer-langue : textes anglais. Le cookie porte les options HttpOnly et SameSite=Lax. oublier.php envoie trois Set-Cookie avec une date passée.</p></div><p><strong>Q3.</strong> On lit <code>$_COOKIE['derniere_visite']</code> avant d'appeler <code>setcookie()</code>, sinon on afficherait la nouvelle date. <code>setcookie()</code> n'écrit pas dans <code>$_COOKIE</code> : la nouvelle valeur n'y apparaît qu'à la requête suivante.</p><p><strong>Q5.</strong> Si on remplace le cookie <code>langue</code> par <code>de</code> avec les outils de développement, <code>$textes['de']</code> n'existe pas : avertissements « Undefined array key » et page sans texte. Un cookie est modifiable par l'utilisateur : on le valide avec une liste blanche (<code>in_array($langue, ['fr', 'en'], true)</code>), puis on retombe sur la valeur par défaut. Testé : avec <code>langue=de</code>, la page s'affiche en français.</p></div></details></div><div class="exo"><h4>Exercice 3 : l'espace membre (avec les deux bonus)</h4><p>password_hash, password_verify, session, protection de page, inactivité, message flash, limitation des tentatives.</p><details class="sol"><summary>Solution détaillée</summary><div class="in"><p>J'ai intégré les bonus : <code>proteger.php</code> gère l'inactivité et l'historique, <code>tentatives.php</code> bloque après 3 échecs.</p><p class="q">creer-comptes.php</p><pre><code>&lt;?php
+$comptes = [
+    ['email' =&gt; 'sara@epa.ma',  'nom' =&gt; 'Sara Ouali',   'hash' =&gt; password_hash('secret123',  PASSWORD_DEFAULT)],
+    ['email' =&gt; 'amine@epa.ma', 'nom' =&gt; 'Amine Benali', 'hash' =&gt; password_hash('azerty2026', PASSWORD_DEFAULT)],
+];
+if (!is_dir(__DIR__ . '/data')) {
+    mkdir(__DIR__ . '/data', 0755, true);
+}
+file_put_contents(
+    __DIR__ . '/data/users.json',
+    json_encode($comptes, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE),
+    LOCK_EX
+);
+echo "Comptes créés";
+// Les empreintes changent à chaque exécution (sel aléatoire). Le mot de passe n'apparaît nulle part.</code></pre><p class="q">inc/auth.php</p><pre><code>&lt;?php
+function verifierIdentifiants(string $email, string $mdp): ?array
+{
+    $fichier = __DIR__ . '/../data/users.json';
+    if (!file_exists($fichier)) {
+        return null;
+    }
+    $users = json_decode(file_get_contents($fichier), true);
+    foreach ($users as $u) {
+        if ($u['email'] === $email) {
+            if (password_verify($mdp, $u['hash'])) {
+                unset($u['hash']);          // l'empreinte ne va jamais en session
+                return $u;
+            }
+            return null;
+        }
+    }
+    return null;                            // email inconnu : même retour que mauvais mot de passe
+}</code></pre><p class="q">inc/tentatives.php (bonus 2)</p><pre><code>&lt;?php
+// BONUS 2 : limiter les tentatives (3 échecs en 300 secondes)
+const TENTATIVES = __DIR__ . '/../data/tentatives.json';
+
+function lireEchecs(): array
+{
+    return file_exists(TENTATIVES) ? json_decode(file_get_contents(TENTATIVES), true) : [];
+}
+
+function enregistrerEchec(string $email): void
+{
+    $t = lireEchecs();
+    $t[$email][] = time();
+    file_put_contents(TENTATIVES, json_encode($t), LOCK_EX);
+}
+
+function echecsRecents(string $email): array
+{
+    return array_filter(lireEchecs()[$email] ?? [], fn($ts) =&gt; $ts &gt; time() - 300);
+}
+
+function estBloque(string $email): bool
+{
+    return count(echecsRecents($email)) &gt;= 3;
+}
+
+function effacerEchecs(string $email): void
+{
+    $t = lireEchecs();
+    unset($t[$email]);
+    file_put_contents(TENTATIVES, json_encode($t), LOCK_EX);
+}</code></pre><p class="q">login.php</p><pre><code>&lt;?php
+session_start();
+require_once __DIR__ . '/inc/auth.php';
+require_once __DIR__ . '/inc/tentatives.php';
+
+$email = "sara@epa.ma";
+$mdp   = "secret123";                       // à modifier pour tester les autres cas
+
+// message flash : lu puis supprimé tout de suite, affiché plus bas (une seule fois)
+$flash = $_SESSION['flash'] ?? null;
+unset($_SESSION['flash']);
+
+// On prépare le message AVANT tout affichage : session_regenerate_id() envoie un en-tête HTTP
+if (estBloque($email)) {
+    $attente = 300 - (time() - min(echecsRecents($email)));
+    $message = "Trop de tentatives, réessayez dans $attente secondes";
+} else {
+    $compte = verifierIdentifiants($email, $mdp);
+    if ($compte !== null) {
+        session_regenerate_id(true);        // contre la fixation de session
+        $_SESSION['user'] = $compte;
+        $_SESSION['connecte_a'] = time();
+        $_SESSION['derniere_activite'] = time();
+        $_SESSION['pages'] = [];
+        effacerEchecs($email);
+        $message = '&lt;a href="espace.php"&gt;Accéder à mon espace&lt;/a&gt;';
+    } else {
+        enregistrerEchec($email);
+        // même message pour un email inconnu et un mauvais mot de passe : on ne révèle pas si le compte existe
+        $message = "Identifiants incorrects";
+    }
+}
+
+if ($flash !== null) {
+    echo "&lt;p&gt;" . htmlspecialchars($flash) . "&lt;/p&gt;";
+}
+echo $message;</code></pre><p class="q">inc/proteger.php (bonus 1 : inactivité et historique)</p><pre><code>&lt;?php
+session_start();
+
+if (!isset($_SESSION['user'])) {
+    header('Location: login.php');
+    exit;
+}
+
+// BONUS 1 : déconnexion après 60 secondes d'inactivité (30 minutes en production)
+if (time() - $_SESSION['derniere_activite'] &gt; 60) {
+    // on retire les données de connexion, mais SANS session_destroy() : il effacerait aussi le message flash
+    unset($_SESSION['user'], $_SESSION['connecte_a'], $_SESSION['derniere_activite'], $_SESSION['pages']);
+    $_SESSION['flash'] = "Vous avez été déconnecté après une minute d'inactivité";
+    header('Location: login.php');
+    exit;
+}
+$_SESSION['derniere_activite'] = time();
+$_SESSION['pages'][] = basename($_SERVER['SCRIPT_NAME']);       // historique des pages visitées</code></pre><p class="q">espace.php</p><pre><code>&lt;?php
+require __DIR__ . '/inc/proteger.php';
+
+$minutes = intdiv(time() - $_SESSION['connecte_a'], 60);
+?&gt;
+&lt;h1&gt;Bonjour &lt;?= htmlspecialchars($_SESSION['user']['nom']) ?&gt;&lt;/h1&gt;
+&lt;p&gt;Connecté depuis &lt;?= $minutes ?&gt; minute(s).&lt;/p&gt;
+&lt;p&gt;Pages vues depuis la connexion : &lt;?= count($_SESSION['pages']) ?&gt;&lt;/p&gt;
+&lt;p&gt;Dernières pages : &lt;?= implode(', ', array_slice($_SESSION['pages'], -5)) ?&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href="profil.php"&gt;Profil&lt;/a&gt; | &lt;a href="logout.php"&gt;Déconnexion&lt;/a&gt;&lt;/p&gt;</code></pre><p class="q">logout.php</p><pre><code>&lt;?php
+session_start();
+$_SESSION = [];                                          // 1. vider les données
+session_destroy();                                       // 2. détruire la session côté serveur
+setcookie(session_name(), '', time() - 3600, '/');       // 3. supprimer le cookie de session
+header('Location: login.php');
+exit;</code></pre><div class="tw"><table>
+<tr><th>Test</th><th>Résultat obtenu</th></tr>
+<tr><td>secret123 pour sara@epa.ma</td><td>Connexion réussie, lien vers l'espace membre</td></tr>
+<tr><td>Secret123 (majuscule)</td><td>Identifiants incorrects</td></tr>
+<tr><td>omar@epa.ma (inconnu)</td><td>Identifiants incorrects</td></tr>
+<tr><td>espace.php sans être connecté</td><td>Redirection (302) vers login.php</td></tr>
+<tr><td>espace.php après logout.php</td><td>Redirection vers login.php</td></tr>
+<tr><td>Trois mauvais mots de passe puis le bon</td><td>« Trop de tentatives, réessayez dans 299 secondes »</td></tr>
+<tr><td>Inactivité dépassée</td><td>Retour à login.php avec le message flash, affiché une seule fois</td></tr>
+</table></div><ol><li>Les empreintes changent à chaque exécution (un sel aléatoire est ajouté). Le mot de passe n'apparaît nulle part dans le fichier.</li><li><code>verifierIdentifiants</code> renvoie le compte sans son empreinte (<code>unset($u['hash'])</code>) : l'empreinte ne va jamais en session.</li><li>Même message pour un email inconnu et un mauvais mot de passe : un pirate ne doit pas pouvoir deviner quels comptes existent.</li><li><code>logout.php</code> suit les trois étapes : vider <code>$_SESSION</code>, <code>session_destroy()</code>, supprimer le cookie de session. En navigation privée, il n'y a pas de cookie de session : <code>espace.php</code> redirige vers la connexion.</li><li>Bonus 1 : on n'appelle pas <code>session_destroy()</code> avant la redirection, car il détruirait aussi le message flash. On retire seulement les données de connexion. L'heure de dernière activité est en session et non en cookie parce qu'un cookie est modifiable par l'utilisateur, qui pourrait se prolonger indéfiniment.</li><li>Bonus 2 : la connexion est refusée même avec le bon mot de passe tant que le blocage dure. Les échecs sont dans un fichier (côté serveur, par email) et non en session : un pirate qui supprime son cookie de session repartirait avec une session vierge et un compteur à zéro.</li></ol><div class='box piege'><p class='t'>Erreur trouvée en testant</p><p>Ma première version de <code>login.php</code> affichait le message flash avant <code>session_regenerate_id()</code>. Résultat : « Session ID cannot be regenerated after headers have already been sent ». La correction est dans le code ci-dessus : on prépare le message, on traite la connexion, puis on affiche en dernier. Règle : tout ce qui envoie des en-têtes (<code>session_start</code>, <code>setcookie</code>, <code>header</code>, <code>session_regenerate_id</code>) passe avant le premier affichage.</p></div></div></details></div><h2 id="tp5">TP5 : formulaires et validation</h2><div class="exo"><h4>Exercice 1 : le moteur de recherche (GET)</h4><p>Formulaire GET, valeurs par défaut, filter_var, array_filter à trois critères, formulaire collant.</p><details class="sol"><summary>Solution détaillée</summary><div class="in"><p class="q">catalogue.php</p><pre><code>&lt;?php
+$livres = [
+    ["titre" =&gt; "Apprendre PHP 8",     "categorie" =&gt; "Informatique", "prix" =&gt; 250],
+    ["titre" =&gt; "Débuter avec Laravel", "categorie" =&gt; "Informatique", "prix" =&gt; 320],
+    ["titre" =&gt; "Le Petit Prince",     "categorie" =&gt; "Roman",        "prix" =&gt; 60],
+    ["titre" =&gt; "PHP et MySQL",        "categorie" =&gt; "Informatique", "prix" =&gt; 180],
+    ["titre" =&gt; "Histoire du temps",   "categorie" =&gt; "Science",      "prix" =&gt; 120],
+    ["titre" =&gt; "L'Alchimiste",        "categorie" =&gt; "Roman",        "prix" =&gt; 75],
+    ["titre" =&gt; "Algorithmique",       "categorie" =&gt; "Informatique", "prix" =&gt; 290],
+    ["titre" =&gt; "Cosmos",              "categorie" =&gt; "Science",      "prix" =&gt; 140],
+];
+
+function e(string $s): string { return htmlspecialchars($s, ENT_QUOTES, 'UTF-8'); }
+
+// 3. lecture avec valeurs par défaut
+$q         = trim($_GET['q'] ?? '');
+$categorie = $_GET['categorie'] ?? 'toutes';
+// 4. valeur vide ou invalide : filter_var renvoie false, donc pas de limite
+$prixMax = filter_var(trim($_GET['prix_max'] ?? ''), FILTER_VALIDATE_FLOAT);
+if ($prixMax === false) {
+    $prixMax = null;
+}
+
+// 5. les trois critères dans un seul array_filter
+$resultats = array_filter($livres, function ($l) use ($q, $categorie, $prixMax) {
+    if ($q !== '' &amp;&amp; stripos($l['titre'], $q) === false)          { return false; }
+    if ($categorie !== 'toutes' &amp;&amp; $l['categorie'] !== $categorie) { return false; }
+    if ($prixMax !== null &amp;&amp; $l['prix'] &gt; $prixMax)               { return false; }
+    return true;
+});
+// 6. tri par prix croissant
+usort($resultats, fn($a, $b) =&gt; $a['prix'] &lt;=&gt; $b['prix']);
+
+$categories = ['toutes' =&gt; 'Toutes', 'Roman' =&gt; 'Roman', 'Science' =&gt; 'Science', 'Informatique' =&gt; 'Informatique'];
+?&gt;
+&lt;!DOCTYPE html&gt;
+&lt;html lang="fr"&gt;
+&lt;head&gt;&lt;meta charset="utf-8"&gt;&lt;title&gt;Catalogue&lt;/title&gt;&lt;/head&gt;
+&lt;body&gt;
+&lt;form method="get" action=""&gt;
+    &lt;label for="q"&gt;Titre&lt;/label&gt;
+    &lt;input type="text" id="q" name="q" value="&lt;?= e($q) ?&gt;"&gt;          &lt;!-- formulaire collant --&gt;
+
+    &lt;label for="categorie"&gt;Catégorie&lt;/label&gt;
+    &lt;select id="categorie" name="categorie"&gt;
+    &lt;?php foreach ($categories as $valeur =&gt; $libelle): ?&gt;
+        &lt;option value="&lt;?= $valeur ?&gt;" &lt;?= $categorie === $valeur ? 'selected' : '' ?&gt;&gt;&lt;?= $libelle ?&gt;&lt;/option&gt;
+    &lt;?php endforeach; ?&gt;
+    &lt;/select&gt;
+
+    &lt;label for="prix_max"&gt;Prix maximum&lt;/label&gt;
+    &lt;input type="number" id="prix_max" name="prix_max" value="&lt;?= e(trim($_GET['prix_max'] ?? '')) ?&gt;"&gt;
+    &lt;button&gt;Chercher&lt;/button&gt;
+&lt;/form&gt;
+
+&lt;p&gt;&lt;?= count($resultats) ?&gt; résultat(s)&lt;/p&gt;
+&lt;?php if (empty($resultats)): ?&gt;
+    &lt;p&gt;Aucun livre trouvé&lt;/p&gt;
+&lt;?php else: ?&gt;
+    &lt;table border="1"&gt;
+        &lt;tr&gt;&lt;th&gt;Titre&lt;/th&gt;&lt;th&gt;Catégorie&lt;/th&gt;&lt;th&gt;Prix&lt;/th&gt;&lt;/tr&gt;
+        &lt;?php foreach ($resultats as $l): ?&gt;
+            &lt;tr&gt;&lt;td&gt;&lt;?= e($l['titre']) ?&gt;&lt;/td&gt;&lt;td&gt;&lt;?= e($l['categorie']) ?&gt;&lt;/td&gt;&lt;td&gt;&lt;?= $l['prix'] ?&gt; DH&lt;/td&gt;&lt;/tr&gt;
+        &lt;?php endforeach; ?&gt;
+    &lt;/table&gt;
+&lt;?php endif; ?&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre><div class="tw"><table>
+<tr><th>Recherche</th><th>Résultat obtenu (identique aux valeurs de contrôle)</th></tr>
+<tr><td><code>q = php</code></td><td>PHP et MySQL (180), Apprendre PHP 8 (250)</td></tr>
+<tr><td><code>q = php, prix_max = 200</code></td><td>PHP et MySQL (180)</td></tr>
+<tr><td><code>categorie = Science</code></td><td>Histoire du temps (120), Cosmos (140)</td></tr>
+<tr><td><code>prix_max = abc</code></td><td>Les 8 livres (pas de limite)</td></tr>
+</table></div><ol><li>Après l'envoi, l'adresse devient <code>catalogue.php?q=php&amp;categorie=Informatique&amp;prix_max=200</code> : les champs sont dans l'URL.</li><li>Copier l'adresse dans un nouvel onglet affiche les mêmes résultats : GET convient à une recherche car l'URL contient tout, on peut la mettre en favori, la partager et recharger sans risque. Une recherche ne modifie aucune donnée.</li><li>Avec <code>prix_max=abc</code> la page fonctionne : <code>filter_var</code> renvoie false, on le traduit par « pas de limite ».</li></ol><p>La saisie est réaffichée avec <code>e()</code> (htmlspecialchars) : testé avec <code>q="&gt;&lt;script&gt;</code>, le champ affiche le texte sans l'exécuter.</p></div></details></div><div class="exo"><h4>Exercice 2 : l'inscription à un atelier (POST)</h4><p>Validation serveur, formulaire collant (texte, radio, cases), enregistrement JSON, message flash, redirection PRG.</p><details class="sol"><summary>Solution détaillée</summary><div class="in"><p class="q">inscription.php</p><pre><code>&lt;?php
+session_start();
+
+function e(string $s): string { return htmlspecialchars($s, ENT_QUOTES, 'UTF-8'); }
+
+$ateliers = ['PHP', 'Laravel', 'MySQL'];
+$optionsPossibles = ['repas', 'attestation'];
+$erreurs = [];
+$d = ['nom' =&gt; '', 'email' =&gt; '', 'age' =&gt; '', 'atelier' =&gt; '', 'options' =&gt; [], 'reglement' =&gt; false];
+
+// 2. le traitement ne s'exécute qu'après l'envoi du formulaire
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // recevoir et nettoyer
+    $d['nom']       = trim($_POST['nom'] ?? '');
+    $d['email']     = trim($_POST['email'] ?? '');
+    $d['age']       = trim($_POST['age'] ?? '');
+    $d['atelier']   = $_POST['atelier'] ?? '';
+    $d['reglement'] = isset($_POST['reglement']);                 // une case non cochée n'est pas envoyée
+    $options = is_array($_POST['options'] ?? null) ? $_POST['options'] : [];
+    $d['options'] = array_values(array_filter($options, fn($o) =&gt; in_array($o, $optionsPossibles, true)));
+
+    // 4. valider : une règle par champ, un message par erreur rangé dans $erreurs[champ]
+    $longueur = mb_strlen($d['nom']);
+    if ($longueur &lt; 2 || $longueur &gt; 50) {
+        $erreurs['nom'] = "Le nom doit contenir de 2 à 50 caractères.";
+    }
+    if (!filter_var($d['email'], FILTER_VALIDATE_EMAIL)) {
+        $erreurs['email'] = "Adresse email invalide.";
+    }
+    $age = filter_var($d['age'], FILTER_VALIDATE_INT, ['options' =&gt; ['min_range' =&gt; 16, 'max_range' =&gt; 99]]);
+    if ($age === false) {
+        $erreurs['age'] = "L'âge doit être compris entre 16 et 99.";
+    }
+    if (!in_array($d['atelier'], $ateliers, true)) {
+        $erreurs['atelier'] = "Choisissez un atelier.";
+    }
+    if (!$d['reglement']) {
+        $erreurs['reglement'] = "Vous devez accepter le règlement.";
+    }
+
+    // 7. tout est valide : on enregistre (lecture, ajout, réécriture avec verrou)
+    if (empty($erreurs)) {
+        $fichier = __DIR__ . '/data/inscriptions.json';
+        if (!is_dir(dirname($fichier))) {
+            mkdir(dirname($fichier), 0755, true);
+        }
+        $liste = file_exists($fichier) ? json_decode(file_get_contents($fichier), true) : [];
+        $liste[] = [
+            'nom' =&gt; $d['nom'], 'email' =&gt; $d['email'], 'age' =&gt; $age,
+            'atelier' =&gt; $d['atelier'], 'options' =&gt; $d['options'], 'date' =&gt; date('Y-m-d H:i:s'),
+        ];
+        file_put_contents($fichier, json_encode($liste, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+
+        // 8. message flash puis redirection (PRG)
+        $_SESSION['flash'] = "Inscription confirmée pour l'atelier " . $d['atelier'];
+        header('Location: merci.php');
+        exit;
+    }
+}
+?&gt;
+&lt;!DOCTYPE html&gt;
+&lt;html lang="fr"&gt;
+&lt;head&gt;&lt;meta charset="utf-8"&gt;&lt;title&gt;Inscription&lt;/title&gt;&lt;style&gt;.erreur{color:red}&lt;/style&gt;&lt;/head&gt;
+&lt;body&gt;
+&lt;form method="post" action=""&gt;
+    &lt;label for="nom"&gt;Nom&lt;/label&gt;
+    &lt;input type="text" id="nom" name="nom" value="&lt;?= e($d['nom']) ?&gt;" required&gt;
+    &lt;?php if (isset($erreurs['nom'])): ?&gt;&lt;p class="erreur"&gt;&lt;?= $erreurs['nom'] ?&gt;&lt;/p&gt;&lt;?php endif; ?&gt;
+
+    &lt;label for="email"&gt;Email&lt;/label&gt;
+    &lt;input type="email" id="email" name="email" value="&lt;?= e($d['email']) ?&gt;"&gt;
+    &lt;?php if (isset($erreurs['email'])): ?&gt;&lt;p class="erreur"&gt;&lt;?= $erreurs['email'] ?&gt;&lt;/p&gt;&lt;?php endif; ?&gt;
+
+    &lt;label for="age"&gt;Âge&lt;/label&gt;
+    &lt;input type="number" id="age" name="age" value="&lt;?= e($d['age']) ?&gt;"&gt;
+    &lt;?php if (isset($erreurs['age'])): ?&gt;&lt;p class="erreur"&gt;&lt;?= $erreurs['age'] ?&gt;&lt;/p&gt;&lt;?php endif; ?&gt;
+
+    &lt;p&gt;Atelier :
+    &lt;?php foreach ($ateliers as $a): ?&gt;
+        &lt;label&gt;&lt;input type="radio" name="atelier" value="&lt;?= $a ?&gt;" &lt;?= $d['atelier'] === $a ? 'checked' : '' ?&gt;&gt; &lt;?= $a ?&gt;&lt;/label&gt;
+    &lt;?php endforeach; ?&gt;
+    &lt;/p&gt;
+    &lt;?php if (isset($erreurs['atelier'])): ?&gt;&lt;p class="erreur"&gt;&lt;?= $erreurs['atelier'] ?&gt;&lt;/p&gt;&lt;?php endif; ?&gt;
+
+    &lt;p&gt;Options :
+    &lt;?php foreach ($optionsPossibles as $o): ?&gt;
+        &lt;label&gt;&lt;input type="checkbox" name="options[]" value="&lt;?= $o ?&gt;" &lt;?= in_array($o, $d['options'], true) ? 'checked' : '' ?&gt;&gt; &lt;?= $o ?&gt;&lt;/label&gt;
+    &lt;?php endforeach; ?&gt;
+    &lt;/p&gt;
+
+    &lt;label&gt;&lt;input type="checkbox" name="reglement" value="1"&gt; J'accepte le règlement&lt;/label&gt;   &lt;!-- jamais pré-cochée --&gt;
+    &lt;?php if (isset($erreurs['reglement'])): ?&gt;&lt;p class="erreur"&gt;&lt;?= $erreurs['reglement'] ?&gt;&lt;/p&gt;&lt;?php endif; ?&gt;
+
+    &lt;button&gt;S'inscrire&lt;/button&gt;
+&lt;/form&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre><p class="q">merci.php</p><pre><code>&lt;?php
+session_start();
+
+// message flash : affiché une seule fois puis supprimé
+if (isset($_SESSION['flash'])) {
+    echo '&lt;p&gt;' . htmlspecialchars($_SESSION['flash']) . '&lt;/p&gt;';
+    unset($_SESSION['flash']);
+}
+
+$fichier = __DIR__ . '/data/inscriptions.json';
+$liste = file_exists($fichier) ? json_decode(file_get_contents($fichier), true) : [];
+$parAtelier = array_count_values(array_column($liste, 'atelier'));
+
+echo '&lt;ul&gt;';
+foreach (['PHP', 'Laravel', 'MySQL'] as $atelier) {
+    echo "&lt;li&gt;$atelier : " . ($parAtelier[$atelier] ?? 0) . " inscrit(s)&lt;/li&gt;";
+}
+echo '&lt;/ul&gt;';</code></pre><div class="tw"><table>
+<tr><th>Test</th><th>Résultat obtenu</th></tr>
+<tr><td>Envoi à vide</td><td>Cinq messages d'erreur, un sous chaque champ</td></tr>
+<tr><td>Nom « Sa », email invalide, âge 12, atelier « Python »</td><td>Erreurs pour email, âge, atelier, règlement ; nom (2 caractères) accepté ; saisie conservée</td></tr>
+<tr><td>Envoi valide</td><td>Redirection 302 vers merci.php, inscription ajoutée au JSON, option « hack » inconnue ignorée</td></tr>
+<tr><td>merci.php</td><td>« Inscription confirmée pour l'atelier PHP » puis le nombre d'inscrits par atelier</td></tr>
+<tr><td>F5 sur merci.php</td><td>Le message flash a disparu et il n'y a toujours qu'un seul inscrit</td></tr>
+</table></div><ol><li><strong>Q10.</strong> Non, F5 ne crée pas de seconde inscription : après le POST, le serveur a répondu par une redirection (302) et le navigateur a demandé <code>merci.php</code> en GET. Recharger rejoue ce GET, pas le POST (motif Post / Redirect / Get).</li><li><strong>Q11.</strong> Oui, la validation PHP refuse quand même le formulaire vide : l'attribut <code>required</code> est une aide côté navigateur, qu'on retire avec l'inspecteur. Seule la validation serveur est une garantie.</li></ol><p>Une case non cochée n'est pas envoyée : <code>isset($_POST['reglement'])</code> teste donc sa présence, et <code>$_POST['options']</code> peut être absent. Le règlement n'est jamais pré-coché dans le formulaire collant.</p></div></details></div><div class="exo"><h4>Exercice 3 : la galerie de photos (upload)</h4><p>enctype multipart, $_FILES, taille, type réel avec finfo, nom aléatoire, move_uploaded_file.</p><details class="sol"><summary>Solution détaillée</summary><div class="in"><p class="q">envoyer.php</p><pre><code>&lt;?php
+session_start();
+
+$erreur = null;
+$max = 2 * 1024 * 1024;                                           // 2 Mo
+$autorises = ['image/jpeg' =&gt; 'jpg', 'image/png' =&gt; 'png', 'image/webp' =&gt; 'webp'];
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $titre = trim($_POST['titre'] ?? '');
+    $f = $_FILES['photo'] ?? null;
+
+    // vérifications dans l'ordre demandé
+    if ($titre === '') {
+        $erreur = "Le titre est obligatoire.";
+    } elseif (!$f || $f['error'] === UPLOAD_ERR_NO_FILE) {
+        $erreur = "Aucun fichier reçu.";
+    } elseif ($f['error'] === UPLOAD_ERR_INI_SIZE || $f['error'] === UPLOAD_ERR_FORM_SIZE) {
+        $erreur = "Fichier trop volumineux (2 Mo maximum).";      // limite upload_max_filesize de php.ini
+    } elseif ($f['error'] !== UPLOAD_ERR_OK) {
+        $erreur = "Erreur lors de l'envoi du fichier.";
+    } elseif ($f['size'] &gt; $max) {
+        $erreur = "Fichier trop volumineux (2 Mo maximum).";
+    } else {
+        // type RÉEL lu dans le contenu, jamais $_FILES['photo']['type'] (falsifiable)
+        $mime = (new finfo(FILEINFO_MIME_TYPE))-&gt;file($f['tmp_name']);
+        if (!isset($autorises[$mime])) {
+            $erreur = "Format refusé : JPG, PNG ou WEBP.";
+        } else {
+            $nom = bin2hex(random_bytes(8)) . '.' . $autorises[$mime];     // nom aléatoire
+            foreach (['uploads', 'data'] as $dossier) {
+                if (!is_dir(__DIR__ . "/$dossier")) { mkdir(__DIR__ . "/$dossier", 0755, true); }
+            }
+            move_uploaded_file($f['tmp_name'], __DIR__ . '/uploads/' . $nom);
+
+            $fichier = __DIR__ . '/data/galerie.json';
+            $liste = file_exists($fichier) ? json_decode(file_get_contents($fichier), true) : [];
+            $liste[] = ['fichier' =&gt; $nom, 'titre' =&gt; $titre, 'date' =&gt; date('Y-m-d H:i:s')];
+            file_put_contents($fichier, json_encode($liste, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+
+            $_SESSION['flash'] = "Photo envoyée.";
+            header('Location: galerie.php');
+            exit;
+        }
+    }
+}
+?&gt;
+&lt;!DOCTYPE html&gt;
+&lt;html lang="fr"&gt;
+&lt;head&gt;&lt;meta charset="utf-8"&gt;&lt;title&gt;Envoyer une photo&lt;/title&gt;&lt;/head&gt;
+&lt;body&gt;
+&lt;?php if ($erreur): ?&gt;&lt;p style="color:red"&gt;&lt;?= htmlspecialchars($erreur) ?&gt;&lt;/p&gt;&lt;?php endif; ?&gt;
+&lt;form method="post" action="" enctype="multipart/form-data"&gt;
+    &lt;label for="titre"&gt;Titre&lt;/label&gt;
+    &lt;input type="text" id="titre" name="titre" value="&lt;?= htmlspecialchars($_POST['titre'] ?? '') ?&gt;"&gt;
+    &lt;input type="file" name="photo" accept="image/*"&gt;
+    &lt;button&gt;Envoyer&lt;/button&gt;
+&lt;/form&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre><p class="q">galerie.php</p><pre><code>&lt;?php
+session_start();
+
+if (isset($_SESSION['flash'])) {
+    echo '&lt;p&gt;' . htmlspecialchars($_SESSION['flash']) . '&lt;/p&gt;';
+    unset($_SESSION['flash']);
+}
+
+$fichier = __DIR__ . '/data/galerie.json';
+$photos = file_exists($fichier) ? json_decode(file_get_contents($fichier), true) : [];
+usort($photos, fn($a, $b) =&gt; $b['date'] &lt;=&gt; $a['date']);            // la plus récente en premier
+?&gt;
+&lt;!DOCTYPE html&gt;
+&lt;html lang="fr"&gt;
+&lt;head&gt;&lt;meta charset="utf-8"&gt;&lt;title&gt;Galerie&lt;/title&gt;&lt;/head&gt;
+&lt;body&gt;
+&lt;?php foreach ($photos as $p): ?&gt;
+    &lt;figure style="display:inline-block"&gt;
+        &lt;img src="uploads/&lt;?= htmlspecialchars($p['fichier']) ?&gt;" width="200" alt="&lt;?= htmlspecialchars($p['titre']) ?&gt;"&gt;
+        &lt;figcaption&gt;&lt;?= htmlspecialchars($p['titre']) ?&gt; (&lt;?= $p['date'] ?&gt;)&lt;/figcaption&gt;
+    &lt;/figure&gt;
+&lt;?php endforeach; ?&gt;
+&lt;p&gt;&lt;a href="envoyer.php"&gt;Envoyer une photo&lt;/a&gt;&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre><div class="tw"><table>
+<tr><th>Test</th><th>Résultat obtenu</th></tr>
+<tr><td>Fichier texte renommé photo.jpg</td><td>« Format refusé : JPG, PNG ou WEBP. »</td></tr>
+<tr><td>Fichier de 3 Mo</td><td>« Fichier trop volumineux (2 Mo maximum). »</td></tr>
+<tr><td>Titre vide</td><td>« Le titre est obligatoire. »</td></tr>
+<tr><td>PNG valide déclaré text/plain par le client</td><td>Accepté (le type réel est lu dans le contenu), redirection vers galerie.php, fichier enregistré sous un nom aléatoire</td></tr>
+</table></div><ol><li><strong>Q6.</strong> Le fichier texte renommé est refusé : <code>finfo</code> lit le contenu et trouve <code>text/plain</code>. En revanche <code>$_FILES['photo']['type']</code> contient <code>image/jpeg</code>, déduit par le navigateur de l'extension. Conclusion : <code>name</code> et <code>type</code> sont falsifiables, on ne s'y fie jamais.</li><li><strong>Q7.</strong> Au-delà de 2 Mo, la limite <code>upload_max_filesize</code> de <code>php.ini</code> (2M par défaut) coupe l'envoi avant même le script : <code>error</code> vaut <code>UPLOAD_ERR_INI_SIZE</code>. J'ai donc traité ce code d'erreur pour afficher le bon message ; le test sur <code>size</code> ne suffit pas.</li><li><strong>Q8.</strong> Il ne faut jamais garder le nom d'origine : il peut contenir <code>../</code> ou une extension <code>.php</code> (le fichier <code>shell.php</code> deviendrait exécutable), des caractères spéciaux, ou écraser le fichier d'un autre visiteur.</li></ol><p>Le dossier <code>uploads/</code> et le fichier <code>galerie.json</code> sont créés par le script. La galerie trie par date décroissante pour afficher la plus récente en premier.</p></div></details></div>
+<div class="box ex">
+<p class="t">Ensuite</p>
+<p>Refaites les corrigés sans regarder, puis passez l'<a href="pratique.html">examen blanc</a> et les <a href="qcm.html">QCM</a>. Les exercices courts du cours sont dans <a href="exercices.html">Exercices du cours</a>.</p>
+</div>
+
+<div class="foot">Énoncés des TP 1 à 5 du Prof. Baqach Adil, INF4041. Les solutions sont les miennes, exécutées et vérifiées.</div>
+</main>
+</div>
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

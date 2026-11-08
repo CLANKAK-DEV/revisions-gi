@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Examen blanc pratique</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="shell">
+<aside class="side" id="side"></aside>
+<main>
+<h1>Examen blanc pratique</h1>
+<p class="lead">Un sujet de 20 points dans l'esprit de votre module : QCM, questions de cours, calculs. Chronométrez-vous, répondez sur papier, puis comparez avec le corrigé.</p>
+
+<div class="box">
+<p class="t">Chronomètre (durée indicative : 1 heure)</p>
+<p class="timer" id="timer">60:00</p>
+<div class="bar">
+<button class="btn" id="t-start">Démarrer</button>
+<button class="btn" id="t-stop">Pause</button>
+<button class="btn" id="t-reset">Remettre à zéro</button>
+<button class="btn" data-toggle-all="close">Refermer toutes les solutions</button>
+</div>
+<p>Je ne connais pas la durée ni le barème réels de votre examen. Adaptez le chronomètre.</p>
+</div>
+
+<div class="box retenir">
+<p class="t">Règles du jeu</p>
+<ul>
+<li>Sans cours, avec une calculatrice. Détaillez chaque calcul : formule, remplacement, résultat avec l'unité.</li>
+<li>Barème indicatif : partie 1 sur 4, partie 2 sur 6, partie 3 sur 10.</li>
+</ul>
+</div>
+
+<h2>Partie 1 : QCM (4 points, 0,5 point par question)</h2>
+<div class="exo">
+<p class="q">1. Quelle topologie donne à chaque station le débit maximum, grâce à un nœud central qui gère les conflits ? A. Bus B. Étoile C. Anneau D. Maillée</p>
+<p class="q">2. Quelle couche TCP/IP regroupe les couches Liaison de données et Physique d'OSI ? A. Application B. Transport C. Internet D. Accès au réseau</p>
+<p class="q">3. Lequel est un protocole de l'Internet des objets ? A. Modbus B. MQTT C. I2C D. Profibus</p>
+<p class="q">4. Que comprend une offre triple play (correction du professeur) ? A. Internet, télévision, téléphonie fixe B. Internet, TV, fixe, mobile C. VoIP, 5G, Edge D. TNT, satellite, câble</p>
+<p class="q">5. Un signal à amplitude discrète et temps continu est : A. Analogique B. Échantillonné C. Quantifié D. Numérique</p>
+<p class="q">6. La distorsion non linéaire (harmonique) vient : A. D'éléments réactifs B. D'un élément non linéaire de la chaîne C. De l'agitation thermique D. De la diaphonie</p>
+<p class="q">7. Pour calculer le spectre d'un signal périodique : A. Transformée de Fourier B. Série de Fourier C. Théorème de Shannon D. Filtre passe-bande</p>
+<p class="q">8. On échantillonne à 10 kHz un signal de 7 kHz. On observe : A. Un signal de 7 kHz B. Un signal de 3 kHz C. Un signal de 17 kHz D. Rien</p>
+<details class="sol"><summary>Corrigé de la partie 1</summary><div class="in">
+<ol>
+<li>B, étoile. (Anneau : tour de rôle. Bus : support partagé.)</li>
+<li>D, Accès au réseau.</li>
+<li>B, MQTT. (Modbus et Profibus : industrie. I2C : embarqué.)</li>
+<li>A. Le quadruple play ajoute le mobile.</li>
+<li>C, quantifié. (Échantillonné : temps discret, amplitude continue.)</li>
+<li>B. Les éléments réactifs causent la distorsion linéaire.</li>
+<li>B, série de Fourier (raies équidistantes). La transformée de Fourier sert aux signaux non périodiques.</li>
+<li>B. fe = 10 kHz impose fmax &lt; 5 kHz. 7 kHz se replie à |7 - 10| = 3 kHz.</li>
+</ol>
+</div></details>
+</div>
+
+<h2>Partie 2 : questions de cours (6 points)</h2>
+<div class="exo">
+<p class="q">2.1 (1,5 pt) Comparez les modèles OSI et TCP/IP : nombre et noms des couches, correspondance, un protocole par couche TCP/IP.</p>
+<details class="sol"><summary>Réponse</summary><div class="in">
+<p>OSI : 7 couches (Application, Présentation, Session, Transport, Réseau, Liaison de données, Physique). TCP/IP : 4 couches.</p>
+<div class="tw"><table>
+<tr><th>TCP/IP</th><th>OSI</th><th>Protocole</th></tr>
+<tr><td>Application</td><td>Application, Présentation, Session</td><td>HTTP</td></tr>
+<tr><td>Transport</td><td>Transport</td><td>TCP ou UDP</td></tr>
+<tr><td>Internet</td><td>Réseau</td><td>IP</td></tr>
+<tr><td>Accès au réseau</td><td>Liaison, Physique</td><td>Ethernet</td></tr>
+</table></div>
+<p>OSI est un modèle de référence créé par l'ISO en 1984. TCP/IP a été conçu pour modéliser Internet.</p>
+</div></details>
+
+<p class="q">2.2 (1 pt) Définissez couche, protocole et interface.</p>
+<details class="sol"><summary>Réponse</summary><div class="in">
+<p>Couche : ensemble homogène qui accomplit une tâche ou rend un service (une couche = une fonction). Protocole : règles de dialogue entre deux couches de même niveau sur deux hôtes. Interface : point de passage de l'information entre deux couches adjacentes d'un même hôte.</p>
+</div></details>
+
+<p class="q">2.3 (1,5 pt) Citez les trois types de déformation d'un signal. Donnez la formule de l'affaiblissement et la façon de le compenser.</p>
+<details class="sol"><summary>Réponse</summary><div class="in">
+<p>Affaiblissement, bruits (blanc : agitation thermique ; impulsifs : parasites, diaphonie) et distorsion (linéaire : éléments réactifs ; non linéaire : élément non linéaire).</p>
+<p>Affaiblissement : A = 10 log10(Psource / Pdestination) en dB, gain G = -A. On le compense par des amplificateurs ou des répéteurs.</p>
+</div></details>
+
+<p class="q">2.4 (1 pt) Décrivez les étapes de la numérisation d'un signal analogique.</p>
+<details class="sol"><summary>Réponse</summary><div class="in">
+<p>CAN à l'émission : échantillonnage (prélever N valeurs à Fe = 1/Te, avec fe ≥ 2 fmax), quantification (approcher chaque échantillon par une valeur discrète, pas P), codage (valeur binaire). CNA à la réception. La qualité augmente quand P diminue et que Fe augmente.</p>
+</div></details>
+
+<p class="q">2.5 (1 pt) Quelles sont les trois catégories de réseaux de communication en télécoms ? Un exemple chacune.</p>
+<details class="sol"><summary>Réponse</summary><div class="in">
+<p>Réseaux de télécommunications (téléphone fixe, réseaux mobiles), réseaux téléinformatiques (Internet, LAN d'entreprise), réseaux de télédiffusion (TV terrestre ou satellite).</p>
+</div></details>
+</div>
+
+<h2>Partie 3 : exercices (10 points)</h2>
+
+<h3>Exercice A (4 points) : liaison, affaiblissement et bruit</h3>
+<p>Une liaison reçoit 1 W en sortie pour 4 W injectés. Le bruit en réception est de 0,02 W.</p>
+<div class="exo">
+<p class="q">A1 (1 pt) Calculer l'affaiblissement de la liaison.</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<p>A = 10 log10(Pe / Ps) = 10 log10(4 / 1) = 10 × 0,602 = <strong>6,02 dB</strong>.</p>
+</div></details>
+<p class="q">A2 (1 pt) Quel gain d'amplificateur pour retrouver 4 W en sortie ?</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<p>G = -A = <strong>+6,02 dB</strong> (la puissance est multipliée par 4).</p>
+</div></details>
+<p class="q">A3 (1 pt) Calculer le rapport S/N en valeur linéaire puis en dB, avant amplification.</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<p>S/N = 1 / 0,02 = <strong>50</strong>. En dB : 10 log10(50) ≈ <strong>16,99 dB</strong>.</p>
+</div></details>
+<p class="q">A4 (1 pt) Le signal reçu passe à 2 W, le bruit restant constant. Nouveau S/N en dB ? Que constatez-vous ?</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<p>S/N = 2 / 0,02 = 100, soit 10 log10(100) = <strong>20 dB</strong>. Doubler la puissance du signal gagne environ 3 dB (de 17 à 20 dB).</p>
+</div></details>
+</div>
+
+<h3>Exercice B (3 points) : numérisation de la voix</h3>
+<p>Le signal vocal occupe la bande [300 Hz ; 3400 Hz].</p>
+<div class="exo">
+<p class="q">B1 (1 pt) Fréquence d'échantillonnage minimale, et bande passante de la voie ?</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<p>fe ≥ 2 × 3400 = <strong>6800 Hz</strong>. Bande passante : W = 3400 - 300 = <strong>3100 Hz</strong>.</p>
+</div></details>
+<p class="q">B2 (1 pt) On retient fe = 8 kHz avec une quantification sur 8 bits. Combien de niveaux, quel débit binaire ?</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<p>2^8 = <strong>256 niveaux</strong>. Débit D = fe × n = 8000 × 8 = <strong>64 000 bit/s</strong> (formule de complément, voir la page du cours).</p>
+</div></details>
+<p class="q">B3 (1 pt) Si on échantillonnait à 5 kHz sans filtre, que deviendrait une composante à 3,4 kHz ?</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<p>fe = 5 kHz impose fmax &lt; 2,5 kHz. La composante de 3,4 kHz se replie à |3,4 - 5| = <strong>1,6 kHz</strong> : le signal est déformé et ne peut plus être reconstitué. Il faut un filtre anti-repliement avant l'échantillonnage.</p>
+</div></details>
+</div>
+
+<h3>Exercice C (3 points) : réseaux et protocoles</h3>
+<div class="exo">
+<p class="q">C1 (1 pt) Un capteur de température envoie ses mesures par réseau 5G à une application cloud. Identifiez l'élément IT, l'élément OT et le réseau mobile.</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<p>OT : le capteur de température (domaine industriel). Réseau mobile : la 5G. IT : l'application cloud (domaine informatique). C'est un exemple d'intégration des trois domaines.</p>
+</div></details>
+<p class="q">C2 (1 pt) Classez par domaine : MQTT, I2C, Profinet, Wi-Fi, CAN.</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<p>MQTT : IoT. I2C : embarqué. Profinet : industrie. Wi-Fi : LAN. CAN : industrie et automobile.</p>
+</div></details>
+<p class="q">C3 (1 pt) Quelle topologie : (a) les stations se passent la parole à tour de rôle ; (b) le support est partagé et le réseau doit gérer des collisions ; (c) tous les nœuds sont reliés entre eux ?</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<p>(a) Anneau. (b) Bus. (c) Maillée.</p>
+</div></details>
+</div>
+
+<div class="box ex">
+<p class="t">Avant de rendre la copie</p>
+<ul>
+<li>Chaque calcul de dB part de la bonne formule (rapport de puissances, facteur 10 devant le log).</li>
+<li>Shannon : on prend la fréquence maximale, pas la bande passante.</li>
+<li>Les unités sont écrites (W, dB, Hz, bit/s).</li>
+</ul>
+</div>
+
+<div class="foot">Sujet écrit à partir des chapitres et exercices fournis. Les résultats numériques ont été recalculés.</div>
+</main>
+</div>
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

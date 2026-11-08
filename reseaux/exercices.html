@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Exercices corrigés Réseaux et Télécoms</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="shell">
+<aside class="side" id="side"></aside>
+<main>
+<h1>Exercices corrigés</h1>
+<p class="lead">D'abord les exercices d'application de votre professeur, avec leur correction détaillée. Ensuite des exercices du même style, sur les mêmes notions. Cherchez avant d'ouvrir la solution.</p>
+
+<div class="bar">
+<button class="btn" data-toggle-all="open">Tout ouvrir</button>
+<button class="btn" data-toggle-all="close">Tout fermer</button>
+</div>
+
+<div class="box">
+<p class="t">Sommaire</p>
+<ul>
+<li><a href="#prof">Exercices d'application du cours (chapitre 2, partie 1) et exemples des slides</a></li>
+<li><a href="#tp">Travail à rendre : analyse de Fourier d'un signal (script)</a></li>
+<li><a href="#plus">Exercices supplémentaires</a></li>
+</ul>
+</div>
+
+<div class="box retenir">
+<p class="t">Trois formules pour tout le chapitre 2</p>
+<ul>
+<li>Affaiblissement : A = 10 log10(Pentrée / Psortie), en dB. Donc Psortie = Pentrée · 10^(-A/10).</li>
+<li>Rapport signal sur bruit : (S/N)dB = 10 log10(Psignal / Pbruit).</li>
+<li>Shannon : fe ≥ 2 · fmax. Bande passante : W = f2 - f1.</li>
+</ul>
+<p>Un rapport de puissance de 10 vaut 10 dB, de 100 vaut 20 dB, de 2 vaut environ 3 dB.</p>
+</div>
+
+<!-- ============ PROF ============ -->
+<h2 id="prof">Exercices du cours</h2>
+
+<h3>Exercice 1 : affaiblissement</h3>
+<div class="exo">
+<p class="q">1. Calculer l'affaiblissement d'une ligne qui perd 20 % de la puissance lors du transfert d'un signal.</p>
+<details class="sol"><summary>Solution détaillée</summary><div class="in">
+<ol>
+<li>Formule : A = 10 · log10(Pentrée / Psortie).</li>
+<li>Une perte de 20 % signifie que la puissance restante est de 80 % : Psortie = 0,8 · Pentrée.</li>
+<li>On remplace : A = 10 · log10(Pentrée / (0,8 · Pentrée)). Pentrée se simplifie : A = 10 · log10(1 / 0,8) = 10 · log10(1,25).</li>
+<li>log10(1,25) ≈ 0,0969, donc <strong>A ≈ 0,97 dB</strong>.</li>
+</ol>
+<p>Piège : 20 % de perte ne fait pas 20 dB. Le décibel est une échelle logarithmique.</p>
+</div></details>
+
+<p class="q">2. Une puissance de 1 W est envoyée dans un atténuateur de 10 dB. Quelle est la puissance en sortie ?</p>
+<details class="sol"><summary>Solution détaillée</summary><div class="in">
+<ol>
+<li>A = 10 dB = 10 · log10(1 W / Psortie).</li>
+<li>On divise par 10 : log10(1 / Psortie) = 1.</li>
+<li>Par définition du logarithme décimal, 1 / Psortie = 10^1 = 10.</li>
+<li>Donc <strong>Psortie = 1/10 = 0,1 W</strong>.</li>
+</ol>
+<p>Raccourci à retenir : 10 dB d'atténuation divisent la puissance par 10.</p>
+</div></details>
+</div>
+
+<h3>Exercice 2 : rapport signal sur bruit</h3>
+<p>Un signal est émis avec une puissance de 0,5 W. Le canal ajoute un bruit de 0,01 W.</p>
+<div class="exo">
+<p class="q">1. Calculer le rapport S/N en valeur linéaire.</p>
+<details class="sol"><summary>Solution détaillée</summary><div class="in">
+<p>S/N = Psignal / Pbruit = 0,5 / 0,01 = 5 · 10^(-1) / 10^(-2) = 5 · 10 = <strong>50</strong>.</p>
+</div></details>
+
+<p class="q">2. L'exprimer en décibels.</p>
+<details class="sol"><summary>Solution détaillée</summary><div class="in">
+<p>(S/N)dB = 10 · log10(50) = 10 × 1,699 ≈ <strong>16,99 dB</strong>, soit environ 17 dB.</p>
+<p>Le corrigé manuscrit écrit 16,98 : c'est un arrondi du même résultat.</p>
+</div></details>
+
+<p class="q">3. La puissance du signal passe à 1 W, le bruit restant à 0,01 W. Nouveau S/N en dB ?</p>
+<details class="sol"><summary>Solution détaillée</summary><div class="in">
+<ol>
+<li>S/N = 1 / 0,01 = 100.</li>
+<li>(S/N)dB = 10 · log10(100) = 10 × 2 = <strong>20 dB</strong>.</li>
+</ol>
+<p>On a doublé la puissance du signal : le gain est d'environ 3 dB (de 17 à 20 dB). La question 3 n'est pas corrigée sur la feuille manuscrite, le calcul ci-dessus est le mien.</p>
+</div></details>
+</div>
+
+<h3>Exemples des slides (partie 2)</h3>
+<div class="exo">
+<p class="q">Fréquence d'échantillonnage minimale pour un signal de ligne téléphonique de bande [300 Hz ; 3400 Hz] ?</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<ol>
+<li>On prend la fréquence maximale du signal : fmax = 3400 Hz (la fréquence minimale 300 Hz ne sert pas).</li>
+<li>Shannon : fe ≥ 2 · fmax = 2 × 3400 = <strong>6800 Hz</strong>.</li>
+<li>Le filtre du cours limite le signal à 4000 Hz : en pratique fe = 2 × 4000 = 8000 Hz.</li>
+</ol>
+</div></details>
+
+<p class="q">Bande passante d'une ligne téléphonique laissant passer de 300 Hz à 3400 Hz (affaiblissement inférieur à 6 dB) ?</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<p>W = f2 - f1 = 3400 - 300 = <strong>3100 Hz</strong> (environ 3,1 kHz).</p>
+<p>Attention : ne pas confondre bande passante (3100 Hz) et fréquence maximale (3400 Hz) utilisée dans Shannon.</p>
+</div></details>
+</div>
+
+<!-- ============ TP ============ -->
+<h2 id="tp">Travail à rendre : analyse spectrale par FFT</h2>
+<div class="box">
+<p class="t">Énoncé</p>
+<ol>
+<li>Générer un signal carré (ou sinusoïdal) d'amplitude 2, de fréquence 20 Hz, de durée 1 s, avec une fréquence d'échantillonnage de 150 Hz.</li>
+<li>Appliquer la transformée de Fourier rapide (FFT) pour analyser son spectre.</li>
+<li>Tracer dans une seule figure, avec subplot, le signal dans le domaine temporel et son spectre.</li>
+<li>Déposer le script sur Moodle.</li>
+</ol>
+</div>
+<p>L'énoncé ne précise pas le langage. Voici une solution en Python (numpy et matplotlib), testée, puis l'équivalent en Matlab.</p>
+<div class="exo">
+<details class="sol"><summary>Solution Python (signal sinusoïdal)</summary><div class="in">
+<pre><code>import numpy as np
+import matplotlib.pyplot as plt
+
+A, f0, T, fe = 2, 20, 1, 150
+N = int(fe * T)                         # 150 échantillons
+t = np.arange(N) / fe                   # axe du temps
+x = A * np.sin(2 * np.pi * f0 * t)      # signal sinusoïdal
+# signal carré : x = A * np.sign(np.sin(2 * np.pi * f0 * t))
+
+X = np.fft.fft(x)                       # transformée de Fourier rapide
+f = np.fft.fftfreq(N, 1 / fe)           # axe des fréquences
+amp = 2 * np.abs(X) / N                 # amplitude réelle de chaque raie
+half = N // 2                           # fréquences positives : 0 à fe/2
+
+plt.figure(figsize=(8, 6))
+plt.subplot(2, 1, 1)
+plt.plot(t, x)
+plt.xlabel("Temps (s)"); plt.ylabel("Amplitude"); plt.title("Signal dans le domaine temporel")
+plt.subplot(2, 1, 2)
+plt.stem(f[:half], amp[:half])
+plt.xlabel("Fréquence (Hz)"); plt.ylabel("Amplitude"); plt.title("Spectre (FFT)")
+plt.tight_layout()
+plt.show()</code></pre>
+<p>Résultat attendu (vérifié) : une seule raie à 20 Hz, d'amplitude 2.</p>
+</div></details>
+
+<details class="sol"><summary>Solution Matlab</summary><div class="in">
+<pre><code>A = 2; f0 = 20; T = 1; fe = 150;
+t = 0:1/fe:T-1/fe;
+x = A*sin(2*pi*f0*t);          % carré : A*square(2*pi*f0*t)
+
+N = length(x);
+X = fft(x);
+f = (0:N-1)*fe/N;
+amp = 2*abs(X)/N;
+
+subplot(2,1,1); plot(t, x);
+xlabel('Temps (s)'); ylabel('Amplitude'); title('Signal temporel');
+subplot(2,1,2); stem(f(1:N/2), amp(1:N/2));
+xlabel('Fréquence (Hz)'); ylabel('Amplitude'); title('Spectre (FFT)');</code></pre>
+</div></details>
+
+<details class="sol"><summary>Que doit-on observer avec un signal carré ? (piège)</summary><div class="in">
+<p>Un signal carré de 20 Hz contient des harmoniques impairs : 20, 60, 100, 140 Hz... Le fondamental a une amplitude de 4A/π, soit environ 2,55 pour A = 2, et chaque harmonique impair est plus faible (60 Hz : environ 0,85).</p>
+<p>Avec fe = 150 Hz, la fréquence maximale utile est fe/2 = 75 Hz. Les harmoniques à 100 et 140 Hz dépassent cette limite : ils se replient et apparaissent comme de fausses raies à 50 Hz et 10 Hz (c'est le repliement de Shannon). Un signal sinusoïdal évite cette difficulté, c'est pour ça qu'il est plus sûr pour le rendu.</p>
+</div></details>
+</div>
+
+<!-- ============ PLUS ============ -->
+<h2 id="plus">Exercices supplémentaires</h2>
+
+<h3>Exercice 3 : bilan de liaison en dB</h3>
+<div class="exo">
+<p class="q">Une ligne de 40 km a un affaiblissement linéique de 0,2 dB/km. On injecte 10 mW. (a) Quel est l'affaiblissement total ? (b) Quelle puissance arrive au bout ? (c) Quel gain d'amplificateur ramène la puissance à 10 mW ?</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<ol>
+<li>(a) A = 40 × 0,2 = <strong>8 dB</strong>. Les affaiblissements en dB s'additionnent.</li>
+<li>(b) Ps = Pe · 10^(-A/10) = 10 mW × 10^(-0,8) ≈ 10 × 0,158 = <strong>1,58 mW</strong>.</li>
+<li>(c) Le gain est l'opposé de l'affaiblissement : G = -A = <strong>+8 dB</strong>. Vérification : 1,58 mW × 10^(0,8) = 1,58 × 6,31 ≈ 10 mW.</li>
+</ol>
+</div></details>
+</div>
+
+<h3>Exercice 4 : chaîne avec amplificateur</h3>
+<div class="exo">
+<p class="q">Un signal de 2 W traverse successivement une ligne qui atténue de 6 dB, un amplificateur de +10 dB, puis une seconde ligne qui atténue de 3 dB. Quelle est la puissance finale ?</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<ol>
+<li>Bilan en dB : -6 + 10 - 3 = <strong>+1 dB</strong> (un gain net).</li>
+<li>Ps = Pe · 10^(1/10) = 2 × 1,259 ≈ <strong>2,52 W</strong>.</li>
+</ol>
+<p>Astuce : on additionne des dB, on ne multiplie pas les rapports.</p>
+</div></details>
+</div>
+
+<h3>Exercice 5 : retrouver la puissance de bruit</h3>
+<div class="exo">
+<p class="q">Un signal de 2 mW arrive avec un rapport S/N de 30 dB. Quelle est la puissance du bruit ?</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<ol>
+<li>30 dB = 10 log10(S/N), donc log10(S/N) = 3 et S/N = 10^3 = 1000.</li>
+<li>Pbruit = Psignal / 1000 = 2 mW / 1000 = <strong>0,002 mW = 2 µW</strong>.</li>
+</ol>
+</div></details>
+</div>
+
+<h3>Exercice 6 : échantillonnage et repliement</h3>
+<div class="exo">
+<p class="q">(a) Un signal audio a une fréquence maximale de 15 kHz. Quelle fréquence d'échantillonnage minimale ? (b) On échantillonne à 8 kHz un signal sinusoïdal de 6 kHz : que voit-on ? (c) Que faire pour l'éviter ?</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<ol>
+<li>(a) fe ≥ 2 × 15 kHz = <strong>30 kHz</strong>.</li>
+<li>(b) fe = 8 kHz impose fmax &lt; 4 kHz. Ici 6 kHz dépasse 4 kHz : il y a repliement. Le signal apparaît à |6 - 8| = <strong>2 kHz</strong>, une fausse fréquence qui ne peut plus être corrigée.</li>
+<li>(c) Placer un filtre anti-repliement (passe-bas, coupure vers 4 kHz) avant l'échantillonnage, ou augmenter fe à au moins 12 kHz.</li>
+</ol>
+</div></details>
+</div>
+
+<h3>Exercice 7 : quantification et débit (complément)</h3>
+<div class="exo">
+<p class="q">Un CAN de 10 bits numérise une tension comprise entre 0 et 5 V, à fe = 8 kHz. Combien de niveaux, quel pas, quel débit ?</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<ol>
+<li>Niveaux : 2^10 = <strong>1024</strong>.</li>
+<li>Pas de quantification : P = 5 V / 1024 ≈ <strong>4,9 mV</strong>. Plus P est petit, meilleure est la qualité.</li>
+<li>Débit : D = fe × n = 8000 × 10 = <strong>80 000 bit/s = 80 kbit/s</strong>.</li>
+</ol>
+<p>Ces deux dernières formules sont des compléments standard : elles ne figurent pas dans vos slides.</p>
+</div></details>
+</div>
+
+<h3>Exercice 8 : spectre d'un signal périodique</h3>
+<div class="exo">
+<p class="q">Soit x(t) = 3 + 2 sin(2π·10·t) + sin(2π·30·t). (a) Donner les raies du spectre. (b) Période du signal ? (c) fe minimale ?</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<ol>
+<li>(a) Trois raies : à 0 Hz, X0 = 3 (valeur moyenne) ; à 10 Hz, X1 = 2 (fondamental) ; à 30 Hz, amplitude 1 (harmonique 3, car 30 = 3 × 10).</li>
+<li>(b) Le fondamental est à 10 Hz : T0 = 1/10 = <strong>0,1 s</strong>.</li>
+<li>(c) fmax = 30 Hz, donc fe ≥ 2 × 30 = <strong>60 Hz</strong>.</li>
+</ol>
+<p>La décomposition en série de Fourier est l'outil adapté, puisque le signal est périodique.</p>
+</div></details>
+</div>
+
+<h3>Exercice 9 : classification des signaux</h3>
+<div class="exo">
+<p class="q">Donner la classe morphologique de chaque signal : (a) la tension continue du capteur de température ; (b) les valeurs de cette tension relevées chaque seconde, sans arrondi ; (c) la tension arrondie à des paliers de 0,1 V, suivie en continu ; (d) la suite de mots binaires fournie par le CAN.</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<ul>
+<li>(a) Analogique : amplitude et temps continus.</li>
+<li>(b) Échantillonné : amplitude continue, temps discret.</li>
+<li>(c) Quantifié : amplitude discrète, temps continu.</li>
+<li>(d) Numérique : amplitude et temps discrets.</li>
+</ul>
+</div></details>
+</div>
+
+<h3>Exercice 10 : couches et protocoles</h3>
+<div class="exo">
+<p class="q">Pour chacun, donner la couche TCP/IP et la couche OSI : HTTP, TCP, UDP, IP, ICMP, Ethernet.</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<div class="tw"><table>
+<tr><th>Protocole</th><th>Couche TCP/IP</th><th>Couche OSI</th></tr>
+<tr><td>HTTP</td><td>Application</td><td>7 Application</td></tr>
+<tr><td>TCP, UDP</td><td>Transport</td><td>4 Transport</td></tr>
+<tr><td>IP, ICMP</td><td>Internet</td><td>3 Réseau</td></tr>
+<tr><td>Ethernet</td><td>Accès au réseau</td><td>2 Liaison (et 1 Physique)</td></tr>
+</table></div>
+</div></details>
+</div>
+
+<h3>Exercice 11 : choisir un réseau et une topologie</h3>
+<div class="exo">
+<p class="q">(a) Dans une usine équipée Schneider Electric, quel réseau pour les capteurs, pour les machines, pour la supervision d'atelier et pour la liaison avec l'ERP ? (b) Chez Siemens, quel bus pour la supervision ? (c) Quelle topologie pour dix PC d'un bureau où chacun doit avoir le débit maximum ? Quelle est la base d'Internet ?</p>
+<details class="sol"><summary>Solution</summary><div class="in">
+<ul>
+<li>(a) Capteurs : AS-i. Machines : CANopen. Atelier : Ethernet Modbus TCP. Entreprise (MES, ERP) : Ethernet Modbus TCP.</li>
+<li>(b) Profinet (au niveau supervision ou conduite). Profibus DP pour la commande et Interface AS pour le terrain.</li>
+<li>(c) Étoile : le nœud central gère les conflits et chaque station dispose du débit maximum. Internet : topologie maillée.</li>
+</ul>
+</div></details>
+</div>
+
+<div class="foot">Les calculs de cette page ont été recalculés avec Python. Le script du TP a été exécuté : raie à 20 Hz, amplitude 2.</div>
+</main>
+</div>
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

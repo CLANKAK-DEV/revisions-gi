@@ -1,0 +1,477 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Résumé du cours Qualité Logicielle</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="shell">
+<aside class="side" id="side"></aside>
+<main>
+<h1>Résumé du cours</h1>
+<p class="lead">Les six cours du Pr. Qazdar : concepts de base, modèles de qualité, norme ISO 25010, métriques de code, métriques objet, SonarQube. Chaque partie porte une étiquette de priorité.</p>
+
+<div class="box">
+<p class="t">Légende des priorités</p>
+<p><span class="tag r">Priorité 1</span>à savoir absolument, sujet probable de contrôle ou d'examen. <span class="tag y">Priorité 2</span>probable, à connaître si le temps le permet. <span class="tag b">Priorité 3</span>bon à savoir, culture générale du cours.</p>
+<p>Ces priorités sont mon estimation à partir des slides, des TD et des QCM du cours. Je ne connais pas votre sujet réel.</p>
+</div>
+
+<div class="box">
+<p class="t">Sommaire</p>
+<ul>
+<li><a href="#c1">1. Concepts de base et définitions</a></li>
+<li><a href="#c2">2. Modèles de qualité logicielle</a></li>
+<li><a href="#c3">3. La norme ISO/IEC 25010:2023</a></li>
+<li><a href="#c4">4. Métriques de code : LOC, McCabe, Halstead</a></li>
+<li><a href="#c5">5. Métriques orientées objet : CK, SI, packages</a></li>
+<li><a href="#c6">6. SonarQube</a></li>
+</ul>
+</div>
+
+<!-- ================= 1 ================= -->
+<h2 id="c1">1. Concepts de base et définitions</h2>
+
+<h3>Le logiciel, plus que du code <span class="tag r">Priorité 1</span></h3>
+<div class="box def"><p class="t">Définition (ISO/IEC/IEEE 24765:2017)</p>
+<p>Un logiciel est tout ou partie des programmes, procédures, règles et documentation associée d'un système informatique, avec éventuellement les données.</p>
+<ul>
+<li>Programmes : instructions traduites en code source, spécifiées, conçues, revues, testées et acceptées.</li>
+<li>Procédures : procédures utilisateurs et processus décrits et optimisés.</li>
+<li>Règles : règles métier, comprises, décrites, validées, mises en œuvre et testées.</li>
+<li>Documentation associée : pour clients, utilisateurs, développeurs, auditeurs, mainteneurs.</li>
+<li>Données : informations inventoriées, modélisées, standardisées pour faire fonctionner le système.</li>
+</ul></div>
+<p>Garantir la qualité du code source ne suffit pas : un système d'information est bien plus complexe qu'un programme unique. Il faut identifier tous les composants et leurs interactions.</p>
+
+<h3>Erreur, défaut, défaillance <span class="tag r">Priorité 1</span></h3>
+<div class="flow">
+<span class="n k">Erreur (faute humaine)</span><span class="a">&rarr;</span>
+<span class="n y">Défaut (bug dans le produit)</span><span class="a">&rarr;</span>
+<span class="n">Défaillance (comportement incorrect en exploitation)</span>
+</div>
+<div class="tw"><table>
+<tr><th>Terme</th><th>Sens</th></tr>
+<tr><td>Error (erreur)</td><td>Faute humaine, dans la documentation, le code, la logique ou n'importe où dans le cycle de vie</td></tr>
+<tr><td>Defect (défaut, faute)</td><td>Erreur humaine non détectée pendant le développement, l'assurance qualité ou les tests</td></tr>
+<tr><td>Failure (défaillance, panne)</td><td>Manifestation d'un défaut dans l'environnement d'exploitation : le composant ne remplit plus (totalement ou partiellement) sa fonction. L'origine est un défaut caché.</td></tr>
+<tr><td>Bug</td><td>Mot vague, renvoie aux défaillances. Peut décrire une multitude de problèmes.</td></tr>
+</table></div>
+<div class="box retenir"><p class="t">Phrase clé du cours</p><p>Les erreurs créent des défauts, qui causent des échecs s'ils ne sont pas corrigés. Sur le schéma du cycle de vie (SDLC), un défaut détecté en planification coûte très peu, un défaut détecté en production coûte très cher.</p></div>
+
+<h3>Causes des défauts (Beizer, 1990) <span class="tag y">Priorité 2</span></h3>
+<div class="tw"><table>
+<tr><th>Type</th><th>Part</th></tr>
+<tr><td>Structurel</td><td>25 %</td></tr>
+<tr><td>Données</td><td>22 %</td></tr>
+<tr><td>Fonctionnalités implémentées</td><td>16 %</td></tr>
+<tr><td>Construction et codage</td><td>10 %</td></tr>
+<tr><td>Intégration</td><td>9 %</td></tr>
+<tr><td>Exigences et spécifications fonctionnelles</td><td>8 %</td></tr>
+<tr><td>Non spécifié</td><td>5 %</td></tr>
+<tr><td>Définition et tests en cours</td><td>3 %</td></tr>
+<tr><td>Architecture et conception</td><td>2 %</td></tr>
+</table></div>
+<p>Structurel, données et fonctionnalités représentent 63 % des défauts. Il faut donc renforcer : les bonnes pratiques de codage (linting, revues de code, tests unitaires), la gestion des données (validation, schémas, tests de données) et les tests fonctionnels automatisés.</p>
+
+<h3>Échecs logiciels célèbres <span class="tag b">Priorité 3</span></h3>
+<p>À connaître pour illustrer une réponse : cause, conséquence, coût.</p>
+<div class="tw"><table>
+<tr><th>Cas</th><th>Cause</th><th>Conséquence</th></tr>
+<tr><td>Mariner 1 (1962)</td><td>Formule manuscrite mal transcrite (symbole manquant)</td><td>Sonde détruite après 294,5 s, 18,5 M$</td></tr>
+<tr><td>Therac-25 (1982 à 1987)</td><td>Mauvaise gestion des états concurrents</td><td>Surdoses de radiations, morts et blessés</td></tr>
+<tr><td>Missile Patriot (1991)</td><td>Calcul du temps inexact (arrondi dans l'horloge)</td><td>Missile Scud non intercepté, 28 morts, 100 blessés</td></tr>
+<tr><td>Pentium (1994)</td><td>Table de division incomplètement initialisée</td><td>475 M$ et crédibilité entamée</td></tr>
+<tr><td>Ariane 5 (1996)</td><td>Débordement lors d'une conversion flottant vers entier</td><td>Explosion 37 s après le lancement</td></tr>
+<tr><td>Mars Climate Orbiter (1999)</td><td>Incohérence d'unités (impérial et métrique)</td><td>Sonde détruite, 327 M$</td></tr>
+<tr><td>Radiothérapie (2000)</td><td>Doses calculées selon l'ordre de saisie, parfois double dose</td><td>8 morts, 20 blessés graves</td></tr>
+<tr><td>PlayStation Network (2011)</td><td>Vulnérabilité connue, conséquences mal évaluées</td><td>Millions de données piratées</td></tr>
+<tr><td>Heartbleed (2014)</td><td>Faille OpenSSL</td><td>Lecture de la mémoire de 500 000 serveurs</td></tr>
+<tr><td>Boeing 737 MAX (2017 à 2019)</td><td>Mauvais capteurs et logique logicielle non redondée (MCAS)</td><td>2 crashs, 346 morts</td></tr>
+<tr><td>Tesla Autopilot (2022)</td><td>Erreurs de détection par l'IA</td><td>Accidents, rappels, plus de 3 Md$</td></tr>
+<tr><td>Bug de l'an 2038</td><td>Limite de la représentation du temps</td><td>Le 19 janvier 2038 à 3 h 14 min 8 s, retour au 13 décembre 1901</td></tr>
+</table></div>
+<p>Le cours donne aussi Y2K (dates codées sur deux chiffres), Knight Capital (2012, mauvaise mise à jour d'un logiciel de trading, 440 M$ en 45 minutes), Healthcare.gov (2013), Jeep Cherokee (2015, piratage), Fastly (2021, mise à jour défectueuse), Southwest Airlines (2023, logiciel obsolète).</p>
+
+<h3>La qualité logicielle <span class="tag r">Priorité 1</span></h3>
+<div class="box def"><p class="t">Définitions</p>
+<ul>
+<li>ISO (SQuaRE) : conformité aux exigences logicielles établies ; capacité d'un produit à satisfaire des besoins déclarés et implicites dans des conditions spécifiées.</li>
+<li>IEEE : degré avec lequel un système, composant ou processus satisfait aux besoins ou attentes de ses clients ou usagers.</li>
+<li>AFNOR : aptitude d'un produit ou d'un service à satisfaire les besoins des utilisateurs.</li>
+<li>ISO 9000 : ensemble des caractéristiques intrinsèques qui lui confèrent l'aptitude à satisfaire les besoins et attentes exprimés ou implicites.</li>
+</ul></div>
+<p>Selon le SWEBOK, la qualité repose sur deux piliers : la qualité du produit (fonctionnalités, fiabilité, efficacité, utilisabilité, maintenabilité, portabilité) et la qualité du processus (rigueur des pratiques, méthodes, outils). Elle dépend aussi de la pertinence des exigences : elles doivent refléter les vrais besoins, attentes et contexte d'usage des parties prenantes.</p>
+
+<h3>Les quatre niveaux de besoins <span class="tag r">Priorité 1</span></h3>
+<div class="flow">
+<span class="n k">Vrais besoins</span><span class="a">&rarr;</span>
+<span class="n">Besoins exprimés</span><span class="a">&rarr;</span>
+<span class="n">Besoins spécifiés</span><span class="a">&rarr;</span>
+<span class="n g">Besoins réalisés</span>
+</div>
+<div class="tw"><table>
+<tr><th>Niveau</th><th>Origine</th><th>Causes d'écart</th></tr>
+<tr><td>Vrais besoins</td><td>Esprit des parties prenantes</td><td>Manque de familiarité avec les véritables besoins, instabilité des exigences, points de vue différents entre donneur d'ordre et utilisateurs</td></tr>
+<tr><td>Exprimés</td><td>Exigences formulées par les utilisateurs</td><td>Spécification incomplète, absence de normes, communication insuffisante, contrôle qualité insuffisant</td></tr>
+<tr><td>Spécifiés</td><td>Document de spécification logicielle</td><td>Méthodes, techniques et outils mal utilisés, tests insuffisants, contrôle qualité insuffisant</td></tr>
+<tr><td>Réalisés</td><td>Documents et code produits</td><td></td></tr>
+</table></div>
+
+<h3>Importance de la qualité <span class="tag b">Priorité 3</span></h3>
+<p>Fiabilité, sûreté et sécurité (automobile, ferroviaire, aéronautique, nucléaire, médical, e-commerce, passeport électronique) et raisons économiques : coût de correction, rappel des appareils, impact sur l'image, arrivée tardive sur le marché, vies humaines, impact écologique.</p>
+
+<h3>Assurance qualité logicielle (SQA) <span class="tag r">Priorité 1</span></h3>
+<div class="box def"><p class="t">Définition (IEEE 730)</p>
+<p>Ensemble d'activités qui définissent et évaluent l'adéquation des processus logiciels, pour établir la confiance qu'ils produisent des logiciels de qualité adaptée. Attribut clé : l'objectivité, voire l'indépendance vis-à-vis du projet (à l'abri des pressions techniques, managériales, financières).</p></div>
+<p>La QA réduit le risque de livrer un logiciel qui ne répond pas aux désirs, besoins et attentes des parties prenantes, dans les limites du budget et du calendrier. Elle implique : planifier les aspects qualité, des activités systématiques tout au long du cycle de vie, un système qualité complet (politique et amélioration continue), des techniques qui démontrent le niveau atteint, et la preuve que les exigences qualité sont respectées.</p>
+
+<h3>Métrologie du logiciel <span class="tag r">Priorité 1</span></h3>
+<ul>
+<li>Métrologie : science de la mesure appliquée au logiciel. Une mesure est une grandeur numérique, multiple d'une unité.</li>
+<li>Rôles d'une mesure : évaluatif (décrire), vérificatif (contrôler la conformité), prédictif (prévoir l'évolution).</li>
+<li>Une métrique quantifie une propriété du logiciel, simple ou composée d'autres métriques.</li>
+<li>Trois types : métriques de processus (coût, temps), de produit (code, complexité), de projet (nombre de développeurs, effort).</li>
+</ul>
+
+<!-- ================= 2 ================= -->
+<h2 id="c2">2. Modèles de qualité logicielle</h2>
+
+<h3>Idée générale <span class="tag r">Priorité 1</span></h3>
+<p>Un modèle de qualité relie les caractéristiques mesurables du logiciel à son niveau de qualité : <code>Qualité ≈ f(attributs)</code>. Les attributs (complexité, fiabilité, maintenabilité, performance, sécurité...) sont des mesures internes. La fonction f dépend du contexte, du domaine et du modèle. Les modèles évaluent la qualité du produit, du processus, du service et des ressources.</p>
+<div class="flow">
+<span class="n k">Qualité</span><span class="a">&rarr;</span>
+<span class="n">Facteurs (vision utilisateur, externe)</span><span class="a">&rarr;</span>
+<span class="n y">Critères (vision développeur, interne)</span><span class="a">&rarr;</span>
+<span class="n g">Métriques (mesures concrètes)</span>
+</div>
+<div class="box def"><p class="t">Définitions</p>
+<ul>
+<li>Facteur : caractéristique du logiciel, du processus ou du service contribuant à sa qualité telle qu'elle est ressentie par l'utilisateur (vision externe). Liée à l'exploitation, au suivi, à la maintenance.</li>
+<li>Critère : attribut du logiciel par lequel un facteur peut être obtenu, et sur lequel le développeur peut agir (vision interne).</li>
+<li>Métrique : mesure d'une propriété d'un critère (par exemple la taille d'un module pour le critère simplicité).</li>
+</ul></div>
+
+<h3>Le modèle de McCall (1977) <span class="tag r">Priorité 1</span></h3>
+<p>Un des premiers modèles. Relation facteurs, critères, métriques. 11 facteurs et 23 critères, chaque critère correspond à au moins une métrique.</p>
+<div class="tw"><table>
+<tr><th>Dimension</th><th>Facteurs</th></tr>
+<tr><td>Opérationnel (utilisation du produit)</td><td>Conformité aux besoins (correction), fiabilité, efficacité, intégrité, facilité d'emploi</td></tr>
+<tr><td>Évolution (révision du produit)</td><td>Maintenabilité, souplesse (flexibilité), testabilité</td></tr>
+<tr><td>Adaptabilité (transition)</td><td>Portabilité, réutilisabilité, interopérabilité</td></tr>
+</table></div>
+
+<h3>Le modèle ISO 9126:2001 <span class="tag r">Priorité 1</span></h3>
+<p>6 caractéristiques principales et 27 sous-caractéristiques.</p>
+<div class="tw"><table>
+<tr><th>Caractéristique</th><th>Sous-caractéristiques</th></tr>
+<tr><td>Fonctionnalité (Functionality)</td><td>Adéquation (suitability), exactitude (accuracy), interopérabilité, sécurité, conformité</td></tr>
+<tr><td>Fiabilité (Reliability)</td><td>Maturité, tolérance aux pannes, capacité de récupération, conformité</td></tr>
+<tr><td>Utilisabilité (Usability)</td><td>Compréhensibilité, apprentissage (learnability), exploitabilité (operability), attractivité, conformité</td></tr>
+<tr><td>Efficacité (Efficiency)</td><td>Comportement temporel, utilisation des ressources, conformité</td></tr>
+<tr><td>Maintenabilité (Maintainability)</td><td>Analysabilité, facilité de modification (changeability), stabilité, testabilité, conformité</td></tr>
+<tr><td>Portabilité (Portability)</td><td>Adaptabilité, facilité d'installation, coexistence, remplaçabilité, conformité</td></tr>
+</table></div>
+
+<h3>Le modèle GQM <span class="tag y">Priorité 2</span></h3>
+<p>Goal, Question, Metric, proposé par Victor Basili. On définit les métriques à partir des objectifs réels de l'organisation. Principe : mesurer uniquement ce qui aide à atteindre un objectif.</p>
+<div class="flow">
+<span class="n k">Goal : que veut-on améliorer ou évaluer ?</span><span class="a">&rarr;</span>
+<span class="n">Question : comment vérifier l'objectif ?</span><span class="a">&rarr;</span>
+<span class="n g">Metric : quels indicateurs mesurables ?</span>
+</div>
+<div class="box ex"><p class="t">Exemple (construit pour l'entraînement)</p>
+<p>Goal : améliorer la maintenabilité du module de facturation. Questions : le code est-il simple à comprendre ? Est-il facile à tester ? Métriques : complexité cyclomatique moyenne, densité de commentaires, couverture des tests.</p></div>
+
+<h3>Évaluer la qualité avec un modèle <span class="tag r">Priorité 1</span></h3>
+<p>Trois niveaux d'évaluation :</p>
+<ul>
+<li>Métriques : indicateurs de propriétés élémentaires, comparés à un seuil.</li>
+<li>Critères : indicateurs de caractéristiques du produit, <code>Ic = f(m1, m2, m3, ...)</code>.</li>
+<li>Facteurs : indicateurs d'objectifs à atteindre, <code>If = g(Ic1, Ic2, Ic3, ...)</code>.</li>
+</ul>
+<p>Les valeurs seuils associées à chaque mesure ne doivent pas être dépassées.</p>
+<div class="box def"><p class="t">Les trois étapes</p>
+<ol>
+<li>Définir les exigences : établir le modèle (facteurs, critères). Elles peuvent varier d'un composant à l'autre.</li>
+<li>Fixer les métriques : sélectionner les métriques, définir les taux de satisfaction (échelles découpées en niveaux), définir références et critères d'appréciation.</li>
+<li>Évaluer : mesure (valeurs), notation (note de satisfaction par valeur), appréciation (résultat global avec les critères d'appréciation).</li>
+</ol></div>
+<p>Deux difficultés : composer des métriques définies différemment, et agréger les résultats pour une note globale. Exemple : la facilité de modification (ISO 9126) combine LOC, complexité cyclomatique, nombre de méthodes par classe (NMC) et profondeur d'héritage (DIT).</p>
+
+<h4>Exemples de barèmes du cours</h4>
+<div class="tw"><table>
+<tr><th>Complexité (E - N + p)</th><th>Interprétation</th><th>Note</th></tr>
+<tr><td>1 à 10</td><td>Simple, sans véritable risque</td><td>3</td></tr>
+<tr><td>11 à 20</td><td>Modérément complexe et risqué</td><td>2</td></tr>
+<tr><td>21 à 50</td><td>Complexe et hautement risqué</td><td>1</td></tr>
+<tr><td>Plus de 50</td><td>Non testable, extrêmement risqué</td><td>0</td></tr>
+</table></div>
+<div class="tw"><table>
+<tr><th>SLOC</th><th>Au plus 35</th><th>]35 ; 70]</th><th>]70 ; 160]</th><th>Plus de 160</th></tr>
+<tr><td>Interprétation</td><td>Excellent</td><td>Acceptable</td><td>Problématique</td><td>Mauvais</td></tr>
+<tr><td>Note</td><td>3</td><td>2</td><td>1</td><td>0</td></tr>
+</table></div>
+<p>La méthode de calcul complète (note de chaque métrique, critère pondéré, facteur pondéré, qualité mesurée, qualité totale) est détaillée avec l'étude de cas et le TD2 dans la page TD, TP et exercices.</p>
+
+<h3>Les types de mesure de Stevens (1946) <span class="tag y">Priorité 2</span></h3>
+<div class="tw"><table>
+<tr><th>Type</th><th>Idée</th><th>Exemples</th><th>Transformation</th></tr>
+<tr><td>Nominal</td><td>Classer sans ordre, nommer</td><td>Type d'erreur (syntaxique, logique, d'exécution, d'interface), langage</td><td>Correspondances un-à-un</td></tr>
+<tr><td>Ordinal</td><td>Ajoute un ordre, écarts non mesurables</td><td>Sévérité d'un bug (mineur, majeur, critique), satisfaction</td><td>Toute transformation qui préserve l'ordre</td></tr>
+<tr><td>Intervalle</td><td>Écarts mesurables, zéro arbitraire</td><td>Température, score de qualité normalisé 0 à 100</td><td>t(M) = a·M + b, a &gt; 0 (Celsius vers Fahrenheit : F = 9/5 C + 32)</td></tr>
+<tr><td>Ratio (rapport)</td><td>Zéro absolu, rapports significatifs</td><td>Âge, salaire, vitesse, taux de couverture des tests</td><td>t(M) = a·M, a &gt; 0 (conversion de monnaie)</td></tr>
+<tr><td>Absolu</td><td>Cas particulier du ratio, comptage direct</td><td>Nombre d'erreurs, nombre de machines</td><td>Identité</td></tr>
+</table></div>
+
+<!-- ================= 3 ================= -->
+<h2 id="c3">3. La norme ISO/IEC 25010:2023</h2>
+
+<h3>Norme et dimensions de la qualité <span class="tag y">Priorité 2</span></h3>
+<p>Une norme est un accord documenté qui définit des règles et spécifications techniques précises, pour garantir conformité et aptitude à l'emploi.</p>
+<div class="tw"><table>
+<tr><th>Dimension</th><th>Évaluée</th><th>Métriques</th></tr>
+<tr><td>Qualité interne (code et conception)</td><td>Mesures statiques, sans exécuter</td><td>Internes : exigences, spécifications, code. Prédire la qualité finale et corriger tôt.</td></tr>
+<tr><td>Qualité externe (comportement)</td><td>À l'exécution, tests et simulations</td><td>Externes : fonctionnement dynamique dans l'environnement cible.</td></tr>
+<tr><td>Qualité d'usage (expérience utilisateur)</td><td>En conditions réelles</td><td>À l'usage : efficacité, productivité, sécurité, satisfaction.</td></tr>
+</table></div>
+<div class="flow">
+<span class="n k">Qualité interne</span><span class="a">influence &rarr;</span>
+<span class="n">Qualité externe</span><span class="a">influence &rarr;</span>
+<span class="n g">Qualité à l'usage</span>
+</div>
+<p>Chaque niveau dépend du suivant. Les trois types de métriques suivent le cycle de vie : conception et code, puis tests, puis utilisation réelle.</p>
+
+<h3>Évolution des normes <span class="tag r">Priorité 1</span></h3>
+<div class="tw"><table>
+<tr><th>Norme</th><th>Contenu</th></tr>
+<tr><td>ISO/IEC 9126 (1991 à 2001)</td><td>6 caractéristiques et 27 sous-caractéristiques. Logiciel traditionnel statique.</td></tr>
+<tr><td>ISO/IEC 25010:2011 (SQuaRE)</td><td>8 caractéristiques. Ajout de la compatibilité et de la sécurité.</td></tr>
+<tr><td>ISO/IEC 25010:2023</td><td>9 caractéristiques et 38 sous-caractéristiques. Utilisabilité devient capacité d'interaction, portabilité devient flexibilité, ajout de la sécurité des personnes et des biens (safety) pour les risques opérationnels et l'IA.</td></tr>
+</table></div>
+
+<h3>Les 9 caractéristiques <span class="tag r">Priorité 1</span></h3>
+<div class="tw"><table>
+<tr><th>Caractéristique</th><th>Question posée</th><th>Sous-caractéristiques</th></tr>
+<tr><td>Adéquation fonctionnelle</td><td>Fournit-il les fonctions nécessaires, correctement et de façon pertinente ?</td><td>Complétude (couverture des tâches), correction (résultats précis), pertinence (les fonctions aident l'utilisateur)</td></tr>
+<tr><td>Efficacité des performances</td><td>Utilise-t-il les ressources de façon optimale ?</td><td>Comportement temporel (temps de réponse, latence, débit), utilisation des ressources (CPU, mémoire...), capacité (limites maximales)</td></tr>
+<tr><td>Compatibilité</td><td>Peut-il coexister et échanger avec d'autres systèmes ?</td><td>Coexistence, interopérabilité</td></tr>
+<tr><td>Capacité d'interaction</td><td>L'interface permet-elle d'interagir efficacement et en confiance ?</td><td>Reconnaissabilité de la pertinence, facilité d'apprentissage, facilité d'utilisation, protection contre les erreurs, engagement utilisateur, inclusivité, assistance utilisateur, auto-descriptivité</td></tr>
+<tr><td>Fiabilité</td><td>Fonctionne-t-il en continu sans défaillance imprévue ?</td><td>Infaillibilité, disponibilité, tolérance aux pannes, capacité de récupération</td></tr>
+<tr><td>Sécurité (security)</td><td>Protège-t-il informations, données et accès ?</td><td>Confidentialité, intégrité, non-répudiation, traçabilité, authenticité, résistance</td></tr>
+<tr><td>Maintenabilité</td><td>Peut-il être analysé, modifié, testé sans régression ?</td><td>Modularité, réutilisabilité, analysabilité, modifiabilité, testabilité</td></tr>
+<tr><td>Flexibilité</td><td>S'adapte-t-il à d'autres environnements et configurations ?</td><td>Adaptabilité, facilité d'installation, remplaçabilité, scalabilité</td></tr>
+<tr><td>Sécurité des personnes et des biens (safety)</td><td>Évite-t-il les risques pour la santé, les infrastructures, l'environnement ?</td><td>Contrainte opérationnelle, identification des risques, comportement fail-safe, avertissement des dangers, intégration sûre</td></tr>
+</table></div>
+<div class="box piege"><p class="t">Piège</p><p>Security (confidentialité, intégrité, authenticité...) et safety (sécurité des personnes et des biens) se traduisent tous les deux par « sécurité ». Safety est la nouveauté de 2023.</p></div>
+
+<h3>Exemples de métriques ISO <span class="tag y">Priorité 2</span></h3>
+<ul>
+<li>Temps de réponse (efficacité, comportement temporel) : T = temps d'obtention du résultat moins heure d'entrée de la commande. Plus T est petit, mieux c'est.</li>
+<li>Échangeabilité des données, base format : X = A / B, A formats validés, B formats à échanger. 10 formats prévus, 8 validés : X = 0,8. Plus X est proche de 1, mieux c'est.</li>
+<li>Échangeabilité, base tentatives : X = 1 - A / B (A échecs, B tentatives), et Y = A / T (T temps de fonctionnement), Y proche de 0 est meilleur.</li>
+<li>Couverture des tests (maturité) : X = A / B, A cas exécutés, B cas nécessaires. Densité Y = A / C (taille du produit).</li>
+<li>Attractivité : questionnaire utilisateur, ou X = A / B, A éléments d'interface personnalisés, B éléments que l'utilisateur veut personnaliser.</li>
+</ul>
+
+<h3>ISO/IEC 25059 (IA) <span class="tag b">Priorité 3</span></h3>
+<p>Extension de SQuaRE pour les systèmes basés sur l'IA : explicabilité, équité et non-discrimination (absence de biais), robustesse, précision fonctionnelle (taux d'erreur, précision, rappel), adaptabilité et apprentissage continu (dérive du modèle).</p>
+
+<!-- ================= 4 ================= -->
+<h2 id="c4">4. Métriques de code : LOC, McCabe, Halstead</h2>
+
+<h3>Les métriques logicielles <span class="tag y">Priorité 2</span></h3>
+<p>« You can't control what you can't measure » (Tom DeMarco). Une métrique logicielle compile des mesures issues des propriétés techniques ou fonctionnelles. Trois catégories : maintenance applicative (LCOM, CBO, DIT, RFC, complexité cyclomatique : structure interne), qualité applicative (bugs, duplication, stabilité, abstraction : produit final), respect des processus (délais, couverture de tests, conformité CMMI : processus). Il n'existe pas de métrique ultime : tout dépend de l'interprétation et du projet.</p>
+
+<h3>Lignes de code <span class="tag r">Priorité 1</span></h3>
+<div class="tw"><table>
+<tr><th>Métrique</th><th>Sens</th><th>Norme</th></tr>
+<tr><td>LOCphy</td><td>Lignes physiques : code, commentaires, lignes vides, directives</td><td>200 à 500 par fichier. Trop long : fractionner.</td></tr>
+<tr><td>LOCpro</td><td>Lignes de programme : déclarations, définitions, directives, code</td><td>50 à 300 par classe. Très élevé : classe complexe.</td></tr>
+<tr><td>LOCcom</td><td>Lignes de commentaires</td><td>10 à 30 % du code</td></tr>
+<tr><td>LOCbl</td><td>Lignes vides</td><td>10 à 20 % du code</td></tr>
+<tr><td>DC = LOCcom / LOCphy</td><td>Densité de commentaires</td><td>0,2 à 0,3</td></tr>
+</table></div>
+<div class="box ex"><p class="t">Exemple du cours</p><p>Un fichier de 19 lignes : 12 lignes de commentaires, 4 lignes de programme, 4 lignes vides (une ligne peut cumuler code et commentaire en ligne). DC = 12 / 19 ≈ 0,63.</p></div>
+<p>Ces métriques mesurent la structure du programme, pas la qualité logique ni l'intelligence du code.</p>
+
+<h3>Graphe de flot de contrôle <span class="tag r">Priorité 1</span></h3>
+<ul>
+<li>Représentation, sous forme de graphe orienté, de tous les chemins possibles d'exécution. Les instructions (blocs) sont les nœuds, les conditions des tests et boucles sont portées par les arcs, avec un nœud d'entrée et un nœud de sortie.</li>
+<li>Structures : séquence, alternative (if), itération (while).</li>
+<li>Un switch se traite comme des if imbriqués, un for comme un while spécial, un return comme un saut vers la fin de la fonction.</li>
+<li>Chemin de contrôle : à chaque exécution correspond un chemin. Certains chemins du graphe ne sont pas exécutables (par exemple, deux conditions incompatibles).</li>
+</ul>
+<div class="box ex"><p class="t">Exemple : deux if successifs sur y</p>
+<pre><code>if (y &lt;= 0) { x = y + 1; }
+if (y &gt; 0)  { x = y - 1; }
+// chemins exécutables : [A,B,C,D,F] et [A,B,D,E,F]
+// [A,B,C,D,E,F] et [A,B,D,F] ne le sont pas</code></pre></div>
+
+<h3>Complexité cyclomatique de McCabe (1976) <span class="tag r">Priorité 1</span></h3>
+<div class="box def"><p class="t">Définition et formules</p>
+<p>Nombre de chemins linéairement indépendants d'une méthode. Indépendante du langage.</p>
+<ul>
+<li><code>V(G) = E - N + 2P</code> : E arêtes, N nœuds, P composantes connexes (1 pour un programme).</li>
+<li><code>C = π + 1</code> : π décisions. IF : 1 par décision. FOR ou WHILE : 1. CASE à N cas : N - 1.</li>
+</ul></div>
+<div class="box ex"><p class="t">Exemples du cours</p>
+<p>Graphe avec N = 8, E = 11, P = 1 : V(G) = 11 - 8 + 2 = 5, et π = 4 donc C = 4 + 1 = 5.</p>
+<p>Calcul d'une puissance (si e différent de 0, tant que e &gt; 0) : E = 12, N = 11 : V = 12 - 11 + 2 = 3, et π = 2 donc C = 3.</p></div>
+<p>Interprétation : mesure clé pour estimer l'effort de test (nombre de cas de test) et la couverture. Minimum 1. Plus il est grand, plus il y a de chemins, et plus la fonction est difficile à comprendre et à tester. La valeur maximale peut figurer dans le plan qualité.</p>
+<div class="tw"><table>
+<tr><th>V(G)</th><th>Interprétation</th><th>Risque</th><th>Probabilité de mauvaise correction</th></tr>
+<tr><td>1 à 10</td><td>Procédure simple</td><td>Faible</td><td>5 %</td></tr>
+<tr><td>11 à 20</td><td>Procédure plus complexe</td><td>Modéré</td><td>20 % (pour 20 à 30)</td></tr>
+<tr><td>21 à 50</td><td>Procédure complexe</td><td>Élevé</td><td>40 % (pour plus de 50)</td></tr>
+<tr><td>Plus de 50</td><td>Code non testable</td><td>Très élevé</td><td>60 % (vers 100)</td></tr>
+</table></div>
+
+<h3>Complexité de Halstead (1977) <span class="tag r">Priorité 1</span></h3>
+<p>Mesure quantitative dérivée du nombre d'opérandes (jetons contenant une valeur : variables, constantes) et d'opérateurs (tout le reste : virgules, parenthèses, opérateurs arithmétiques, mots-clés).</p>
+<div class="tw"><table>
+<tr><th>Grandeur</th><th>Formule</th><th>Sens</th></tr>
+<tr><td>n1, n2</td><td></td><td>Opérateurs et opérandes uniques</td></tr>
+<tr><td>N1, N2</td><td></td><td>Nombre total d'occurrences</td></tr>
+<tr><td>Vocabulaire n</td><td>n = n1 + n2</td><td>Opérateurs et opérandes distincts</td></tr>
+<tr><td>Longueur N</td><td>N = N1 + N2</td><td>Occurrences totales</td></tr>
+<tr><td>Volume V</td><td>V = N · log2(n)</td><td>Taille en bits</td></tr>
+<tr><td>Difficulté D</td><td>D = (n1 / 2) × (N2 / n2)</td><td>Difficulté de compréhension</td></tr>
+<tr><td>Niveau L</td><td>L = 1 / D</td><td>Proche de 1 : langage de haut niveau</td></tr>
+<tr><td>Effort E</td><td>E = V × D</td><td>Effort mental d'implémentation</td></tr>
+<tr><td>Temps T</td><td>T = E / S, S = 18</td><td>Secondes (constante de Stroud)</td></tr>
+<tr><td>Bugs B</td><td>B = E^(2/3) / 3000</td><td>Bugs estimés</td></tr>
+</table></div>
+<div class="box ex"><p class="t">Exemple du cours</p>
+<pre><code>z = 0;
+while x &gt; 0
+   z = z + y;
+   x = x - 1;
+end-while;
+print (z);</code></pre>
+<p>Opérateurs : = (3), ; (5), while/end-while (1), &gt; (1), + (1), - (1), print (1), () (1). Donc n1 = 8, N1 = 14. Opérandes : z (4), 0 (2), x (3), y (1), 1 (1). Donc n2 = 5, N2 = 11. Vocabulaire n = 13. Longueur N = 14 + 11 = 25.</p>
+<p>La slide écrit N = 24 : c'est une erreur d'addition, 14 + 11 = 25. Avec N = 25 : V = 25 × log2(13) ≈ 92,5, D = 4 × 2,2 = 8,8, E ≈ 814, T ≈ 45 s, B ≈ 0,03.</p></div>
+
+<!-- ================= 5 ================= -->
+<h2 id="c5">5. Métriques orientées objet</h2>
+
+<h3>Chidamber et Kemerer (1994) <span class="tag r">Priorité 1</span></h3>
+<p>Six métriques de classe, pour mesurer qualité et complexité. Elles décrivent la qualité locale (complexité, couplage, cohésion), pas la structure globale.</p>
+<div class="tw"><table>
+<tr><th>Métrique</th><th>Définition</th><th>Lecture</th></tr>
+<tr><td>WMC (Weighted Methods per Class)</td><td>Somme des complexités Ci des n méthodes (souvent McCabe). Si chaque Ci = 1, WMC = n.</td><td>Prédit délai et effort de construction et de maintenance</td></tr>
+<tr><td>DIT (Depth of Inheritance Tree)</td><td>Distance maximale entre la classe et la racine de l'arbre d'héritage. En Java, minimum 1 (Object).</td><td>Élevé : complexité et comportement difficile à prédire</td></tr>
+<tr><td>NOC (Number Of Children)</td><td>Nombre de sous-classes directes</td><td>Élevé : problèmes de conception et d'instabilité des super-classes</td></tr>
+<tr><td>CBO (Coupling Between Objects)</td><td>Nombre de classes couplées à la classe</td><td>Élevé : classe complexe, moins réutilisable, plus difficile à modifier et maintenir</td></tr>
+<tr><td>RFC (Response For Class)</td><td>|RS| : méthodes de la classe plus méthodes appelées directement par elles</td><td>Élevé : classe complexe, difficile à tester</td></tr>
+<tr><td>LCOM (Lack of Cohesion Of Methods)</td><td>P - Q si P &gt; Q, sinon 0. P : paires de méthodes sans attribut commun. Q : paires avec attribut commun.</td><td>Petit : classe cohésive, une seule responsabilité</td></tr>
+</table></div>
+
+<h4>Valeurs de référence du cours</h4>
+<div class="tw"><table>
+<tr><th>Métrique</th><th>Faible ou bon</th><th>Moyen</th><th>Élevé</th></tr>
+<tr><td>WMC</td><td>0 à 10</td><td>11 à 20</td><td>plus de 20</td></tr>
+<tr><td>DIT</td><td>0 à 4 acceptable</td><td>5 à 7</td><td>plus de 7</td></tr>
+<tr><td>NOC</td><td>0 à 3 normal</td><td>4 à 7</td><td>plus de 7</td></tr>
+<tr><td>CBO</td><td>0 à 5</td><td>6 à 10</td><td>plus de 10</td></tr>
+<tr><td>RFC</td><td>0 à 20</td><td>21 à 50</td><td>plus de 50</td></tr>
+<tr><td>LCOM</td><td>0 à 1 forte cohésion (idéal)</td><td></td><td>plus de 1 : faible cohésion, refactorisation</td></tr>
+</table></div>
+
+<div class="box ex"><p class="t">Exemples du cours</p>
+<ul>
+<li>WMC : la classe foo a 4 méthodes, toutes de même complexité : WMC = 4.</li>
+<li>DIT : D1 est à 4 niveaux de la racine : DIT(D1) = 4. NOC : B1 a deux enfants : NOC(B1) = 2.</li>
+<li>CBO : ClassA est liée à ClassB, ClassC, ClassD, ClassE et InterfaceF : CBO = 5.</li>
+<li>RFC : C1 a M1, M2, M3 (M3 appelle C2.M1) : RFC = 3 + 1 = 4. Classe Order : 2 méthodes internes, 1 appel externe : RFC = 3.</li>
+<li>LCOM, classe à 3 méthodes : I1 = {a,b,c,d,e}, I2 = {a,b,c}, I3 = {x,y,z} : P = 2, Q = 1, LCOM = 1.</li>
+<li>LCOM, classe TestCohesion à 5 méthodes : P = 6, Q = 4, LCOM = 2.</li>
+</ul></div>
+
+<h3>Principes SOLID <span class="tag y">Priorité 2</span></h3>
+<ul>
+<li>S : une classe, une seule responsabilité.</li>
+<li>O : ouverte à l'extension, fermée à la modification.</li>
+<li>L : les sous-classes remplacent leurs super-classes sans altérer le comportement.</li>
+<li>I : préférer plusieurs petites interfaces à une interface générale.</li>
+<li>D : les modules de haut niveau dépendent d'abstractions, pas d'implémentations.</li>
+</ul>
+
+<h3>Indice de spécialisation SI <span class="tag r">Priorité 1</span></h3>
+<p><code>SI = NORM × DIT / NOM</code>. NORM : méthodes redéfinies. DIT : profondeur. NOM : nombre total de méthodes. On peut faire des moyennes par package ou projet.</p>
+<ul>
+<li>Faible (environ 0) : classe peu spécialisée, générique, flexible.</li>
+<li>Moyenne (environ 0,5 à 1) : équilibre entre héritage et redéfinition, bonne réutilisation.</li>
+<li>Élevée (plus de 1,5) : très spécialisée, risque de rigidité, refactorisation recommandée.</li>
+</ul>
+<div class="box ex"><p class="t">Exemple du cours</p><p>C3 hérite de C2 qui hérite de C1 ; C3 redéfinit m1, m2, m3. NOM = 3, DIT = 3, NORM = 3 : SI = 3 × 3 / 3 = 3. Très spécialisée : elle devrait plutôt implémenter une interface.</p></div>
+
+<h3>Métriques de packages (Robert C. Martin) <span class="tag r">Priorité 1</span></h3>
+<div class="tw"><table>
+<tr><th>Métrique</th><th>Formule</th><th>Lecture</th></tr>
+<tr><td>Abstractivité A</td><td>A = Nabstrait / Ntotal</td><td>0 : totalement concret. 1 : totalement abstrait.</td></tr>
+<tr><td>Instabilité I</td><td>I = Ce / (Ca + Ce)</td><td>0 : stable, difficile à changer (beaucoup en dépendent). 1 : instable, facile à changer.</td></tr>
+<tr><td>Distance D</td><td>D = |A + I - 1|</td><td>Distance à la séquence principale. Entre 0 et 1. Plus proche de 0, mieux.</td></tr>
+</table></div>
+<p>Ca (couplage afférent, entrant) : nombre de classes extérieures qui dépendent de la classe ou du module. Ce (couplage efférent, sortant) : nombre de classes dont elle dépend.</p>
+<div class="box piege"><p class="t">Piège dans la slide</p><p>Le texte de la slide mélange les mots entrant et sortant pour Ca et Ce, mais ses exemples sont cohérents avec la définition ci-dessus (Forme : Ca = 2, Ce = 0, donc I = 0). Suivez les exemples.</p></div>
+<div class="box ex"><p class="t">Exemple : Forme, Rectangle, Carre, Cercle</p>
+<p>Carre dépend de Rectangle qui dépend de Forme ; Cercle dépend de Forme.</p>
+<div class="tw"><table>
+<tr><th>Classe</th><th>Ca</th><th>Ce</th><th>I</th><th>Lecture</th></tr>
+<tr><td>Forme</td><td>2</td><td>0</td><td>0</td><td>Très stable</td></tr>
+<tr><td>Rectangle</td><td>1</td><td>1</td><td>0,5</td><td>Moyennement stable</td></tr>
+<tr><td>Carre</td><td>0</td><td>1</td><td>1</td><td>Très instable</td></tr>
+<tr><td>Cercle</td><td>0</td><td>1</td><td>1</td><td>Très instable</td></tr>
+</table></div>
+<p>Plus une classe est proche du métier (haut niveau), plus elle est instable. Plus elle est générique, plus elle est stable.</p></div>
+<div class="box ex"><p class="t">Exemple : trois packages</p>
+<p>Package 3 : Ce = 0, Ca = 1, I = 0, A = 0, D = 1. Package 1 : Ce = 1, Ca = 3, I = 0,25, A = 0,5, D = 0,25. Package 2 : Ce = 3, Ca = 0, I = 1, A = 0, D = 0. Moyennes : I = 0,42 et D = 0,417.</p></div>
+<ul>
+<li>Cas typiques : A = 0 et I = 0,1 (D = 0,9) : concret et stable, rigide. A = 1 et I = 0,8 (D = 0,2) : abstrait et instable, bien conçu. A = 0,5 et I = 0,5 (D = 0) : idéal.</li>
+<li>Distance moyenne : moins de 0,3, très bonne architecture. De 0,3 à 0,5, acceptable mais améliorable. Plus de 0,5, déséquilibrée.</li>
+</ul>
+
+<!-- ================= 6 ================= -->
+<h2 id="c6">6. SonarQube</h2>
+
+<h3>Présentation <span class="tag y">Priorité 2</span></h3>
+<ul>
+<li>Solution web open source de gestion centralisée de la qualité du code, avec une vue globale des projets audités.</li>
+<li>Plus de 25 langages : Java, C#, C/C++, Python, PHP, JavaScript, TypeScript, Kotlin, Go, COBOL, ABAP, etc.</li>
+<li>Intégration DevOps : outils CI (Jenkins, TravisCI, Azure DevOps), notification de succès ou d'échec, haute disponibilité.</li>
+<li>Sécurisé et basé sur RBAC (Role-Based Access Control).</li>
+</ul>
+
+<h3>Les 7 axes de qualité <span class="tag y">Priorité 2</span></h3>
+<div class="tw"><table>
+<tr><th>Axe</th><th>Ce qu'il détecte</th></tr>
+<tr><td>Respect des standards</td><td>Règles de codage. Chaque anomalie a un niveau (bloquant, critique, majeur, mineur, info) et un temps estimé de correction.</td></tr>
+<tr><td>Anomalies potentielles</td><td>Plantages et erreurs à l'exécution : ressources non fermées, boucles infinies, mauvais usage de classes (new BigDecimal(double)), exception créée sans throw.</td></tr>
+<tr><td>Complexité</td><td>Cyclomatique (McCabe, nombre de décisions, chemins linéairement indépendants) et cognitive (SonarSource, 2016 : effort pour comprendre, sans fondement mathématique).</td></tr>
+<tr><td>Duplications</td><td>Doit tendre vers 0 : source d'anomalies et code inutile, donc refactoring.</td></tr>
+<tr><td>Architecture et design</td><td>Code spaghetti, dépendances.</td></tr>
+<tr><td>Absence de tests unitaires</td><td>Couverture de classe, lignes non couvertes, conditions partiellement couvertes.</td></tr>
+<tr><td>Documentation et commentaires</td><td>Manque de commentaires.</td></tr>
+</table></div>
+
+<h3>Quality Gate <span class="tag r">Priorité 1</span></h3>
+<p>Réponse à la question « puis-je livrer mon projet en production aujourd'hui ? » : PASSED ou FAILED. Critères : absence d'anomalies bloquantes, couverture de code supérieure à 80 %, et d'autres indicateurs de sécurité, fiabilité et maintenabilité.</p>
+
+<h3>Installation <span class="tag b">Priorité 3</span></h3>
+<p>Télécharger depuis le site de SonarSource, décompresser, exécuter le script correspondant au système (StartSonar.bat sous Windows). Serveur sur http://localhost:9000/.</p>
+
+<div class="box retenir">
+<p class="t">Pour la suite</p>
+<p>Passez à la page <a href="essentiel.html">Essentiel à retenir</a> pour la vue d'ensemble, puis à <a href="exercices.html">TD, TP et exercices</a> pour les calculs corrigés.</p>
+</div>
+
+<div class="foot">Contenu tiré des cours du Pr. Aimad Qazdar (concepts, modèles, ISO 25010, métriques de code, métriques POO, SonarQube) et des TD et TP.</div>
+</main>
+</div>
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

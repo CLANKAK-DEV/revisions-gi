@@ -1,0 +1,364 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Résumé du cours Réseaux et Télécoms</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="shell">
+<aside class="side" id="side"></aside>
+<main>
+<h1>Résumé du cours</h1>
+<p class="lead">Module INF4031, Réseaux et Télécoms. Chapitre 1 : introduction aux réseaux et aux télécoms. Chapitre 2 : traitement de l'information et du signal, partie 1 (signal) et partie 2 (numérisation et transmission).</p>
+
+<div class="box">
+<p class="t">Sommaire</p>
+<ul>
+<li><a href="#syl">Le module en un coup d'œil</a></li>
+<li><a href="#c1a">Chapitre 1, partie I : les réseaux</a></li>
+<li><a href="#c1b">Chapitre 1, partie II : les systèmes de télécoms</a></li>
+<li><a href="#c2a">Chapitre 2, partie 1 : traitement de l'information et du signal</a></li>
+<li><a href="#c2b">Chapitre 2, partie 2 : numérisation et notions de transmission</a></li>
+</ul>
+</div>
+
+<h2 id="syl">Le module en un coup d'œil</h2>
+<p>Axes du syllabus : architecture des réseaux, classification des réseaux de communication, convergence réseaux-télécoms, IoT et télécoms, traitement du signal et de l'information, numérisation, modulation (adapter le signal porteur d'information), réseau téléphonique fixe et mobile. S'ajoutent des mini-projets (exposés) et des travaux pratiques.</p>
+<p>Travaux pratiques annoncés : réseaux de communication, pilotage d'automates programmables industriels (API) via le réseau mobile GSM, télégestion via GPRS, modulation analogique, modulation numérique (TNT et satellite) et routeurs cellulaires industriels Teltonika (RUT951).</p>
+
+<!-- ===================== CHAPITRE 1 PARTIE I ===================== -->
+<h2 id="c1a">Chapitre 1, partie I : les réseaux</h2>
+
+<h3>1. Qu'est-ce qu'un réseau ?</h3>
+<div class="box def">
+<p class="t">Définition</p>
+<p>Un réseau est un ensemble d'entités appelées nœuds, interconnectées par des liaisons ou liens, qui permettent l'acheminement de l'information.</p>
+</div>
+<p>Un réseau peut être matériel (réseau électrique, routier, sanguin, industriel, téléphonique), immatériel (réseau social) ou abstrait (réseau de tâches de la méthode PERT).</p>
+<div class="box ex"><p class="t">Origine</p>
+<p>En 1741, Leonhard Euler étudie le problème des sept ponts de Königsberg. Il représente les terres par des nœuds et les ponts par des arêtes : c'est la première utilisation d'un graphe pour un problème réel, à l'origine de la théorie des graphes, base de la modélisation des réseaux de communication.</p></div>
+
+<h4>Les nœuds et les liens</h4>
+<ul>
+<li>Hôtes (terminaux) : PC, serveurs, capteurs. Ils exécutent des applications (web, email) et génèrent ou utilisent de l'information.</li>
+<li>Équipements de réseau (nœuds intermédiaires) : routeurs, commutateurs. Ils acheminent l'information et assurent des fonctionnalités spécifiques.</li>
+<li>Lignes de transmission (liens) : câble en cuivre, fibre optique, ondes radio, infrarouge. Elles transportent l'information d'un nœud à l'autre.</li>
+</ul>
+
+<h3>2. Les types de réseaux</h3>
+<p>On les distingue selon quatre axes : le mode de transmission, la topologie, la taille (distance maximale entre les deux points les plus éloignés) et le type de support.</p>
+<div class="tw"><table>
+<tr><th>Mode de transmission</th><th>Définition</th></tr>
+<tr><td>Point-à-point</td><td>Le support physique ne relie qu'une paire de nœuds</td></tr>
+<tr><td>Multipoint (ou diffusion)</td><td>Le support de transmission est partagé entre plusieurs nœuds</td></tr>
+</table></div>
+
+<h3>3. Les topologies</h3>
+<div class="box def">
+<p class="t">Définition</p>
+<p>La topologie est la façon de raccorder les stations entre elles. La topologie physique est la configuration matérielle (le câblage). La topologie logique décrit le mode d'échange des messages : comment les hôtes accèdent au support pour émettre et comment les données transitent dans les lignes.</p>
+</div>
+<div class="tw"><table>
+<tr><th>Topologie</th><th>Ce que dit le cours</th><th>Avantages et limites (complément)</th></tr>
+<tr><td>Bus</td><td>Support partagé. Toutes les stations peuvent émettre en même temps. Le réseau gère les collisions.</td><td>Peu de câble, simple. Collisions, une coupure du câble peut tout bloquer.</td></tr>
+<tr><td>Étoile</td><td>Le nœud central gère les conflits. Chaque station dispose du débit maximum. Le nœud donne souvent accès à un serveur.</td><td>Une panne de station n'arrête pas les autres. Le nœud central est un point faible.</td></tr>
+<tr><td>Arbre</td><td>Des étoiles interconnectées. Le nombre de nœuds peut être limité.</td><td>Organisation hiérarchique, extension facile par niveaux.</td></tr>
+<tr><td>Anneau (boucle)</td><td>Les stations émettent quand elles y sont invitées, elles se passent la parole à tour de rôle. Débit à peu près fixe.</td><td>Pas de collision. Une rupture de l'anneau perturbe le réseau.</td></tr>
+<tr><td>Maillée</td><td>Tous les nœuds sont connectés les uns avec les autres. C'est l'architecture de base d'Internet.</td><td>Plusieurs chemins possibles, très robuste. Coûteuse en liens.</td></tr>
+</table></div>
+<p>La dernière colonne n'est pas dans vos slides, qui posent la question « quels sont les avantages et limitations de chaque topologie ? ». C'est un complément standard pour y répondre.</p>
+
+<h3>4. Architecture de base : couches, protocoles, interfaces</h3>
+<p>Le modèle repose sur trois principes.</p>
+<div class="box def">
+<p class="t">Définitions</p>
+<ul>
+<li>Couche : ensemble homogène destiné à accomplir une tâche ou rendre un service (adressage, transport). Une couche = une fonction.</li>
+<li>Protocole : règles de dialogue entre deux couches de même niveau situées sur deux hôtes différents (par exemple protocole de couche 3).</li>
+<li>Interface : point de passage de l'information entre deux couches adjacentes d'un même hôte (par exemple interface entre couches 3 et 4).</li>
+</ul>
+</div>
+<p>Pourquoi normaliser ? Pour l'interopérabilité et la compatibilité : un langage commun permet à des systèmes de fournisseurs différents de fonctionner ensemble.</p>
+
+<h4>Le modèle OSI (7 couches)</h4>
+<p>OSI (Open System Interconnection) a été publié en 1984 par l'ISO (International Standard Organisation). Il propose aux fournisseurs des normes qui assurent compatibilité et interopérabilité.</p>
+<div class="tw"><table>
+<tr><th>N°</th><th>Couche OSI</th><th>Rôle (aide-mémoire)</th></tr>
+<tr><td>7</td><td>Application</td><td>Services aux programmes : HTTP, FTP, SMTP, DNS</td></tr>
+<tr><td>6</td><td>Présentation</td><td>Format des données, chiffrement, compression</td></tr>
+<tr><td>5</td><td>Session</td><td>Ouverture, gestion et fermeture du dialogue</td></tr>
+<tr><td>4</td><td>Transport</td><td>Transport de bout en bout : TCP, UDP</td></tr>
+<tr><td>3</td><td>Réseau</td><td>Adressage et acheminement : paquets IP, routeur</td></tr>
+<tr><td>2</td><td>Liaison de données</td><td>Transfert entre nœuds voisins : commutateur, adresse MAC</td></tr>
+<tr><td>1</td><td>Physique</td><td>Transmission des bits sur le support : câble, fibre, radio</td></tr>
+</table></div>
+<div class="box ex"><p class="t">Exemple du cours : une communication entre deux nœuds</p>
+<ol>
+<li>L'émetteur prépare la transmission : les données descendent de la couche Application à la couche Physique.</li>
+<li>La couche physique transmet sur le support.</li>
+<li>Les équipements intermédiaires traitent les données et les expédient (le commutateur utilise les couches basses, le routeur monte jusqu'à la couche Réseau).</li>
+<li>Le récepteur traite les données reçues et les remonte, chaque couche supprimant ses informations propres.</li>
+<li>L'application reçoit les données.</li>
+</ol></div>
+
+<h4>Le modèle TCP/IP (4 couches) et la comparaison avec OSI</h4>
+<p>TCP/IP a été conçu pour modéliser le réseau Internet.</p>
+<div class="tw"><table>
+<tr><th>TCP/IP</th><th>OSI</th><th>Protocoles et services</th></tr>
+<tr><td>Application</td><td>Application, Présentation, Session</td><td>HTTP, FTP, Telnet, NTP, DHCP, PING</td></tr>
+<tr><td>Transport</td><td>Transport</td><td>TCP, UDP</td></tr>
+<tr><td>Internet (Network)</td><td>Réseau</td><td>IP, ARP, ICMP, IGMP</td></tr>
+<tr><td>Accès au réseau (Network Interface)</td><td>Liaison de données, Physique</td><td>Ethernet</td></tr>
+</table></div>
+<div class="box piege"><p class="t">Piège</p><p>La couche Application de TCP/IP couvre trois couches d'OSI (Application, Présentation, Session). La couche Accès au réseau couvre deux couches d'OSI (Liaison, Physique). C'est une question de QCM.</p></div>
+
+<h3>5. Classification des réseaux : informatiques, industriels, mobiles</h3>
+
+<h4>Réseaux informatiques, par taille</h4>
+<div class="tw"><table>
+<tr><th>Sigle</th><th>Nom</th><th>Portée</th></tr>
+<tr><td>BAN</td><td>Body Area Network</td><td>Autour du corps humain</td></tr>
+<tr><td>PAN</td><td>Personal Area Network</td><td>Quelques mètres (réseau personnel)</td></tr>
+<tr><td>LAN</td><td>Local Area Network</td><td>Zone restreinte : bureau, bâtiment</td></tr>
+<tr><td>MAN</td><td>Metropolitan Area Network</td><td>Interconnexion de plusieurs LAN dans une ville</td></tr>
+<tr><td>WAN</td><td>Wide Area Network</td><td>Vaste zone géographique (Internet)</td></tr>
+</table></div>
+<p>Sur le schéma du cours, l'échelle va de 1 m à 100 km : PAN autour de quelques mètres, LAN jusqu'à environ 1 km, MAN jusqu'à environ 10 km, WAN au-delà. Les ordres de grandeur se recouvrent un peu.</p>
+
+<h4>Réseaux industriels</h4>
+<p>Ils équipent les environnements de production, d'automatisation et de contrôle industriel. Ils connectent capteurs, actionneurs, automates et robots, avec des protocoles spécifiques. Pour positionner les réseaux d'automatisation, on regarde quatre critères : le nombre d'informations à transmettre, le temps de réponse nécessaire, la distance et la topologie.</p>
+<p>Acteurs mondiaux : ABB (Suisse et Suède), Mitsubishi Electric (Japon), Schneider Electric (France), Rockwell Automation (États-Unis), Siemens (Allemagne).</p>
+<div class="tw"><table>
+<tr><th>Niveau</th><th>Schneider Electric</th><th>Siemens</th></tr>
+<tr><td>Capteur / terrain (bit, très rapide)</td><td>AS-i</td><td>Interface AS</td></tr>
+<tr><td>Machine / commande</td><td>CANopen</td><td>Profibus DP</td></tr>
+<tr><td>Atelier</td><td>Ethernet Modbus TCP</td><td></td></tr>
+<tr><td>Entreprise / supervision ou conduite</td><td>Ethernet Modbus TCP (MES, ERP, Internet via un pare-feu)</td><td>Profinet</td></tr>
+</table></div>
+<p>Sur le schéma de positionnement, AS-i est tout en bas (volume du bit, temps de réponse très court) et Ethernet TCP/IP tout en haut (méga-octets, niveau entreprise).</p>
+
+<h4>Réseaux mobiles</h4>
+<p>Réseaux sans fil destinés à la communication via des terminaux mobiles (smartphones, tablettes, objets connectés).</p>
+<div class="tw"><table>
+<tr><th>Génération</th><th>Technologie</th><th>Apport</th></tr>
+<tr><td>2G</td><td>GSM</td><td>Voix et SMS</td></tr>
+<tr><td>3G</td><td>UMTS</td><td>Données mobiles</td></tr>
+<tr><td>4G</td><td>LTE</td><td>Haut débit mobile</td></tr>
+<tr><td>5G</td><td></td><td>Ultra haut débit, faible latence, objets connectés (IoT)</td></tr>
+<tr><td>6G</td><td></td><td>À venir</td></tr>
+</table></div>
+<p>Le cours demande de chercher d'autres réseaux mobiles ou sans fil au-delà du cellulaire : par exemple Wi-Fi, Bluetooth, Zigbee, LoRa.</p>
+
+<h3>6. Les protocoles de communication</h3>
+<div class="tw"><table>
+<tr><th>Domaine</th><th>Protocoles</th></tr>
+<tr><td>Internet</td><td>TCP/IP, HTTP/HTTPS</td></tr>
+<tr><td>Réseaux locaux (LAN)</td><td>Ethernet, Wi-Fi</td></tr>
+<tr><td>Internet des objets (IoT)</td><td>MQTT, LoRa, Zigbee, Bluetooth/BLE, CoAP</td></tr>
+<tr><td>Systèmes embarqués</td><td>I2C, SPI, UART</td></tr>
+<tr><td>Industrie</td><td>Modbus, Profibus, Profinet, RS-232/RS-485</td></tr>
+<tr><td>Industrie et automobile</td><td>CAN</td></tr>
+</table></div>
+<div class="box ex"><p class="t">Intégration IT, OT et mobile (exemples du terrain)</p>
+<ul>
+<li>Un capteur de température (OT) envoie ses données par réseau mobile 5G à une application cloud (IT).</li>
+<li>Un ingénieur utilise une tablette (mobile) pour accéder en temps réel à des données SCADA (industriel) hébergées sur un serveur (informatique).</li>
+</ul></div>
+
+<!-- ===================== CHAPITRE 1 PARTIE II ===================== -->
+<h2 id="c1b">Chapitre 1, partie II : les systèmes de télécoms</h2>
+
+<div class="box def">
+<p class="t">Définition : télécoms</p>
+<p>Ensemble des techniques permettant de transmettre des informations à distance par des moyens électroniques. En 1932 (Madrid), l'Union Internationale des Télécommunications (UIT) devient l'organisme spécialisé dans les technologies de l'information et de la communication.</p>
+</div>
+<p>Architecture d'un système de télécoms : un émetteur, un support de transmission, un récepteur et des protocoles de gestion.</p>
+
+<h3>Télécoms et réseaux de communication</h3>
+<p>Il y a deux termes en télécommunications : réseau et système. Les systèmes sont les supports des réseaux : ce sont les moyens de télécommunications qui servent à les constituer.</p>
+<div class="grid">
+<div class="card"><h3>Systèmes de transmission</h3><p>Supports de transmission, équipements de groupement des signaux (multiplexage), amplificateurs.</p></div>
+<div class="card"><h3>Systèmes de commutation</h3><p>Aiguillage de l'information par des commutateurs : commutation de circuit (téléphonie), de messages, de paquets.</p></div>
+</div>
+
+<h3>Convergence réseaux-télécoms</h3>
+<ul>
+<li>VoIP (Voice over IP) : la voix transite sur les réseaux IP (WhatsApp, Zoom).</li>
+<li>Triple play : Internet, télévision et téléphonie fixe. Quadruple play : on ajoute le mobile. Dans vos slides : « offre groupée (Internet + TV + téléphonie + mobile) ». La correction du QCM retient pour le triple play : Internet, télévision, téléphonie fixe.</li>
+<li>5G et Edge Computing.</li>
+</ul>
+
+<h3>Classification des réseaux de communication en télécoms</h3>
+<div class="tw"><table>
+<tr><th>Catégorie</th><th>À retenir</th><th>Exemples</th></tr>
+<tr><td>Réseaux de télécommunications</td><td>Les plus anciens. Transmission à distance avec des moyens électroniques et informatiques.</td><td>Réseau téléphonique fixe, réseaux mobiles</td></tr>
+<tr><td>Réseaux téléinformatiques</td><td>Transmission à distance de l'information sous forme numérique. Systèmes informatiques connectés par un réseau de communication. Intérêts : rapidité, longues distances, confidentialité.</td><td>Internet, réseaux locaux d'entreprise</td></tr>
+<tr><td>Réseaux de télédiffusion</td><td>Diffusion des chaînes de télévision entre les studios TV et les particuliers.</td><td>Distribution terrestre, satellite</td></tr>
+</table></div>
+<div class="box piege"><p class="t">Piège</p><p>Il existe deux classifications. Par domaine : informatiques, industriels, mobiles (partie I). Par nature en télécoms : télécommunications, téléinformatiques, télédiffusion (partie II). Ne pas les mélanger.</p></div>
+
+<!-- ===================== CHAPITRE 2 PARTIE 1 ===================== -->
+<h2 id="c2a">Chapitre 2, partie 1 : traitement de l'information et du signal</h2>
+
+<h3>1. Définitions de base</h3>
+<div class="box def">
+<p class="t">Définitions</p>
+<ul>
+<li>Information : représentation objective et mesurable de données pouvant être communiquées entre systèmes.</li>
+<li>Message : représentation concrète de l'information, sous forme de texte, voix, image, vidéo.</li>
+<li>Signal : représentation physique d'une information à transmettre. C'est le support de l'information : une tension, un courant, une onde électromagnétique (radio, TV, radar), une onde lumineuse ou infrarouge (fibre optique).</li>
+</ul>
+</div>
+<div class="box ex"><p class="t">Exemple</p><p>Message : la phrase « bonjour ». Information : son contenu. Signal : la tension électrique qui sort du microphone.</p></div>
+
+<h3>2. Chaîne de communication</h3>
+<p>C'est la relation entre un système qui émet une information et un système qui la reçoit et l'exploite : le trajet de l'information. Du côté de l'émetteur : création (procédé physique), création du signal (codage, modulation), système de transmission (amplificateur, ligne électrique), récepteur (détection, décodage, démodulation), exploitation. À chaque étage, du bruit peut s'ajouter.</p>
+<p>Il existe deux types d'information : analogique et numérique.</p>
+<div class="tw"><table>
+<tr><th>Chaîne</th><th>Éléments</th></tr>
+<tr><td>Information analogique</td><td>Source, transducteur, émetteur, canal, récepteur, transducteur, destinataire</td></tr>
+<tr><td>Information numérique</td><td>ETTD, ETCD, support de transmission, ETCD, ETTD. L'ensemble ETCD, support, ETCD est le circuit de données.</td></tr>
+</table></div>
+<div class="box def">
+<p class="t">ETTD et ETCD</p>
+<ul>
+<li>ETTD : Équipement Terminal de Traitement de Données (DTE, Data Terminal Equipment). Traitement de données et gestion des communications.</li>
+<li>ETCD : Équipement Terminal de Circuits de Données (DCE, Data Communication Equipment). Adaptation électrique du signal de l'ETTD au support de transmission, établissement et libération des circuits. Exemple : le modem.</li>
+<li>Interfaces numériques : les jonctions entre ETTD et ETCD.</li>
+</ul>
+</div>
+
+<h3>3. Capteur, transducteur, transmetteur, conditionneur</h3>
+<ul>
+<li>Signal : grandeur électrique engendrée par un phénomène physique, obtenue à l'aide de capteurs.</li>
+<li>Capteur : dispositif qui transforme une grandeur physique observée en une grandeur physique utilisable (capteur de vitesse, capteur de force).</li>
+<li>Transmetteur : prend un signal d'entrée (issu du transducteur) et le prépare, par mise en forme, pour la transmission.</li>
+<li>Conditionneur : adapte le signal du capteur (amplification, filtrage) pour l'exploiter. Le cours montre des conditionneurs de la série GSV et parle de chaîne de mesure informatisée.</li>
+</ul>
+
+<h3>4. Traitement du signal</h3>
+<div class="box def">
+<p class="t">Définition</p>
+<p>Traitement : suite d'opérations qui transforme une représentation de l'information en une autre, plus facile à manipuler ou à interpréter. Le traitement du signal est un ensemble de techniques pour créer, analyser et transformer les signaux en vue de leur exploitation.</p>
+</div>
+<div class="tw"><table>
+<tr><th>Fonction</th><th>Exemples</th></tr>
+<tr><td>Créer</td><td>Synthèse, modulation</td></tr>
+<tr><td>Analyser</td><td>Détection, identification</td></tr>
+<tr><td>Transformer</td><td>Filtrage, codage, compression</td></tr>
+</table></div>
+<p>Application en télécommunication : protéger l'information contre le bruit.</p>
+
+<h3>5. Classification des signaux</h3>
+<div class="tw"><table>
+<tr><th>Mode de classification</th><th>Classes</th></tr>
+<tr><td>Temporelle</td><td>Déterministe : décrit par une fonction mathématique ou un graphe. Aléatoire : imprévisible, décrit par des propriétés statistiques (moyenne, variance, loi de probabilité).</td></tr>
+<tr><td>Énergétique</td><td>Énergie totale finie (signaux transitoires). Puissance moyenne finie non nulle (signaux aléatoires permanents).</td></tr>
+<tr><td>Spectrale</td><td>Bande étroite (largeur spectrale petite) ou large bande (largeur grande).</td></tr>
+<tr><td>Morphologique</td><td>Analogique, quantifié, échantillonné, numérique (tableau ci-dessous).</td></tr>
+</table></div>
+<div class="tw"><table>
+<tr><th>Signal</th><th>Amplitude</th><th>Temps</th></tr>
+<tr><td>Analogique</td><td>continue</td><td>continu</td></tr>
+<tr><td>Quantifié</td><td>discrète</td><td>continu</td></tr>
+<tr><td>Échantillonné</td><td>continue</td><td>discret</td></tr>
+<tr><td>Numérique (logique)</td><td>discrète</td><td>discret</td></tr>
+</table></div>
+
+<h3>6. Déformation des signaux</h3>
+<h4>Affaiblissement (atténuation)</h4>
+<div class="box def">
+<p class="t">Formule</p>
+<p><code>A = 10 · log10(Psource / Pdestination)</code> en décibels (dB). Le gain est l'inverse de l'affaiblissement : <code>G = -A</code>. Pour contrer l'affaiblissement, on utilise des amplificateurs ou des répéteurs.</p>
+</div>
+<div class="box ex"><p class="t">Exemple</p><p>Une ligne qui perd 20 % de la puissance : Psortie = 0,8 Pentrée, donc A = 10 log10(1/0,8) ≈ 0,97 dB.</p></div>
+<div class="box retenir"><p class="t">À retenir (valeurs usuelles)</p>
+<ul><li>3 dB : la puissance est divisée par 2 (environ).</li><li>10 dB : divisée par 10.</li><li>20 dB : divisée par 100.</li><li>Puissance de sortie : <code>Ps = Pe · 10^(-A/10)</code>.</li></ul></div>
+
+<h4>Bruits</h4>
+<ul>
+<li>Bruit blanc : provoqué par l'agitation thermique dans les conducteurs.</li>
+<li>Bruits impulsifs : signaux parasites, diaphonie entre voies.</li>
+<li>Rapport signal sur bruit (S/N) : caractérise la qualité de la ligne, en décibels. <code>(S/N)dB = 10 · log10(Psignal / Pbruit)</code>.</li>
+</ul>
+
+<h4>Distorsion</h4>
+<p>Ensemble des modifications indésirables d'un signal. Distorsion linéaire : due à la présence d'éléments réactifs. Distorsion non linéaire ou harmonique : un élément de la chaîne est non linéaire. Un signal sinusoïdal pur (un seul harmonique, le fondamental) n'a pas de distorsion harmonique.</p>
+
+<h3>7. Analyse spectrale</h3>
+<div class="box def">
+<p class="t">Définition</p>
+<p>L'analyse spectrale calcule la quantité d'énergie contenue dans les différentes composantes fréquentielles d'un signal.</p>
+</div>
+<ul>
+<li>Représentation temporelle : l'allure en fonction du temps, donnée par l'oscillogramme (oscilloscope). Exemple : x(t) = 10 sin(ωt).</li>
+<li>Représentation fréquentielle : diagramme amplitude-fréquence, le spectre (analyseur de spectre). Pour x(t) = 10 sin(400 t), le spectre est une raie d'amplitude 10 à la pulsation 400 rad/s.</li>
+</ul>
+<h4>Les trois outils mathématiques</h4>
+<div class="tw"><table>
+<tr><th>Cas</th><th>Outil</th><th>Résultat</th></tr>
+<tr><td>x(t) périodique</td><td>Décomposition en série de Fourier</td><td>Amplitude des raies du spectre (raies équidistantes)</td></tr>
+<tr><td>x(t) non périodique, équation connue</td><td>Transformée de Fourier : S(jω) = intégrale de x(t)·e^(-jωt) dt</td><td>Fonction complexe, on en extrait le module et on garde les fréquences positives</td></tr>
+<tr><td>N échantillons disponibles</td><td>Transformée de Fourier discrète (TFD, FFT)</td><td>N points du spectre, abscisse f(k), ordonnée S(k)</td></tr>
+</table></div>
+<p>Pour la TFD : échantillonnage à la fréquence fe, la prise de N échantillons dure T = N·Te = N/fe. Spectre d'un signal périodique : X0 est la valeur moyenne, X1 l'amplitude du fondamental, X2 celle de l'harmonique 2, et ainsi de suite jusqu'à Xn.</p>
+<div class="box retenir"><p class="t">Complément utile pour le TP</p><p>La résolution en fréquence de la FFT est fe/N = 1/T. Avec fe = 150 Hz et T = 1 s, N = 150 et la résolution est de 1 Hz. Les fréquences exploitables vont de 0 à fe/2.</p></div>
+
+<!-- ===================== CHAPITRE 2 PARTIE 2 ===================== -->
+<h2 id="c2b">Chapitre 2, partie 2 : numérisation et notions de transmission</h2>
+
+<h3>1. Deux méthodes de transmission à distance</h3>
+<p>Transmission en bande de base (TBB) ou transmission par modulation d'une porteuse. Quatre situations sont possibles selon que le signal d'origine est numérique ou analogique, et que le transfert se fait sous forme numérique ou analogique.</p>
+
+<h3>2. Numérisation</h3>
+<p>Pour un signal analogique transféré sous forme numérique, on utilise un CAN (convertisseur analogique-numérique) à l'émission et une conversion inverse (CNA) à la réception. Deux opérations à l'émission : l'échantillonnage, puis la quantification et le codage.</p>
+
+<h4>Échantillonnage</h4>
+<div class="box def">
+<p class="t">Définition</p>
+<p>Prélever des échantillons du signal à une cadence déterminée. Pendant la durée totale d'acquisition, on prélève un nombre fini N de valeurs de tension U(t), avec une fréquence d'échantillonnage Fe = 1/Te. Fe est le nombre de prélèvements par seconde.</p>
+</div>
+<div class="box def">
+<p class="t">Théorème de Shannon</p>
+<p><code>fe ≥ 2 · fmax</code>. La fréquence d'échantillonnage doit être au moins le double de la fréquence maximale du signal. Si fe &gt; 2 fmax, le signal peut être reconstitué. Si fe &lt; 2 fmax, il y a trop peu d'échantillons et le signal ne peut pas être reconstitué : c'est le repliement dû au sous-échantillonnage. Remède : un filtre anti-repliement placé avant l'échantillonnage.</p>
+</div>
+<div class="box ex"><p class="t">Exemple du cours</p>
+<p>Avant l'échantillonnage, le signal basse fréquence traverse un filtre qui limite sa fréquence à 4000 Hz. Question : un signal de ligne téléphonique occupe la bande [300 Hz ; 3400 Hz], quelle est la fréquence d'échantillonnage minimale ?</p>
+<p>Réponse : fmax = 3400 Hz, donc fe ≥ 6800 Hz. En pratique, avec le filtre à 4000 Hz, on échantillonne à 8000 Hz (c'est la valeur de la téléphonie numérique).</p></div>
+
+<h4>Quantification et codage</h4>
+<ul>
+<li>Quantification : approcher un signal continu par des valeurs d'un ensemble discret (nombre d'états fini), c'est-à-dire affecter une valeur d'amplitude à chaque échantillon prélevé.</li>
+<li>La qualité de la numérisation est d'autant meilleure que le pas P du convertisseur est petit et que Fe est élevée.</li>
+<li>Codage : transformer la valeur numérique de l'amplitude en valeur binaire.</li>
+</ul>
+<div class="box retenir"><p class="t">Compléments standard (hors slides)</p>
+<ul><li>Avec n bits, il y a 2^n niveaux. Pas de quantification : P = plage de tension / 2^n.</li><li>Débit binaire d'un signal numérisé : D = fe × n. Voix : 8000 × 8 = 64 kbit/s.</li></ul></div>
+
+<h3>3. Notions de base en transmission</h3>
+<div class="box def">
+<p class="t">Circuit de données</p>
+<p>Il est composé de deux ou plusieurs ETCD et de la ligne de transmission. La liaison de données, plus large, inclut aussi les contrôleurs de communications des ETTD.</p>
+</div>
+<p>Caractéristiques d'un circuit de données : bande passante, débit binaire, capacité, rapidité de modulation, type de modulation (analogique ou numérique), mode de transmission (simplex, half-duplex, full-duplex), mode d'exploitation (circuit ou paquet).</p>
+<div class="box def">
+<p class="t">Bande passante</p>
+<p>Espace de fréquences où tout signal ne subit qu'un petit affaiblissement, c'est-à-dire le domaine où les distorsions de la voie restent dans des limites acceptables. Un circuit de données est assimilable à un filtre passe-bande. Largeur de bande : <code>W = f2 - f1</code> (Hz).</p>
+</div>
+<div class="box ex"><p class="t">Exemple du cours</p><p>Une ligne téléphonique usuelle laisse passer les signaux dont l'affaiblissement est inférieur à 6 dB, soit de 300 Hz à 3400 Hz. Bande passante : W = 3400 - 300 = 3100 Hz.</p></div>
+<div class="box retenir"><p class="t">Compléments probables à l'examen (définitions standard, non détaillées dans vos slides)</p>
+<ul>
+<li>Simplex : transmission dans un seul sens. Half-duplex : dans les deux sens, mais pas en même temps. Full-duplex : dans les deux sens simultanément.</li>
+<li>Rapidité de modulation R = 1/T, en bauds (T = durée d'un symbole). Débit binaire D = R · log2(V), où V est le nombre de valeurs possibles du signal.</li>
+<li>Capacité maximale d'un canal bruité (Shannon-Hartley) : C = W · log2(1 + S/N), avec S/N en valeur linéaire.</li>
+</ul></div>
+
+<div class="foot">Contenu tiré des supports du Dr. B. Nassiri (chapitre 1, chapitre 2 parties 1 et 2, QCM récapitulatif, exercices). Les encadrés marqués « complément » ne figurent pas dans vos slides.</div>
+</main>
+</div>
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

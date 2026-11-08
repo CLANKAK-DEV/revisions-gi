@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Essentiel à retenir Qualité Logicielle</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="shell">
+<aside class="side" id="side"></aside>
+<main>
+<h1>Essentiel à retenir</h1>
+<p class="lead">Une page pour tout le module, avec un ordre de priorité et les liens entre les notions. Si vous avez peu de temps, commencez ici.</p>
+
+<div class="box">
+<p class="t">Sommaire</p>
+<ul>
+<li><a href="#prio">Que réviser selon le temps disponible</a></li>
+<li><a href="#huit">Le module en 8 phrases</a></li>
+<li><a href="#chaines">Les chaînes logiques</a></li>
+<li><a href="#rel">Si on vous dit... pensez à...</a></li>
+<li><a href="#form">Toutes les formules</a></li>
+<li><a href="#abs">À savoir absolument, par cours</a></li>
+<li><a href="#cle">Les 15 éléments à connaître par cœur</a></li>
+</ul>
+</div>
+
+<h2 id="prio">Que réviser selon le temps disponible</h2>
+<div class="box retenir"><p class="t">Ce classement est mon estimation</p>
+<p>Il vient du poids des sujets dans les slides, des QCM de fin de cours et des TD. Je ne connais pas votre sujet réel. Les calculs (McCabe, Halstead, métriques objet, modèle pondéré) ont un TD ou une étude de cas : ils sont les plus probables.</p></div>
+<div class="tw"><table>
+<tr><th>Temps</th><th>À faire, dans l'ordre</th></tr>
+<tr><td>2 heures</td><td>Cette page. Calculs : V(G) = E - N + 2P et C = π + 1, Halstead, LCOM, SI, I, D, étude de cas pondérée. QCM des chapitres Calculs et Métriques de code.</td></tr>
+<tr><td>Une demi-journée</td><td>Ajouter : erreur, défaut, défaillance ; piliers de la qualité et niveaux de besoins ; structure facteur, critère, métrique ; McCall et ISO 9126 ; ISO 25010:2023 (9 caractéristiques) ; TD2 et TD3 refaits sans la solution.</td></tr>
+<tr><td>Un jour ou plus</td><td>Ajouter : Stevens, GQM, métriques ISO, SonarQube (7 axes, Quality Gate), TP, cas célèbres, examen blanc chronométré.</td></tr>
+</table></div>
+
+<div class="tw"><table>
+<tr><th>Priorité</th><th>Notions</th></tr>
+<tr><td><span class="tag r">1</span></td><td>Erreur, défaut, défaillance. Définition de la qualité et deux piliers. Quatre niveaux de besoins. SQA. Types de métriques. Facteur, critère, métrique. McCall (11 facteurs, 23 critères, 3 dimensions). ISO 9126 (6 et 27). ISO 25010:2023 (9 et 38). LOC et DC. McCabe. Halstead. CK (WMC, DIT, NOC, CBO, RFC, LCOM). SI. A, I, D. Quality Gate. Évaluation pondérée (TD2).</td></tr>
+<tr><td><span class="tag y">2</span></td><td>Types de mesure de Stevens. GQM. Trois dimensions ISO (interne, externe, usage). Métriques ISO (X = A / B). Causes des défauts (63 %). SOLID. SonarQube : axes, complexités, sévérités. TP CKJM et TP SonarQube.</td></tr>
+<tr><td><span class="tag b">3</span></td><td>Détail des échecs célèbres, ISO 25059 (IA), tableau chronologique, installation de SonarQube, liste des langages.</td></tr>
+</table></div>
+
+<h2 id="huit">Le module en 8 phrases</h2>
+<ol class="six">
+<li>Un logiciel, c'est du code, des procédures, des règles, de la documentation et des données : la qualité dépasse le code.</li>
+<li>Une erreur humaine crée un défaut, qui provoque une défaillance en exploitation.</li>
+<li>La qualité est le degré auquel un produit satisfait les besoins explicites et implicites. Elle repose sur la qualité du produit et celle du processus.</li>
+<li>Le client a quatre niveaux de besoins : vrais, exprimés, spécifiés, réalisés. Les écarts entre eux causent l'insatisfaction.</li>
+<li>La SQA est une fonction objective qui vérifie que processus et produits respectent les exigences, dans le budget et les délais.</li>
+<li>Un modèle de qualité décompose la qualité en facteurs, critères et métriques : McCall, ISO 9126, ISO 25010:2023.</li>
+<li>Les métriques de code (LOC, McCabe, Halstead) et les métriques objet (CK, packages) chiffrent la complexité, le couplage et la cohésion.</li>
+<li>SonarQube automatise ces mesures, détecte bugs, duplications et complexité, et décide du passage en production avec le Quality Gate.</li>
+</ol>
+
+<h2 id="chaines">Les chaînes logiques</h2>
+<h4>Du problème à la qualité</h4>
+<div class="flow">
+<span class="n k">Erreur</span><span class="a">&rarr;</span>
+<span class="n y">Défaut</span><span class="a">&rarr;</span>
+<span class="n">Défaillance</span><span class="a">&rarr;</span>
+<span class="n g">SQA : prévenir et détecter tôt</span>
+</div>
+<h4>Les besoins</h4>
+<div class="flow">
+<span class="n k">Vrais</span><span class="a">&rarr;</span><span class="n">Exprimés</span><span class="a">&rarr;</span><span class="n">Spécifiés</span><span class="a">&rarr;</span><span class="n g">Réalisés</span>
+</div>
+<h4>Les modèles</h4>
+<div class="flow">
+<span class="n k">Qualité</span><span class="a">&rarr;</span>
+<span class="n">Facteurs (externe)</span><span class="a">&rarr;</span>
+<span class="n y">Critères (interne)</span><span class="a">&rarr;</span>
+<span class="n g">Métriques</span>
+</div>
+<div class="flow">
+<span class="n">McCall 1977 : 11 facteurs</span><span class="a">&rarr;</span>
+<span class="n">ISO 9126 : 6 caractéristiques</span><span class="a">&rarr;</span>
+<span class="n">ISO 25010:2011 : 8</span><span class="a">&rarr;</span>
+<span class="n g">ISO 25010:2023 : 9</span>
+</div>
+<h4>Les trois qualités ISO</h4>
+<div class="flow">
+<span class="n k">Interne (code, statique)</span><span class="a">&rarr;</span>
+<span class="n">Externe (tests, exécution)</span><span class="a">&rarr;</span>
+<span class="n g">À l'usage (réel)</span>
+</div>
+<h4>Les métriques</h4>
+<div class="flow">
+<span class="n k">LOC (taille)</span><span class="a">&rarr;</span>
+<span class="n">Graphe de contrôle</span><span class="a">&rarr;</span>
+<span class="n y">McCabe (chemins)</span><span class="a">&rarr;</span>
+<span class="n g">Halstead (vocabulaire, effort, bugs)</span>
+</div>
+<div class="flow">
+<span class="n k">Classe : CK (WMC, DIT, NOC, CBO, RFC, LCOM), SI</span><span class="a">&rarr;</span>
+<span class="n g">Package : A, I, D</span><span class="a">&rarr;</span>
+<span class="n">Outil : SonarQube, Quality Gate</span>
+</div>
+
+<h2 id="rel">Si on vous dit... pensez à...</h2>
+<div class="tw"><table>
+<tr><th>Si on vous dit</th><th>Pensez à</th></tr>
+<tr><td>Faute humaine</td><td>Erreur</td></tr>
+<tr><td>Bug dans le produit non détecté</td><td>Défaut</td></tr>
+<tr><td>Crash en production</td><td>Défaillance</td></tr>
+<tr><td>Formule mal recopiée, 18,5 M$</td><td>Mariner 1</td></tr>
+<tr><td>Horloge qui dérive, 28 morts</td><td>Patriot</td></tr>
+<tr><td>Table de division incomplète</td><td>Pentium</td></tr>
+<tr><td>Attentes réelles non exprimées</td><td>Vrais besoins</td></tr>
+<tr><td>Objectivité, indépendance du projet</td><td>SQA</td></tr>
+<tr><td>Vision utilisateur, externe</td><td>Facteur</td></tr>
+<tr><td>Vision développeur, interne</td><td>Critère</td></tr>
+<tr><td>11 facteurs, 23 critères</td><td>McCall</td></tr>
+<tr><td>6 caractéristiques, 27 sous-caractéristiques</td><td>ISO 9126</td></tr>
+<tr><td>9 caractéristiques, 38 sous-caractéristiques, safety</td><td>ISO 25010:2023</td></tr>
+<tr><td>Goal, Question, Metric</td><td>GQM (Basili)</td></tr>
+<tr><td>Ordre mais écarts non mesurables</td><td>Échelle ordinale</td></tr>
+<tr><td>Zéro absolu</td><td>Échelle ratio</td></tr>
+<tr><td>Chemins linéairement indépendants</td><td>McCabe</td></tr>
+<tr><td>Opérateurs et opérandes</td><td>Halstead</td></tr>
+<tr><td>Méthodes qui ne partagent pas d'attributs</td><td>LCOM (cohésion)</td></tr>
+<tr><td>Classes couplées</td><td>CBO</td></tr>
+<tr><td>Méthodes de la classe plus méthodes appelées</td><td>RFC</td></tr>
+<tr><td>Redéfinitions et héritage</td><td>SI</td></tr>
+<tr><td>Concret et stable, D proche de 1</td><td>Package rigide</td></tr>
+<tr><td>Passer ou non en production</td><td>Quality Gate</td></tr>
+<tr><td>Effort pour comprendre le code</td><td>Complexité cognitive</td></tr>
+</table></div>
+
+<h2 id="form">Toutes les formules</h2>
+<pre><code>DC = LOCcom / LOCphy                      norme 0,2 à 0,3
+V(G) = E - N + 2P        C = π + 1        CASE à N cas : N - 1 décisions
+n = n1 + n2              N = N1 + N2      V = N · log2(n)
+D = (n1 / 2) · (N2 / n2)                  L = 1 / D
+E = V · D                T = E / 18       B = E^(2/3) / 3000
+WMC = somme des Ci       RFC = |RS|       LCOM = P - Q si P &gt; Q, sinon 0
+SI = NORM · DIT / NOM
+A = Nabstrait / Ntotal   I = Ce / (Ca + Ce)    D = |A + I - 1|
+Métriques ISO : X = A / B (0 à 1, proche de 1 est mieux)
+Qualité : Ic = f(m1, m2, ...)    If = g(Ic1, Ic2, ...)
+Intervalle : t(M) = a·M + b      Ratio : t(M) = a·M       Absolu : identité</code></pre>
+
+<h2 id="abs">À savoir absolument, par cours</h2>
+<h3>Concepts de base</h3>
+<div class="box retenir"><ul>
+<li><span class="tag r">Indispensable</span>Erreur, défaut, défaillance, avec un exemple.</li>
+<li><span class="tag r">Indispensable</span>Qualité : produit et processus, besoins explicites et implicites.</li>
+<li><span class="tag r">Indispensable</span>Quatre niveaux de besoins et causes d'écart.</li>
+<li><span class="tag r">Indispensable</span>SQA : objectivité, risques, budget et calendrier.</li>
+<li><span class="tag y">Important</span>63 % des défauts : structure, données, fonctionnalités.</li>
+<li><span class="tag y">Important</span>Métriques de processus, produit, projet. Rôles évaluatif, vérificatif, prédictif.</li>
+</ul></div>
+<h3>Modèles de qualité et ISO 25010</h3>
+<div class="box retenir"><ul>
+<li><span class="tag r">Indispensable</span>Facteurs (externe), critères (interne), métriques.</li>
+<li><span class="tag r">Indispensable</span>McCall : 11 facteurs, 23 critères, 3 dimensions.</li>
+<li><span class="tag r">Indispensable</span>ISO 9126 : six caractéristiques. ISO 25010:2023 : neuf, avec capacité d'interaction, flexibilité, safety.</li>
+<li><span class="tag r">Indispensable</span>Évaluation : trois niveaux (métriques, critères, facteurs), trois étapes (exigences, métriques, évaluation), calcul pondéré.</li>
+<li><span class="tag y">Important</span>Stevens : nominal, ordinal, intervalle, ratio, absolu.</li>
+<li><span class="tag y">Important</span>GQM. Interne, externe, usage.</li>
+</ul></div>
+<h3>Métriques de code et objet</h3>
+<div class="box retenir"><ul>
+<li><span class="tag r">Indispensable</span>LOCphy, LOCpro, LOCcom, LOCbl, DC.</li>
+<li><span class="tag r">Indispensable</span>McCabe : deux formules, interprétation 1 à 10, 11 à 20, 21 à 50, plus de 50.</li>
+<li><span class="tag r">Indispensable</span>Halstead : toutes les formules, comptage des tokens.</li>
+<li><span class="tag r">Indispensable</span>CK : six métriques, seuils, exemples de calcul (LCOM, RFC, WMC).</li>
+<li><span class="tag r">Indispensable</span>SI, A, I, D : formules et lecture.</li>
+</ul></div>
+<h3>SonarQube et TP</h3>
+<div class="box retenir"><ul>
+<li><span class="tag r">Indispensable</span>Quality Gate (PASSED ou FAILED, couverture supérieure à 80 %).</li>
+<li><span class="tag y">Important</span>Sept axes de qualité. Complexité cyclomatique contre cognitive. Cinq niveaux de sévérité.</li>
+<li><span class="tag y">Important</span>TP : StartSonar.bat, port 9000, token, sonar-scanner. CKJM : metrics.txt. Effets du refactoring sur WMC, CBO, LCOM, A et I.</li>
+</ul></div>
+
+<h2 id="cle">Les 15 éléments à connaître par cœur</h2>
+<ol class="six">
+<li>Erreur, puis défaut, puis défaillance.</li>
+<li>Qualité = produit + processus.</li>
+<li>Besoins : vrais, exprimés, spécifiés, réalisés.</li>
+<li>Qualité, facteurs, critères, métriques.</li>
+<li>McCall : 11 facteurs, 23 critères. ISO 9126 : 6 et 27. ISO 25010:2023 : 9 et 38.</li>
+<li>Trois qualités ISO : interne, externe, usage.</li>
+<li>Stevens : nominal, ordinal, intervalle, ratio, absolu.</li>
+<li>McCabe : V(G) = E - N + 2P = π + 1.</li>
+<li>McCabe : 1 à 10 faible, 11 à 20 modéré, 21 à 50 élevé, plus de 50 non testable.</li>
+<li>Halstead : V = N log2 n, D = (n1/2)(N2/n2), E = V D, T = E / 18, B = E^(2/3) / 3000.</li>
+<li>CK : WMC, DIT, NOC, CBO, RFC, LCOM.</li>
+<li>LCOM = P - Q si P &gt; Q, sinon 0.</li>
+<li>SI = NORM × DIT / NOM, élevé au-delà de 1,5.</li>
+<li>I = Ce / (Ca + Ce), D = |A + I - 1|.</li>
+<li>Quality Gate : bloquants, couverture supérieure à 80 %.</li>
+</ol>
+
+<div class="box ex"><p class="t">Et ensuite</p><p>Faites le <a href="qcm.html">QCM</a> par chapitre, puis l'<a href="pratique.html">examen blanc</a>.</p></div>
+
+<div class="foot">Synthèse des six cours, des trois TD et des deux TP.</div>
+</main>
+</div>
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Examen blanc PHP</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="shell">
+<aside class="side" id="side"></aside>
+<main>
+<h1>Examen blanc pratique</h1>
+<p class="lead">Un sujet de 20 points : prédire l'affichage, un programme sur les tableaux et les fonctions, un formulaire avec validation, des questions de cours. Chronométrez-vous, répondez sur papier, puis comparez avec le corrigé.</p>
+
+<div class="box">
+<p class="t">Chronomètre (durée indicative : 1 heure)</p>
+<p class="timer" id="timer">60:00</p>
+<div class="bar">
+<button class="btn" id="t-start">Démarrer</button>
+<button class="btn" id="t-stop">Pause</button>
+<button class="btn" id="t-reset">Remettre à zéro</button>
+<button class="btn" data-toggle-all="close">Refermer toutes les solutions</button>
+</div>
+<p>Je ne connais pas la durée ni le barème réels de votre contrôle. Adaptez le chronomètre.</p>
+</div>
+
+<div class="box retenir">
+<p class="t">Règles du jeu</p>
+<ul>
+<li>Pas de cours ni d'ordinateur : écrivez le code à la main, comme à l'examen.</li>
+<li>Barème : partie A 4 points, partie B 6 points, partie C 6 points, partie D 4 points.</li>
+<li>Tout le code des corrigés a été exécuté (PHP 8.0 et 8.5). Les sorties annoncées sont les sorties réelles.</li>
+</ul>
+</div>
+
+<h2>Partie A : prédire l'affichage (4 points, 0,5 par question)</h2>
+<p>Donnez exactement ce qu'affiche chaque extrait. Précisez le type quand c'est un <code>var_dump</code>.</p>
+<div class="exo"><h4>A1</h4><pre><code>$a = "10"; $b = 5;
+var_dump($a + $b, $a . $b);</code></pre><details class="sol"><summary>Solution</summary><div class="in"><p><code>int(15)</code> puis <code>string(3) "105"</code>. <code>+</code> additionne (la chaîne numérique est convertie), <code>.</code> concatène.</p></div></details></div><div class="exo"><h4>A2</h4><pre><code>$i = 5;
+echo $i++ + ++$i;</code></pre><details class="sol"><summary>Solution</summary><div class="in"><p>Affiche <code>12</code>. <code>$i++</code> renvoie 5 puis <code>$i</code> vaut 6 ; <code>++$i</code> passe à 7 et renvoie 7 ; 5 + 7 = 12.</p></div></details></div><div class="exo"><h4>A3</h4><pre><code>var_dump(0 == "a", "1" == "01", "10" == "1e1", 100 == "1e2");</code></pre><details class="sol"><summary>Solution</summary><div class="in"><p><code>false</code>, <code>true</code>, <code>true</code>, <code>true</code>. En PHP 8, <code>0 == "a"</code> est faux. Les trois autres comparent des chaînes numériques en nombres : à éviter, préférer <code>===</code>.</p></div></details></div><div class="exo"><h4>A4</h4><pre><code>$t = [1, 2, 3];
+$r = array_map(fn($x) =&gt; $x * 2, array_filter($t, fn($x) =&gt; $x &gt; 1));
+print_r($r);</code></pre><details class="sol"><summary>Solution</summary><div class="in"><p>Un tableau avec les <strong>clés conservées</strong> : <code>[1] =&gt; 4</code> et <code>[2] =&gt; 6</code>. <code>array_filter</code> garde les clés 1 et 2, <code>array_map</code> les conserve.</p></div></details></div><div class="exo"><h4>A5</h4><pre><code>function f(int &amp;$n) { $n++; }
+$a = 1;
+f($a); f($a);
+echo $a;</code></pre><details class="sol"><summary>Solution</summary><div class="in"><p>Affiche <code>3</code> : le paramètre est passé par référence (<code>&amp;</code>), chaque appel modifie <code>$a</code>.</p></div></details></div><div class="exo"><h4>A6</h4><pre><code>function compteur() { static $n = 0; return ++$n; }
+echo compteur(), compteur(), compteur();</code></pre><details class="sol"><summary>Solution</summary><div class="in"><p>Affiche <code>123</code> : la variable <code>static</code> garde sa valeur d'un appel à l'autre.</p></div></details></div><div class="exo"><h4>A7</h4><pre><code>$x = null;
+echo $x ?? "défaut";
+echo isset($x) ? "oui" : "non";
+echo empty("0") ? "vide" : "plein";</code></pre><details class="sol"><summary>Solution</summary><div class="in"><p>Affiche <code>défautnonvide</code>. <code>??</code> donne la valeur par défaut car <code>$x</code> est null ; <code>isset(null)</code> est faux ; <code>"0"</code> est vide.</p></div></details></div><div class="exo"><h4>A8</h4><pre><code>switch ("2") {
+    case 2: echo "a";
+    case 3: echo "b"; break;
+    default: echo "c";
+}</code></pre><details class="sol"><summary>Solution</summary><div class="in"><p>Affiche <code>ab</code>. <code>switch</code> compare en souple : <code>"2" == 2</code>. Sans <code>break</code> après le premier <code>case</code>, l'exécution « tombe » dans le suivant.</p></div></details></div>
+<h2>Partie B : tableaux et fonctions (6 points)</h2>
+<div class="exo">
+<h4>Les notes de la promotion</h4>
+<pre><code>$etudiants = [
+    ["nom" =&gt; "Amal",   "notes" =&gt; [12, 15, 9]],
+    ["nom" =&gt; "Bilal",  "notes" =&gt; [8, 7, 10]],
+    ["nom" =&gt; "Chaima", "notes" =&gt; [16, 14, 18]],
+    ["nom" =&gt; "Driss",  "notes" =&gt; [10, 10, 10]],
+];</code></pre>
+<ol>
+<li>(1 point) Écrire une fonction typée <code>moyenne(array $notes): float</code>. Que renvoie-t-elle pour un tableau vide, et pourquoi ?</li>
+<li>(1 point) Ajouter à chaque étudiant la clé <code>"moyenne"</code> (arrondie à 2 décimales). Pourquoi <code>foreach ($etudiants as $e)</code> ne suffit-il pas ?</li>
+<li>(1,5 point) Avec <code>array_filter</code>, construire la liste des admis (moyenne d'au moins 10) et afficher « 3 admis : Amal, Chaima, Driss ».</li>
+<li>(1,5 point) Trier les étudiants par moyenne décroissante avec <code>usort</code> et afficher le classement.</li>
+<li>(1 point) Que se passe-t-il si on écrit <code>$etudiants = usort($etudiants, ...);</code> ?</li>
+</ol>
+<details class="sol"><summary>Solution détaillée</summary><div class="in">
+<p class="q">Solution testée</p><pre><code>&lt;?php
+$etudiants = [
+    ["nom" =&gt; "Amal",   "notes" =&gt; [12, 15, 9]],
+    ["nom" =&gt; "Bilal",  "notes" =&gt; [8, 7, 10]],
+    ["nom" =&gt; "Chaima", "notes" =&gt; [16, 14, 18]],
+    ["nom" =&gt; "Driss",  "notes" =&gt; [10, 10, 10]],
+];
+
+// 1. moyenne d'un tableau de notes (0 si le tableau est vide : pas de division par zéro)
+function moyenne(array $notes): float
+{
+    return count($notes) === 0 ? 0 : array_sum($notes) / count($notes);
+}
+
+// 2. ajouter la clé "moyenne" : on passe par la clé $i, car $e est une copie
+foreach ($etudiants as $i =&gt; $e) {
+    $etudiants[$i]["moyenne"] = round(moyenne($e["notes"]), 2);
+}
+
+// 3. les admis (moyenne d'au moins 10)
+$admis = array_filter($etudiants, fn($e) =&gt; $e["moyenne"] &gt;= 10);
+echo count($admis) . " admis : " . implode(", ", array_column($admis, "nom")) . "\n";
+// 3 admis : Amal, Chaima, Driss
+
+// 4. classement par moyenne décroissante
+usort($etudiants, fn($a, $b) =&gt; $b["moyenne"] &lt;=&gt; $a["moyenne"]);
+foreach ($etudiants as $rang =&gt; $e) {
+    echo ($rang + 1) . ". {$e['nom']} : {$e['moyenne']}\n";
+}
+// 1. Chaima : 16 | 2. Amal : 12 | 3. Driss : 10 | 4. Bilal : 8.33</code></pre>
+<ol>
+<li>La fonction renvoie 0 pour un tableau vide : sans cette protection, <code>array_sum / count</code> diviserait par zéro (erreur <code>DivisionByZeroError</code>).</li>
+<li>Dans <code>foreach ($etudiants as $e)</code>, <code>$e</code> est une <strong>copie</strong> de l'élément : modifier <code>$e['moyenne']</code> ne change pas <code>$etudiants</code>. Il faut la clé : <code>foreach ($etudiants as $i =&gt; $e)</code> puis <code>$etudiants[$i]['moyenne'] = ...</code>.</li>
+<li><code>array_filter</code> garde les clés d'origine (0, 2, 3) : <code>array_column($admis, "nom")</code> les ignore, ce qui donne la liste voulue.</li>
+<li>Classement : Chaima 16, Amal 12, Driss 10, Bilal 8.33.</li>
+<li><code>usort</code> modifie le tableau par référence et renvoie <code>true</code> : <code>$etudiants</code> deviendrait <code>true</code>, le tableau serait perdu.</li>
+</ol>
+</div></details>
+</div>
+
+<h2>Partie C : formulaire de contact (6 points)</h2>
+<div class="exo">
+<h4>Écrire contact.php et merci.php</h4>
+<p>Le formulaire a trois champs : nom, email, message. Il envoie en POST vers la même page.</p>
+<ol>
+<li>(1 point) Écrire le formulaire HTML, avec un <code>label</code> par champ.</li>
+<li>(2 points) Valider côté serveur : nom obligatoire, email valide, message d'au moins 10 caractères. Ranger les messages dans <code>$erreurs</code>, indexé par nom de champ.</li>
+<li>(1 point) Réafficher le formulaire avec la saisie conservée et chaque erreur sous son champ. Quelle fonction protège l'affichage de la saisie ?</li>
+<li>(1 point) Si tout est valide, ajouter une ligne au fichier <code>data/messages.csv</code> sans effacer les précédentes.</li>
+<li>(1 point) Afficher « Merci Sara, votre message a été envoyé. » une seule fois, et empêcher le double envoi au rechargement.</li>
+</ol>
+<details class="sol"><summary>Solution détaillée</summary><div class="in">
+<p class="q">contact.php (testé)</p><pre><code>&lt;?php
+session_start();
+
+function e(string $s): string { return htmlspecialchars($s, ENT_QUOTES, 'UTF-8'); }
+
+$erreurs = [];
+$d = ['nom' =&gt; '', 'email' =&gt; '', 'message' =&gt; ''];
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // 1. recevoir et nettoyer
+    $d['nom']     = trim($_POST['nom'] ?? '');
+    $d['email']   = trim($_POST['email'] ?? '');
+    $d['message'] = trim($_POST['message'] ?? '');
+
+    // 2. valider côté serveur
+    if ($d['nom'] === '') {
+        $erreurs['nom'] = "Le nom est obligatoire.";
+    }
+    if (!filter_var($d['email'], FILTER_VALIDATE_EMAIL)) {
+        $erreurs['email'] = "Adresse email invalide.";
+    }
+    if (strlen($d['message']) &lt; 10) {
+        $erreurs['message'] = "Le message doit contenir au moins 10 caractères.";
+    }
+
+    // 3. enregistrer dans un CSV (mode a : ajout), puis PRG avec message flash
+    if (empty($erreurs)) {
+        if (!is_dir(__DIR__ . '/data')) { mkdir(__DIR__ . '/data', 0755, true); }
+        $f = fopen(__DIR__ . '/data/messages.csv', 'a');
+        if ($f === false) {
+            exit("Service indisponible.");
+        }
+        fputcsv($f, [date('Y-m-d H:i:s'), $d['nom'], $d['email'], $d['message']], escape: '');
+        fclose($f);
+
+        $_SESSION['flash'] = "Merci " . $d['nom'] . ", votre message a été envoyé.";
+        header('Location: merci.php');
+        exit;
+    }
+}
+?&gt;
+&lt;form method="post" action=""&gt;
+    &lt;label for="nom"&gt;Nom&lt;/label&gt;
+    &lt;input type="text" id="nom" name="nom" value="&lt;?= e($d['nom']) ?&gt;"&gt;
+    &lt;?php if (isset($erreurs['nom'])): ?&gt;&lt;p class="erreur"&gt;&lt;?= $erreurs['nom'] ?&gt;&lt;/p&gt;&lt;?php endif; ?&gt;
+
+    &lt;label for="email"&gt;Email&lt;/label&gt;
+    &lt;input type="email" id="email" name="email" value="&lt;?= e($d['email']) ?&gt;"&gt;
+    &lt;?php if (isset($erreurs['email'])): ?&gt;&lt;p class="erreur"&gt;&lt;?= $erreurs['email'] ?&gt;&lt;/p&gt;&lt;?php endif; ?&gt;
+
+    &lt;label for="message"&gt;Message&lt;/label&gt;
+    &lt;textarea id="message" name="message"&gt;&lt;?= e($d['message']) ?&gt;&lt;/textarea&gt;
+    &lt;?php if (isset($erreurs['message'])): ?&gt;&lt;p class="erreur"&gt;&lt;?= $erreurs['message'] ?&gt;&lt;/p&gt;&lt;?php endif; ?&gt;
+
+    &lt;button&gt;Envoyer&lt;/button&gt;
+&lt;/form&gt;</code></pre><p class="q">merci.php (testé)</p><pre><code>&lt;?php
+session_start();
+
+if (isset($_SESSION['flash'])) {                 // message affiché une seule fois
+    echo '&lt;p&gt;' . htmlspecialchars($_SESSION['flash']) . '&lt;/p&gt;';
+    unset($_SESSION['flash']);
+}</code></pre>
+<div class="tw"><table>
+<tr><th>Question</th><th>Points clés attendus</th></tr>
+<tr><td>1</td><td><code>method="post"</code>, <code>name</code> sur chaque champ, <code>label for</code> relié à l'<code>id</code>.</td></tr>
+<tr><td>2</td><td><code>trim</code>, <code>filter_var(..., FILTER_VALIDATE_EMAIL)</code> testé avec <code>!</code>, <code>strlen</code> d'au moins 10, tout dans <code>if ($_SERVER['REQUEST_METHOD'] === 'POST')</code>, <code>??</code> pour éviter les avertissements.</td></tr>
+<tr><td>3</td><td><code>value="&lt;?= e($d['nom']) ?&gt;"</code> avec <code>htmlspecialchars</code> pour empêcher l'injection de HTML ou de JavaScript (faille XSS).</td></tr>
+<tr><td>4</td><td><code>fopen($chemin, 'a')</code> (mode <code>a</code>, pas <code>w</code> qui efface), <code>fputcsv</code>, <code>fclose</code>, test de <code>=== false</code> sur <code>fopen</code>.</td></tr>
+<tr><td>5</td><td>Message dans <code>$_SESSION['flash']</code>, <code>header('Location: merci.php'); exit;</code>, affichage puis <code>unset</code>. Recharger <code>merci.php</code> est un simple GET : pas de double envoi.</td></tr>
+</table></div>
+<p>Testé avec des requêtes réelles : l'envoi à vide donne les trois erreurs, un envoi valide donne une redirection 302, <code>merci.php</code> affiche le message une fois, et le fichier CSV reçoit une ligne.</p>
+</div></details>
+</div>
+
+<h2>Partie D : questions de cours (4 points, 1 par question)</h2>
+<div class="exo">
+<ol>
+<li>Quelle est la différence entre <code>include</code> et <code>require</code> ? Pourquoi utilise-t-on <code>require_once</code> pour un fichier de fonctions ?</li>
+<li>Citez trois différences entre un cookie et une session.</li>
+<li>Pourquoi ne faut-il pas stocker un mot de passe avec <code>md5</code> ? Quelles fonctions PHP utiliser ?</li>
+<li>Expliquez le motif Post / Redirect / Get et le rôle du message flash.</li>
+</ol>
+<details class="sol"><summary>Solution</summary><div class="in">
+<ol>
+<li>Fichier introuvable : <code>include</code> émet un Warning et le script continue ; <code>require</code> provoque une erreur fatale et le script s'arrête. Avec <code>_once</code>, le fichier n'est chargé qu'une fois, même si l'instruction est rencontrée plusieurs fois : indispensable pour un fichier de fonctions, car déclarer deux fois la même fonction provoque une erreur.</li>
+<li>Le cookie est stocké chez le client, la session sur le serveur. Le cookie est lisible et modifiable par l'utilisateur, la session non (seul l'identifiant circule). Le cookie peut survivre à la fermeture du navigateur, la session expire après inactivité ou déconnexion. Autres : taille (environ 4 Ko contre pratiquement illimitée), usage (préférences contre authentification).</li>
+<li>MD5 est très rapide, donc facile à attaquer par essais successifs, et sans sel il donne la même empreinte pour le même mot de passe. On utilise <code>password_hash($mdp, PASSWORD_DEFAULT)</code> (bcrypt, sel automatique, volontairement lent) et <code>password_verify($saisi, $empreinte)</code>.</li>
+<li>Après un POST réussi, on ne renvoie pas la page de résultat : on redirige (302) vers une page lue en GET, avec <code>header('Location: ...'); exit;</code>. Recharger cette page ne renvoie plus le formulaire, donc pas de doublon. Les variables du script précédent ont disparu : le message flash, stocké en session avant la redirection, est affiché une seule fois par la page suivante, puis supprimé.</li>
+</ol>
+</div></details>
+</div>
+
+<div class="box ex">
+<p class="t">Après l'examen blanc</p>
+<p>Comptez vos points. En dessous de 14, refaites le <a href="qcm.html">QCM</a> « Prédire la sortie » et les <a href="tp.html">TP 2 et 3</a>. Entre 14 et 17, regardez la page <a href="pieges.html">Pièges</a>. Au-dessus, passez aux quiz <a href="wooclap.html">Wooclap</a>.</p>
+</div>
+
+<div class="foot">Sujet créé à partir des cours et TP. Ce n'est pas le sujet réel : le format de votre contrôle peut différer.</div>
+</main>
+</div>
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

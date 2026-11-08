@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Révision PHP</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="shell">
+<aside class="side" id="side"></aside>
+<main>
+<h1>Réviser PHP</h1>
+<p class="lead">Un résumé en français simple des cinq chapitres de INF4041 (Technologies Web Avancées), avec les exercices du cours et les cinq TP corrigés, des QCM, des questions de cours, un examen blanc et le lien des quiz Wooclap. Pensé pour réviser même avec peu de temps.</p>
+
+<h2>Par où commencer</h2>
+<div class="grid">
+<a class="card" href="essentiel.html"><span class="tag y">Commencer ici</span><h3>Essentiel à retenir</h3><p>Priorités selon votre temps, chaînes logiques, fonctions à connaître, 15 éléments à retenir par cœur.</p></a>
+<a class="card" href="cours.html"><span class="tag b">1</span><h3>Résumé du cours</h3><p>Les cinq chapitres, avec une étiquette de priorité sur chaque partie.</p></a>
+<a class="card" href="exercices.html"><span class="tag g">2</span><h3>Exercices du cours</h3><p>Les exercices d'application des chapitres 1 à 5, corrigés pas à pas.</p></a>
+<a class="card" href="tp.html"><span class="tag g">3</span><h3>TP corrigés</h3><p>TP 1 à 5, avec bonus : code exécuté et valeurs de contrôle retrouvées.</p></a>
+<a class="card" href="qcm.html"><span class="tag y">4</span><h3>QCM</h3><p>Des questions corrigées et expliquées, filtrables par chapitre, dont des « Prédire la sortie ».</p></a>
+<a class="card" href="questions.html"><span class="tag b">5</span><h3>Questions de cours</h3><p>Les questions probables avec des réponses courtes.</p></a>
+<a class="card" href="pratique.html"><span class="tag r">6</span><h3>Examen blanc pratique</h3><p>Un sujet de 20 points avec chronomètre et corrigé.</p></a>
+<a class="card" href="pieges.html"><span class="tag r">7</span><h3>Pièges et aide-mémoire</h3><p>Erreurs classiques, différences entre versions de PHP, méthode.</p></a>
+<a class="card" href="wooclap.html"><span class="tag b">8</span><h3>Quiz Wooclap</h3><p>Code IOSOOQG et mode d'emploi des trois quiz du cours.</p></a>
+</div>
+
+<h2>Si le temps manque</h2>
+<div class="tw"><table>
+<tr><th>Temps</th><th>Programme</th></tr>
+<tr><td>2 heures</td><td>Page Essentiel, puis QCM « Prédire la sortie », exercices 1.6 et 2.1, TP2.</td></tr>
+<tr><td>Une demi-journée</td><td>Ajouter les chapitres 3 (tableaux, fonctions) et 5 (formulaires) du résumé, TP3 et TP5.</td></tr>
+<tr><td>Un jour ou plus</td><td>Tout le résumé, tous les TP, le chapitre 4 (sessions), les quiz Wooclap, l'examen blanc chronométré.</td></tr>
+</table></div>
+
+<h2>Ce que contient le cours</h2>
+<div class="grid">
+<div class="card"><h3>Introduction à PHP</h3><p>Client-serveur, HTTP, XAMPP, variables, types, conversions, chaînes, constantes, erreurs.</p></div>
+<div class="card"><h3>Structures de contrôle</h3><p>Opérateurs, <code>==</code> et <code>===</code>, <code>if</code>, <code>switch</code>, <code>match</code>, boucles.</p></div>
+<div class="card"><h3>Tableaux et fonctions</h3><p>Indexés, associatifs, tris, <code>map</code> <code>filter</code> <code>reduce</code>, fonctions, portée, closures, récursivité.</p></div>
+<div class="card"><h3>Fichiers, cookies, sessions</h3><p>Inclusions, modes de fichier, CSV et JSON, cookies, sessions, mots de passe.</p></div>
+<div class="card"><h3>Formulaires et upload</h3><p>GET et POST, validation, formulaire collant, PRG, message flash, upload sécurisé.</p></div>
+</div>
+
+<div class="box retenir">
+<p class="t">Ce que je ne sais pas, et ce que j'ai repéré</p>
+<ul>
+<li>Le syllabus du cours annonce 12 chapitres (dont MySQL, requêtes SQL, Laravel, authentification et déploiement) et un chapitre de synthèse sur la sécurité. Les fichiers fournis ne contiennent que les chapitres 1 à 5 et les TP 1 à 5 : ce site ne couvre que cela.</li>
+<li>Je n'ai pas le format de votre contrôle ni de votre examen. Les priorités sont mon estimation.</li>
+<li>Je ne connais pas les questions des quiz Wooclap : elles ne s'affichent qu'en les lançant. Voir la page Wooclap.</li>
+<li>Les corrigés des TP sont les miens, exécutés avec PHP 8.0 (XAMPP) et 8.5. Les valeurs de contrôle des énoncés sont retrouvées.</li>
+<li>Les slides du chapitre 1 mentionnent PHP 8.5 et un site W3Techs de « septembre 2026 » : ce sont des chiffres de l'enseignant, je ne les ai pas vérifiés.</li>
+</ul>
+</div>
+
+<div class="foot">Cours du Prof. Baqach Adil, INF4041, 4ème année Génie Informatique. Ouvrez simplement ce site dans votre navigateur, il fonctionne hors ligne. Les scripts PHP du site sont des exemples à copier : ils ne s'exécutent pas ici.</div>
+</main>
+</div>
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
