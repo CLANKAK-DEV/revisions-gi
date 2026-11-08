@@ -7,7 +7,8 @@
     ['qcm.html', 'QCM'],
     ['questions.html', 'Questions de cours'],
     ['pratique.html', 'Examen blanc pratique'],
-    ['pieges.html', 'Pièges et aide-mémoire']
+    ['pieges.html', 'Pièges et aide-mémoire'],
+    ['interactif.html', 'Révision interactive']
   ];
   var here = location.pathname.split('/').pop() || 'index.html';
 

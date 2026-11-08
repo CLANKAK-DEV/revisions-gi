@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>INF4021 · Révision NoSQL</title>
+<link rel="stylesheet" href="revision/style.css">
+</head>
+<body>
+<div class="layout">
+<aside class="sidebar">
+  <div class="logo"><small>MODULE · 5 SEMAINES</small>INF4021<span>.</span></div>
+  <p>Un espace calme pour réviser une notion à la fois.</p>
+  <p style="font-size:13px;margin:0 0 14px"><a href="index.html">Module NoSQL</a> &nbsp;|&nbsp; <a href="../index.html">Tous les modules</a></p>
+  <nav id="nav">
+    <button data-view="home" class="active">⌂ &nbsp; Mon espace</button>
+    <button data-view="learn">▤ &nbsp; Le cours</button>
+    <button data-view="quiz">◉ &nbsp; M’entraîner</button>
+    <button data-view="practice">⌘ &nbsp; Pratiquer</button>
+    <button data-view="cards">≡ &nbsp; Flashcards</button>
+    <button data-view="exam">✎ &nbsp; Simulations</button>
+    <button data-view="plan">◷ &nbsp; Mon rythme</button>
+    <button data-view="revision">☑ &nbsp; L’essentiel</button>
+    <button data-view="sources">↗ &nbsp; Supports</button>
+  </nav>
+  <button class="theme-btn" onclick="toggleTheme()" title="Thème clair/sombre">◐ / ○</button>
+  <div class="sidebar-foot">Votre progression reste enregistrée ici.<br>Sans compte, sans serveur, sans pression.</div>
+</aside>
+<main>
+  <header><span class="eyebrow">BASES DE DONNÉES NOSQL / RÉVISION ACTIVE</span><div class="header-actions"><span class="shortcut-hint" aria-hidden="true">1–4 pour répondre</span><span class="badge" id="topBadge">0 question maîtrisée</span></div></header>
+  <section class="view active" id="home">
+    <div class="hero">
+      <span class="eyebrow">TON ESPACE DE RÉVISION</span>
+      <h1>Une notion. Un essai. Puis la suivante.</h1>
+      <p>Tout le module est ici, organisé pour avancer sereinement : comprendre, essayer, corriger, puis revenir sur ce qui mérite encore un peu d’attention.</p>
+      <div class="actions"><button class="btn pale" onclick="startQuiz('diagnostic')">Faire un petit diagnostic →</button><button class="btn outline-light" onclick="showView('learn')">Parcourir le cours</button></div>
+    </div>
+    <div class="section-title"><h2>Ton cheminement</h2><p>Un repère, pas une note. Chaque réponse te fait avancer.</p></div>
+    <div class="stats">
+      <div class="card stat"><strong id="statAnswered">0</strong><span>réponses données</span></div>
+      <div class="card stat"><strong id="statMastered">0/50</strong><span>questions maîtrisées</span></div>
+      <div class="card stat"><strong id="statAccuracy">—</strong><span>précision globale</span></div>
+      <div class="card stat"><strong id="statTasks">0/94</strong><span>TP réussis sans aide</span></div>
+    </div>
+    <div class="dashboard-grid">
+      <article class="card focus-card" id="focusHome" aria-live="polite"></article>
+      <article class="card readiness-card" id="readinessHome" aria-live="polite"></article>
+    </div>
+    <div class="section-title"><h2>Les cinq chapitres</h2><p>Ouvre celui dont tu as besoin maintenant.</p></div>
+    <div class="week-grid" id="weekGrid"></div>
+    <div class="section-title"><h2>À revoir doucement</h2><p>Les notions qui demandent encore un passage.</p></div>
+    <div class="card" id="weakHome"></div>
+  </section>
+  <section class="view" id="learn">
+    <span class="eyebrow">COURS INTERACTIF</span><h1>Comprendre les notions</h1>
+    <p class="sub">Lisez, refaites les exemples sans regarder, puis testez-vous.</p>
+    <div class="tabs" id="lessonTabs"></div>
+    <div class="lesson-grid"><article class="card lesson" id="lessonBody"></article><aside class="card sourcebox" id="lessonSources"></aside></div>
+  </section>
+  <section class="view" id="quiz">
+    <span class="eyebrow">RAPPEL ACTIF</span><h1>Entraînement à ton rythme</h1>
+    <p class="sub">Essaie sans regarder le cours. Une erreur n’est pas une sanction : elle indique simplement ce qui reviendra plus tard.</p>
+    <div class="tabs" id="quizModes">
+      <button data-mode="diagnostic">Diagnostic · 5 questions</button>
+      <button data-mode="adaptive">Entraînement adaptatif</button>
+      <button data-mode="exam">Simulation · 15 questions</button>
+      <button data-mode="weak">À revoir</button>
+    </div>
+    <div id="quizArea"></div>
+  </section>
+  <section class="view" id="practice">
+    <span class="eyebrow">PRATIQUE ACTIVE</span><h1>Exercices guidés</h1>
+    <p class="sub">Écris une première version avant de regarder. Il existe parfois plusieurs requêtes valides : l’important est de comprendre ton choix.</p>
+    <div class="practice-tools"><input id="practiceSearch" type="search" placeholder="Chercher : $elemMatch, tableau, stock, client…" aria-label="Chercher un exercice"><span id="practiceCount"></span></div>
+    <div class="tabs" id="practiceFilters"></div><div class="practice-grid" id="practiceGrid"></div>
+    <div class="more-wrap"><button class="btn ghost" id="practiceMore" onclick="showMorePractice()">Afficher 12 exercices de plus ↓</button></div>
+  </section>
+  <section class="view" id="cards">
+    <span class="eyebrow">RAPPEL ACTIF</span><h1>Flashcards</h1>
+    <p class="sub">Question d'abord, révélez la réponse vous-même. « Je savais » fait monter la carte de niveau ; une erreur la remet à zéro.</p>
+    <div class="practice-tools"><div class="tabs" id="cardFilters" style="margin:0"></div><span id="cardProgress"></span></div>
+    <div id="cardArea" style="margin-top:18px"></div>
+  </section>
+  <section class="view" id="exam">
+    <span class="eyebrow">SIMULATION ÉCRITE</span><h1>Simulations d’examen</h1>
+    <p class="sub">Quand tu te sens prêt, rédige comme sur une copie. Le corrigé et le barème t’aideront ensuite à choisir la prochaine notion à reprendre.</p>
+    <div class="practice-grid" id="examList"></div>
+  </section>
+  <section class="view" id="examRun">
+    <span class="eyebrow">COPIE</span><h1>Examen en cours</h1>
+    <div id="examRunArea"></div>
+  </section>
+  <section class="view" id="plan">
+    <span class="eyebrow">REPÈRES</span><h1>Un plan souple sur 7 jours</h1>
+    <div id="planBody"></div>
+  </section>
+  <section class="view" id="revision">
+    <span class="eyebrow">À GARDER EN TÊTE</span><h1>L’essentiel à réviser</h1>
+    <p class="sub">Des fiches courtes, les pièges fréquents et une checklist : prends ce qui t’aide aujourd’hui.</p>
+    <div class="revision-intro card"><span class="pill">MODE CALME · 15 MINUTES</span><div><strong>Tu n’as pas besoin de tout faire maintenant.</strong><p>Choisis une fiche, réponds à quelques cartes, puis fais une pause. Le prochain petit pas sera déjà plus clair.</p></div><div class="actions"><button class="btn" onclick="cardFilter='À revoir';cardIndex=0;showView('cards')">Mes cartes à revoir</button><button class="btn ghost" onclick="startQuiz('weak')">Quelques questions</button></div></div>
+    <div class="tabs" id="revTabs"></div>
+    <div id="revBody"></div>
+  </section>
+  <section class="view" id="sources">
+    <span class="eyebrow">TRAÇABILITÉ</span><h1>Supports du module</h1>
+    <p class="sub">Les corrigés des TP 2 et 3 sont des scans sans texte exploitable; les réponses ici suivent les énoncés et les cours.</p>
+    <div class="practice-grid" id="sourcesGrid"></div>
+    <div class="card notes"><h2>Nuances utiles à l’examen</h2>
+      <ul>
+        <li>CAP décrit l’arbitrage <strong>pendant une partition réseau</strong>, pas une étiquette permanente de toute base.</li>
+        <li>ACID, CAP et BASE parlent de propriétés différentes. MongoDB prend aussi en charge les transactions.</li>
+        <li>Dans le TP 3, <code>$size:3</code> signifie <strong>exactement trois</strong> éléments. Pour « au moins trois », le chemin <code>"resultats.2":{$exists:true}</code> convient.</li>
+        <li>Le TP 5 classe <code>replaceOne()</code> avec « Delete »; c’est une opération de remplacement.</li>
+        <li>Le fichier <code>produits.json</code> présent concerne le TP 4. Le jeu de données décrit au TP 5 n’est pas fourni; les corrections suivent ses noms de champs.</li>
+      </ul>
+    </div>
+  </section>
+</main>
+</div>
+<script src="revision/content.js"></script><script src="revision/deep.js"></script><script src="revision/questions-extra.js"></script><script src="revision/tasks.js"></script><script src="revision/tasks-extra.js"></script><script src="revision/flashcards.js"></script><script src="revision/exams.js"></script><script src="revision/revision-data.js"></script><script src="revision/plan-data.js"></script><script src="revision/course-gaps.js"></script><script src="revision/modules.js"></script><script src="revision/app.js"></script>
+</body></html>
