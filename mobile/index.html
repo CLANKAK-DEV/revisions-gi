@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Révision Flutter</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="shell">
+<aside class="side" id="side"></aside>
+<main>
+<h1>Réviser Flutter et Dart</h1>
+<p class="lead">Un résumé en français simple du module Mobile Application Development, avec <strong>des captures d'écran réelles de chaque widget</strong>, le travail à rendre sur Moodle corrigé, les TP, des QCM, des questions de cours et un examen blanc pratique. Pensé pour préparer un test où il faut réaliser une application.</p>
+
+<div class="box retenir">
+<p class="t">Votre test</p>
+<p>Le professeur a annoncé un test <strong>pratique</strong> : une application simple avec les techniques de la première partie du module. Il conseille de faire avant la prochaine séance le <strong>travail à rendre sur Moodle</strong> : l'application « Ma Bibliothèque ». Elle est corrigée, expliquée et testée sur la page <a href="tp.html#biblio">TP et exercices corrigés</a>.</p>
+</div>
+
+<h2>Par où commencer</h2>
+<div class="grid">
+<a class="card" href="essentiel.html"><span class="tag y">Commencer ici</span><h3>Essentiel à retenir</h3><p>Priorités, chaînes logiques, la recette d'une application de test, 15 éléments par cœur.</p></a>
+<a class="card" href="widgets.html"><span class="tag g">Captures</span><h3>Widgets en images</h3><p>Chaque widget avec son code et une vraie capture : margin et padding, Row et Column, les boutons, les champs.</p></a>
+<a class="card" href="tp.html"><span class="tag g">Corrigés</span><h3>TP et exercices corrigés</h3><p>Ma Bibliothèque, IMC, ListTile, exercices du cours, série Dart, tout testé.</p></a>
+<a class="card" href="cours.html"><span class="tag b">1</span><h3>Résumé du cours</h3><p>Dart, widgets, boutons et champs de texte, avec des exemples exécutés.</p></a>
+<a class="card" href="qcm.html"><span class="tag y">2</span><h3>QCM</h3><p>116 questions corrigées, filtrables par chapitre, dont des extraits de code à lire.</p></a>
+<a class="card" href="questions.html"><span class="tag b">3</span><h3>Questions de cours</h3><p>33 questions probables avec réponse courte.</p></a>
+<a class="card" href="pratique.html"><span class="tag r">4</span><h3>Examen blanc pratique</h3><p>Une application « Mes films » à réaliser en une heure, avec corrigé et captures.</p></a>
+<a class="card" href="pieges.html"><span class="tag r">5</span><h3>Pièges et aide-mémoire</h3><p>Vrais messages du compilateur, confusions fréquentes, slides obsolètes.</p></a>
+</div>
+
+<h2>Si le temps manque</h2>
+<div class="tw"><table>
+<tr><th>Temps</th><th>Programme</th></tr>
+<tr><td>2 heures</td><td>Page Essentiel, puis Ma Bibliothèque refaite seul, puis les sections B et D de Widgets en images.</td></tr>
+<tr><td>Une demi-journée</td><td>Ajouter l'IMC, le formulaire validé, le résumé du chapitre 1 (Dart) et le QCM « Lire le code ».</td></tr>
+<tr><td>Un jour ou plus</td><td>Tout le résumé, tous les TP, l'examen blanc chronométré, les pièges.</td></tr>
+</table></div>
+
+<h2>Le code à lancer chez vous</h2>
+<p>Le dossier <code>exemples_flutter</code> (à côté de ce site, dans le dossier <code>mobile</code>) contient toutes les applications. Une fois : <code>flutter create .</code> dans ce dossier, puis par exemple <code>flutter run -t lib/main_bibliotheque.dart</code>. Les autres points d'entrée : <code>lib/main_imc.dart</code> et <code>lib/main_examen.dart</code>. Les tests se lancent avec <code>flutter test</code>.</p>
+
+<div class="box retenir">
+<p class="t">Ce que je ne sais pas, et ce que j'ai repéré</p>
+<ul>
+<li>Je n'ai pas le sujet de votre test : le sujet de l'examen blanc est construit à partir du cours et du travail à rendre.</li>
+<li>Les images des couvertures et des plats sont des <strong>images de remplacement</strong> que j'ai dessinées. Remplacez-les par les vôtres.</li>
+<li>La maquette du travail à rendre est une image du document Moodle : je l'ai reproduite d'après l'image, sans copier le document.</li>
+<li>Les slides utilisent <code>primary</code> et <code>onPrimary</code> pour les boutons : ils ne compilent plus avec Flutter 3.41.</li>
+<li>Le sujet de l'IMC dit « Poids normal » mais son tableau dit « Poids idéal » ; le tableau a un trou entre 39.9 et 40.</li>
+<li>Pour les exercices du cours dont l'image n'était pas lisible dans le texte, j'ai écrit ma propre solution à partir de la consigne.</li>
+</ul>
+</div>
+<div class="foot">Cours de Pr. Sanaa Mouhim et Pr. Hassan Bousnguar, 4ème année Génie Informatique. Ouvrez simplement ce site dans votre navigateur, il fonctionne hors ligne.</div>
+</main>
+</div>
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

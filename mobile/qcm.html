@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QCM de révision Flutter</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="shell">
+<aside class="side" id="side"></aside>
+<main>
+<h1>QCM de révision</h1>
+<p class="lead">Des questions à une seule bonne réponse sur Dart, les widgets, l'état, les boutons et les champs de texte. La série « Lire le code » donne des extraits : tous les affichages annoncés ont été obtenus en exécutant le code. La correction s'affiche au clic.</p>
+<div class="bar">
+<button class="btn on" data-qcm-ch="0">Tout</button>
+<button class="btn" data-qcm-ch="1">Dart</button>
+<button class="btn" data-qcm-ch="2">Widgets de base</button>
+<button class="btn" data-qcm-ch="3">Stateless et Stateful</button>
+<button class="btn" data-qcm-ch="4">Boutons et TextField</button>
+<button class="btn" data-qcm-ch="5">Lire le code</button>
+<button class="btn" id="qcm-shuffle">Mélanger</button>
+<button class="btn" id="qcm-reset">Recommencer</button>
+<span class="score" id="score"></span>
+</div>
+<div id="qcm"></div>
+<div class="foot">Les options sont mélangées à chaque chargement de la page.</div>
+</main>
+</div>
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

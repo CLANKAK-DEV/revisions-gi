@@ -1,0 +1,647 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Widgets Flutter en images</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="shell">
+<aside class="side" id="side"></aside>
+<main>
+<h1>Les widgets en images</h1>
+<p class="lead">Chaque widget du cours avec son code et une <strong>vraie capture d'écran</strong> : l'image est produite par Flutter à partir du code affiché juste à côté. Les images comparent les cas qu'on confond : margin et padding, Row et Column, les six alignements, les cinq boutons.</p>
+
+<div class="box retenir">
+<p class="t">Comment ces images ont été faites</p>
+<p>Le code de chaque exemple est dans le projet <code>exemples_flutter</code> (dossier <code>mobile</code>). Un test Flutter construit le widget, le dessine avec la police Roboto et les icônes Material, et enregistre l'image. Le code affiché ici est extrait du même fichier : ce que vous lisez est exactement ce qui a été dessiné.</p>
+</div>
+
+<div class="box">
+<p class="t">Sommaire</p>
+<ul>
+<li><a href="#a">A. La structure d'une application</a> : Text, Center, AppBar, Scaffold, SafeArea</li>
+<li><a href="#b">B. La mise en page</a> : Container, margin et padding, Padding, SizedBox, Row, Column, alignements</li>
+<li><a href="#c">C. Le contenu</a> : Icon, Card, Image, ClipOval, ListTile</li>
+<li><a href="#d">D. Les boutons</a></li>
+<li><a href="#e">E. Les champs de texte</a></li>
+<li><a href="#f">F. L'état</a> : Stateless, Stateful, setState, formulaire</li>
+<li><a href="#g">G. Hot reload, hot restart, run</a></li>
+</ul>
+</div>
+
+<h2 id="a">A. La structure d'une application</h2>
+<h3 id="text">Text et TextStyle <span class="tag r">Priorité 1</span></h3><p><code>Text</code> affiche du texte. Le paramètre <code>style</code> reçoit un <code>TextStyle</code> : couleur, taille, graisse.</p>
+<div class="pair"><div><pre><code>return const Text(
+  'hello flutter widgets',
+  style: TextStyle(color: Colors.red, fontSize: 28, fontWeight: FontWeight.bold),
+);</code></pre></div><div class="shots"><figure class="shot"><img src="img/text.png" alt="Text rouge, taille 28, en gras" loading="lazy"><figcaption>Text rouge, taille 28, en gras</figcaption></figure></div></div>
+<div class="box retenir"><p class="t">À retenir</p>Sans <code>MaterialApp</code>, <code>runApp(Text(...))</code> demande <code>textDirection: TextDirection.ltr</code> (de gauche à droite). Avec <code>MaterialApp</code> et <code>Scaffold</code>, ce paramètre n'est plus nécessaire.</div>
+<h3 id="center">Center : où se place le contenu ? <span class="tag r">Priorité 1</span></h3><p>Dans un <code>Scaffold</code>, le <code>body</code> s'affiche en <strong>haut à gauche</strong> par défaut. <code>Center</code> place son enfant au milieu de l'espace disponible.</p>
+<div class="pair"><div><p class="q">Sans Center</p><pre><code>return const Scaffold(
+  body: Text('Bonjour Flutter !'),
+);</code></pre><p class="q">Avec Center</p><pre><code>return const Scaffold(
+  body: Center(
+    child: Text('Bonjour Flutter !'),
+  ),
+);</code></pre></div><div class="shots"><figure class="shot"><img src="img/center.png" alt="À gauche sans Center, à droite avec Center" loading="lazy"><figcaption>À gauche sans Center, à droite avec Center</figcaption></figure></div></div>
+<h3 id="appbar">AppBar : leading, title, actions <span class="tag r">Priorité 1</span></h3><p>La barre du haut. <code>leading</code> à gauche (menu, retour), <code>title</code> au centre-gauche, <code>actions</code> : une liste de widgets à droite. <code>bottom</code> ajoute une barre en dessous (onglets).</p>
+<div class="pair"><div><pre><code>return Scaffold(
+  appBar: AppBar(
+    backgroundColor: Colors.blue,
+    foregroundColor: Colors.white,
+    leading: const Icon(Icons.menu),          // à gauche
+    title: const Text('Ma Bibliothèque'),     // le titre
+    actions: const [                          // à droite
+      Icon(Icons.search),
+      SizedBox(width: 12),
+      Icon(Icons.more_vert),
+      SizedBox(width: 8),
+    ],
+  ),
+  body: const Center(child: Text('body')),
+);</code></pre></div><div class="shots"><figure class="shot"><img src="img/appbar.png" alt="AppBar avec une icône de menu, un titre et deux icônes d'action" loading="lazy"><figcaption>AppBar avec une icône de menu, un titre et deux icônes d'action</figcaption></figure></div></div>
+<div class="box retenir"><p class="t">À retenir</p><code>backgroundColor</code> change le fond, <code>foregroundColor</code> change la couleur du texte et des icônes. <code>title</code> attend un <strong>widget</strong> (donc <code>Text(...)</code>), pas une chaîne.</div>
+<h3 id="scaffold">Scaffold : les zones d'une page <span class="tag r">Priorité 1</span></h3><p><code>Scaffold</code> donne la structure d'une page : <code>appBar</code> (haut), <code>body</code> (contenu), <code>floatingActionButton</code> (bouton rond flottant, en bas à droite), <code>bottomNavigationBar</code> (navigation en bas), <code>drawer</code> (panneau latéral). L'image de droite montre le <code>drawer</code> ouvert.</p>
+<div class="pair"><div><pre><code>return Scaffold(
+  key: cle,
+  appBar: AppBar(title: const Text('appBar')),
+  body: const Center(child: Text('body')),
+  floatingActionButton: FloatingActionButton(
+    onPressed: () {},
+    child: const Icon(Icons.add),
+  ),
+  bottomNavigationBar: BottomNavigationBar(
+    items: const [
+      BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Accueil'),
+      BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profil'),
+    ],
+  ),
+  drawer: const Drawer(
+    child: Center(child: Text('drawer')),
+  ),
+);</code></pre></div><div class="shots"><figure class="shot"><img src="img/scaffold_zones.png" alt="Les zones du Scaffold" loading="lazy"><figcaption>Les zones du Scaffold</figcaption></figure><figure class="shot"><img src="img/scaffold_drawer.png" alt="Le drawer ouvert (glisse depuis la gauche)" loading="lazy"><figcaption>Le drawer ouvert (glisse depuis la gauche)</figcaption></figure></div></div>
+<div class="box retenir"><p class="t">À retenir</p><code>backgroundColor</code> colore la page entière. <code>resizeToAvoidBottomInset</code> redimensionne le <code>body</code> quand le clavier apparaît, pour ne pas cacher les champs de saisie.</div>
+<h3 id="safearea">SafeArea : éviter l'encoche <span class="tag y">Priorité 2</span></h3><p>Sur certains téléphones, une encoche ou une barre système cache le haut de l'écran. <code>SafeArea</code> décale son enfant pour qu'il reste visible. L'image simule une barre d'état de 44 pixels.</p>
+<div class="pair"><div><p class="q">Sans SafeArea</p><pre><code>return Scaffold(
+  body: Container(
+    color: Colors.grey,
+    child: const Text('Safe area'),
+  ),
+);</code></pre><p class="q">Avec SafeArea</p><pre><code>return Scaffold(
+  body: SafeArea(
+    child: Container(
+      color: Colors.grey,
+      child: const Text('Safe area'),
+    ),
+  ),
+);</code></pre></div><div class="shots"><figure class="shot"><img src="img/safearea.png" alt="Sans SafeArea le texte passe sous la barre, avec SafeArea il reste visible" loading="lazy"><figcaption>Sans SafeArea le texte passe sous la barre, avec SafeArea il reste visible</figcaption></figure></div></div>
+<h2 id="b">B. La mise en page</h2>
+<h3 id="container">Container : avec ou sans enfant <span class="tag r">Priorité 1</span></h3><p><code>Container</code> est une boîte qui contient <strong>un seul</strong> widget enfant et qu'on peut styler (taille, couleur, marges).</p>
+<div class="pair"><div><p class="q">Sans enfant</p><pre><code>return Scaffold(
+  appBar: AppBar(title: const Text('Image app')),
+  body: Container(color: Colors.grey),
+);</code></pre><p class="q">Avec enfant</p><pre><code>return Scaffold(
+  appBar: AppBar(title: const Text('Image app')),
+  body: Container(
+    color: Colors.grey,
+    child: const Text('Welcome to Android ATC'),
+  ),
+);</code></pre></div><div class="shots"><figure class="shot"><img src="img/container_vide_enfant.png" alt="Sans enfant il remplit tout l'espace, avec un enfant il prend la taille de l'enfant" loading="lazy"><figcaption>Sans enfant il remplit tout l'espace, avec un enfant il prend la taille de l'enfant</figcaption></figure></div></div>
+<div class="box retenir"><p class="t">À retenir</p>Pour qu'un <code>Container</code> avec enfant remplisse l'écran, donnez <code>width: double.infinity</code> et <code>height: double.infinity</code>.</div>
+<h3 id="margin_padding">margin et padding : dehors ou dedans ? <span class="tag r">Priorité 1</span></h3><p>C'est la confusion la plus fréquente. <code>margin</code> est l'espace <strong>autour</strong> du conteneur (à l'extérieur). <code>padding</code> est l'espace <strong>entre</strong> le bord du conteneur et son enfant (à l'intérieur).</p>
+<div class="pair"><div><p class="q">margin</p><pre><code>return Container(
+  color: Colors.grey,
+  height: 70,
+  width: 200,
+  margin: const EdgeInsets.all(20),     // espace À L'EXTÉRIEUR du conteneur
+  child: const Text('Welcome'),
+);</code></pre><p class="q">padding</p><pre><code>return Container(
+  color: Colors.grey,
+  height: 70,
+  width: 200,
+  padding: const EdgeInsets.only(left: 50), // espace À L'INTÉRIEUR, avant l'enfant
+  child: const Text('Welcome'),
+);</code></pre></div><div class="shots"><figure class="shot"><img src="img/margin_padding.png" alt="À gauche margin (le fond bleu du parent apparaît autour), à droite padding (le texte est décalé)" loading="lazy"><figcaption>À gauche margin (le fond bleu du parent apparaît autour), à droite padding (le texte est décalé)</figcaption></figure></div></div>
+<div class="box retenir"><p class="t">À retenir</p><code>EdgeInsets.all(20)</code> : tous les côtés. <code>EdgeInsets.only(left: 50)</code> : certains côtés. <code>EdgeInsets.symmetric(vertical: 8, horizontal: 16)</code> : haut et bas, gauche et droite. <code>EdgeInsets.fromLTRB(gauche, haut, droite, bas)</code> : les quatre dans cet ordre.</div>
+<h3 id="decoration">decoration, borderRadius, transform <span class="tag y">Priorité 2</span></h3><p><code>decoration</code> avec <code>BoxDecoration</code> permet un cercle, une bordure, des coins arrondis ou une image de fond. <code>transform</code> applique une rotation (en radians).</p>
+<div class="pair"><div><p class="q">shape circle</p><pre><code>return Container(
+  height: 120,
+  width: 120,
+  decoration: const BoxDecoration(
+    color: Color(0xff7c94b6),
+    shape: BoxShape.circle,
+  ),
+  child: const Center(child: Text('Welcome')),
+);</code></pre><p class="q">border et borderRadius</p><pre><code>return Container(
+  height: 120,
+  width: 160,
+  decoration: BoxDecoration(
+    color: const Color(0xff7c94b6),
+    border: Border.all(width: 8),
+    borderRadius: BorderRadius.circular(12),
+  ),
+);</code></pre><p class="q">transform</p><pre><code>return Container(
+  height: 100,
+  width: 160,
+  color: Colors.amber,
+  transform: Matrix4.rotationZ(0.1),   // angle en radians
+  child: const Center(child: Text('rotationZ(0.1)')),
+);</code></pre></div><div class="shots"><figure class="shot"><img src="img/container_decoration.png" alt="Cercle, bordure avec coins arrondis, rotation" loading="lazy"><figcaption>Cercle, bordure avec coins arrondis, rotation</figcaption></figure></div></div>
+<div class="box piege"><p class="t">Piège</p>Quand on utilise <code>decoration</code>, la couleur va <strong>dans</strong> <code>BoxDecoration(color: ...)</code>. Écrire <code>color:</code> sur le <code>Container</code> <em>et</em> <code>decoration:</code> provoque une erreur (vérifié par un test).</div>
+<h3 id="padding_sizedbox">Padding et SizedBox <span class="tag r">Priorité 1</span></h3><p><code>Padding</code> entoure <strong>un</strong> widget d'espace. <code>SizedBox</code> crée un espace vide de taille fixe (souvent entre deux widgets d'une <code>Column</code> ou d'une <code>Row</code>), ou impose une taille à son enfant.</p>
+<div class="pair"><div><p class="q">Padding</p><pre><code>return const Padding(
+  padding: EdgeInsets.all(20),
+  child: Text('hello padding'),
+);</code></pre><p class="q">SizedBox</p><pre><code>return Column(
+  children: const [
+    Text('Premier élément'),
+    SizedBox(height: 30),                 // espace vide de 30 pixels
+    Text('Deuxième élément'),
+  ],
+);</code></pre></div><div class="shots"><figure class="shot"><img src="img/padding_sizedbox.png" alt="Padding autour d'un texte, SizedBox entre deux textes" loading="lazy"><figcaption>Padding autour d'un texte, SizedBox entre deux textes</figcaption></figure></div></div>
+<h3 id="row_column">Column et Row <span class="tag r">Priorité 1</span></h3><p>Un <code>Container</code> n'a qu'un enfant. Pour plusieurs enfants, on utilise <code>children: [...]</code> dans <code>Column</code> (de haut en bas) ou <code>Row</code> (de gauche à droite).</p>
+<div class="pair"><div><p class="q">Column</p><pre><code>return Column(
+  children: [
+    boite(Colors.red, '1'),
+    boite(Colors.green, '2'),
+    boite(Colors.blue, '3'),
+  ],
+);</code></pre><p class="q">Row</p><pre><code>return Row(
+  children: [
+    boite(Colors.red, '1'),
+    boite(Colors.green, '2'),
+    boite(Colors.blue, '3'),
+  ],
+);</code></pre></div><div class="shots"><figure class="shot"><img src="img/row_column.png" alt="Les mêmes trois boîtes en Column puis en Row" loading="lazy"><figcaption>Les mêmes trois boîtes en Column puis en Row</figcaption></figure></div></div>
+<h3 id="main_axis">mainAxisAlignment : l'axe principal <span class="tag r">Priorité 1</span></h3><p>L'<strong>axe principal</strong> est horizontal pour une <code>Row</code>, vertical pour une <code>Column</code>. <code>mainAxisAlignment</code> répartit les enfants le long de cet axe.</p>
+<pre><code>return Row(
+  mainAxisAlignment: alignement,   // start, end, center, spaceBetween, spaceAround, spaceEvenly
+  children: [
+    boite(Colors.red, '1', taille: 40),
+    boite(Colors.green, '2', taille: 40),
+    boite(Colors.blue, '3', taille: 40),
+  ],
+);</code></pre><div class="shots"><figure class="shot wide"><img src="img/main_axis.png" alt="Les six valeurs de mainAxisAlignment sur une Row" loading="lazy"><figcaption>Les six valeurs de mainAxisAlignment sur une Row</figcaption></figure></div>
+<div class="box retenir"><p class="t">À retenir</p><code>start</code> : au début. <code>end</code> : à la fin. <code>center</code> : au milieu. <code>spaceBetween</code> : espace entre les enfants, les extrémités collées aux bords. <code>spaceAround</code> : espace autour de chaque enfant (la moitié aux bords). <code>spaceEvenly</code> : espaces identiques partout, bords compris.</div>
+<h3 id="cross_axis">crossAxisAlignment : l'axe transversal <span class="tag r">Priorité 1</span></h3><p>L'<strong>axe transversal</strong> est perpendiculaire : vertical pour une <code>Row</code>, horizontal pour une <code>Column</code>. <code>crossAxisAlignment</code> aligne les enfants sur cet axe.</p>
+<pre><code>return Row(
+  crossAxisAlignment: alignement,  // start, center, end, stretch
+  children: [
+    Container(width: 40, height: 30, color: Colors.red),
+    Container(width: 40, height: 60, color: Colors.green),
+    Container(width: 40, height: 90, color: Colors.blue),
+  ],
+);</code></pre><div class="shots"><figure class="shot wide"><img src="img/cross_axis.png" alt="start, center, end et stretch sur une Row de trois barres de hauteurs différentes" loading="lazy"><figcaption>start, center, end et stretch sur une Row de trois barres de hauteurs différentes</figcaption></figure></div>
+<div class="box piege"><p class="t">Piège</p><code>stretch</code> étire les enfants sur tout l'axe transversal. Ne confondez pas <code>mainAxisAlignment</code> (le long de la direction) et <code>crossAxisAlignment</code> (en travers).</div>
+<h2 id="c">C. Le contenu</h2>
+<h3 id="icon">Icon <span class="tag y">Priorité 2</span></h3><p><code>Icon(Icons.nom)</code> affiche une icône du jeu Material. <code>size</code> et <code>color</code> règlent la taille et la couleur.</p>
+<div class="pair"><div><pre><code>return const Row(
+  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+  children: [
+    Icon(Icons.shopping_cart, size: 50, color: Colors.green),
+    Icon(Icons.favorite, size: 30, color: Colors.red),
+    Icon(Icons.settings),
+  ],
+);</code></pre></div><div class="shots"><figure class="shot"><img src="img/icon.png" alt="Trois icônes : panier vert 50, cœur rouge 30, réglages par défaut" loading="lazy"><figcaption>Trois icônes : panier vert 50, cœur rouge 30, réglages par défaut</figcaption></figure></div></div>
+<h3 id="card">Card <span class="tag r">Priorité 1</span></h3><p><code>Card</code> est une carte Material : coins légèrement arrondis et ombre. Elle accepte <code>color</code>, <code>elevation</code>, <code>shape</code>, <code>shadowColor</code>, <code>margin</code>.</p>
+<p class="q">Card avec une image et du texte</p><pre><code>return Card(
+  color: Colors.blue[100],
+  margin: const EdgeInsets.all(20),
+  child: Row(
+    children: [
+      Container(
+        padding: const EdgeInsets.all(8),
+        height: 100,
+        width: 100,
+        child: Image.asset('images/pizza.png'),
+      ),
+      const SizedBox(width: 20),
+      const Text('Vegetable Pizza', style: TextStyle(fontSize: 22)),
+    ],
+  ),
+);</code></pre><p class="q">Card personnalisée</p><pre><code>return Card(
+  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+  shadowColor: Colors.deepOrange,
+  elevation: 20,
+  color: Colors.blue[100],
+  margin: const EdgeInsets.all(20),
+  child: const Padding(                    // Card n'a pas de padding : on utilise Padding
+    padding: EdgeInsets.all(20),
+    child: Text('Bonjour Flutter'),
+  ),
+);</code></pre><div class="shots"><figure class="shot wide"><img src="img/card.png" alt="Card avec une image de pizza et un texte" loading="lazy"><figcaption>Card avec une image de pizza et un texte</figcaption></figure><figure class="shot wide"><img src="img/card_style.png" alt="Card avec shape arrondie, ombre orange et élévation 20" loading="lazy"><figcaption>Card avec shape arrondie, ombre orange et élévation 20</figcaption></figure></div>
+<div class="box piege"><p class="t">Piège</p><code>Card</code> n'a pas de <code>padding</code>. Pour espacer le contenu du bord de la carte, mettez un widget <code>Padding</code> comme enfant (dernier exemple).</div>
+<h3 id="image">Image et ClipOval <span class="tag r">Priorité 1</span></h3><p><code>Image.asset</code> affiche une image du projet (déclarée dans <code>pubspec.yaml</code>), <code>Image.network</code> une image d'Internet. <code>ClipOval</code> découpe son enfant en ovale : avec <code>width</code> égal à <code>height</code> on obtient un <strong>cercle</strong>.</p>
+<p class="q">Image normale</p><pre><code>return Image.asset('images/livre2.png', width: 200, height: 150);</code></pre><p class="q">Cercle</p><pre><code>return ClipOval(
+  child: Image.asset('images/livre2.png', width: 150, height: 150, fit: BoxFit.cover),
+);</code></pre><p class="q">Ellipse</p><pre><code>return ClipOval(
+  child: Image.asset('images/livre2.png', width: 220, height: 80, fit: BoxFit.cover),
+);</code></pre><div class="shots"><figure class="shot wide"><img src="img/image_clipoval.png" alt="Image normale, ClipOval 150 x 150 (cercle), ClipOval 220 x 80 (ellipse)" loading="lazy"><figcaption>Image normale, ClipOval 150 x 150 (cercle), ClipOval 220 x 80 (ellipse)</figcaption></figure></div>
+<div class="box retenir"><p class="t">À retenir</p><code>fit: BoxFit.cover</code> remplit la zone sans déformer l'image, quitte à en couper une partie. Pour <code>Image.asset</code>, ajoutez dans <code>pubspec.yaml</code> : <code>flutter:</code> puis <code>assets:</code> puis <code>- images/</code>, avec les bonnes indentations, puis relancez l'application.</div>
+<h3 id="listtile">ListTile : leading, title, subtitle, trailing <span class="tag r">Priorité 1</span></h3><p><code>ListTile</code> est une ligne de liste toute prête. <code>leading</code> : widget à gauche. <code>title</code> : titre. <code>subtitle</code> : texte sous le titre. <code>trailing</code> : widget à droite.</p>
+<div class="pair"><div><pre><code>return Container(
+  color: Colors.lightBlue[100],
+  child: const ListTile(
+    leading: Icon(Icons.account_circle, size: 40),   // leading : à gauche
+    title: Text('Widget of the week'),                // title
+    subtitle: Text('#54'),                            // subtitle : sous le titre
+    trailing: Icon(Icons.menu),                       // trailing : à droite
+  ),
+);</code></pre></div><div class="shots"><figure class="shot"><img src="img/listtile.png" alt="ListTile avec icône à gauche, titre, sous-titre et icône à droite" loading="lazy"><figcaption>ListTile avec icône à gauche, titre, sous-titre et icône à droite</figcaption></figure></div></div>
+<h2 id="d">D. Les boutons</h2>
+<h3 id="boutons">Quel bouton choisir ? <span class="tag r">Priorité 1</span></h3><p>Chaque bouton a un niveau d'importance. <code>ElevatedButton</code> : l'action la plus importante. <code>OutlinedButton</code> : action importante mais secondaire. <code>TextButton</code> : action peu importante. <code>IconButton</code> : une icône seule. <code>FloatingActionButton</code> : l'action principale de l'écran, <strong>un seul</strong> par écran.</p>
+<div class="pair"><div><pre><code>return Wrap(
+  spacing: 12,
+  runSpacing: 12,
+  crossAxisAlignment: WrapCrossAlignment.center,
+  children: [
+    ElevatedButton(onPressed: () {}, child: const Text('Elevated')),
+    OutlinedButton(onPressed: () {}, child: const Text('Outlined')),
+    TextButton(onPressed: () {}, child: const Text('Text')),
+    IconButton(onPressed: () {}, icon: const Icon(Icons.favorite), tooltip: 'Favori'),
+    FloatingActionButton(onPressed: () {}, mini: true, child: const Icon(Icons.add)),
+  ],
+);</code></pre></div><div class="shots"><figure class="shot"><img src="img/boutons.png" alt="Elevated, Outlined, Text, IconButton et FloatingActionButton mini" loading="lazy"><figcaption>Elevated, Outlined, Text, IconButton et FloatingActionButton mini</figcaption></figure></div></div>
+<div class="box retenir"><p class="t">À retenir</p><code>onPressed</code> attend une fonction : <code>() {}</code> est une fonction vide. Un bouton avec <code>onPressed: null</code> est désactivé (grisé).</div>
+<h3 id="boutons_icone">Boutons avec icône <span class="tag y">Priorité 2</span></h3><p>Les constructeurs <code>.icon</code> ajoutent une icône à gauche du texte : <code>ElevatedButton.icon</code>, <code>OutlinedButton.icon</code>. <code>FloatingActionButton.extended</code> affiche une icône et un libellé.</p>
+<div class="pair"><div><pre><code>return Wrap(
+  spacing: 12,
+  runSpacing: 12,
+  children: [
+    ElevatedButton.icon(
+      onPressed: () {},
+      icon: const Icon(Icons.shopping_cart),
+      label: const Text('Acheter'),
+    ),
+    OutlinedButton.icon(
+      onPressed: () {},
+      icon: const Icon(Icons.settings),
+      label: const Text('Réglages'),
+    ),
+    FloatingActionButton.extended(
+      onPressed: () {},
+      icon: const Icon(Icons.add),
+      label: const Text('Ajouter'),
+    ),
+  ],
+);</code></pre></div><div class="shots"><figure class="shot"><img src="img/boutons_icone.png" alt="Boutons avec icône et bouton flottant étendu" loading="lazy"><figcaption>Boutons avec icône et bouton flottant étendu</figcaption></figure></div></div>
+<h3 id="bouton_style">Personnaliser un bouton avec styleFrom <span class="tag y">Priorité 2</span></h3><p><code>styleFrom</code> règle le style : <code>backgroundColor</code>, <code>foregroundColor</code>, <code>elevation</code>, <code>shadowColor</code>, <code>shape</code>, <code>side</code>, <code>padding</code>.</p>
+<div class="pair"><div><pre><code>return SizedBox(
+  width: 300,
+  height: 80,
+  child: ElevatedButton(
+    onPressed: () {},
+    style: ElevatedButton.styleFrom(
+      backgroundColor: Colors.yellow,
+      foregroundColor: Colors.black,
+      elevation: 15,
+      shadowColor: Colors.yellow,
+      shape: const StadiumBorder(),
+      side: const BorderSide(color: Colors.black, width: 2),
+    ),
+    child: const Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        Text('Click to begin', style: TextStyle(fontSize: 22)),
+        Icon(Icons.add_shopping_cart, size: 30),
+      ],
+    ),
+  ),
+);</code></pre></div><div class="shots"><figure class="shot"><img src="img/bouton_style.png" alt="Bouton jaune en forme de stade avec bordure noire" loading="lazy"><figcaption>Bouton jaune en forme de stade avec bordure noire</figcaption></figure></div></div>
+<div class="box piege"><p class="t">Piège : slides obsolètes</p>Les slides utilisent <code>primary:</code> et <code>onPrimary:</code>. Ces paramètres <strong>n'existent plus</strong> dans Flutter 3.41 : l'analyse donne « The named parameter 'primary' isn't defined ». Il faut écrire <code>backgroundColor:</code> et <code>foregroundColor:</code>.</div>
+<h3 id="fab">FloatingActionButton : l'emplacement <span class="tag y">Priorité 2</span></h3><p>Par défaut le bouton est en bas à droite (<code>endFloat</code>). <code>floatingActionButtonLocation</code> du <code>Scaffold</code> le déplace. <code>mini: true</code> le réduit.</p>
+<pre><code>return Scaffold(
+  appBar: AppBar(title: Text(titre)),
+  floatingActionButtonLocation: emplacement,
+  floatingActionButton: FloatingActionButton(
+    onPressed: () {},
+    child: const Icon(Icons.add),
+  ),
+);</code></pre><div class="shots"><figure class="shot wide"><img src="img/fab_emplacements.png" alt="endFloat, centerFloat et centerTop" loading="lazy"><figcaption>endFloat, centerFloat et centerTop</figcaption></figure></div>
+<h2 id="e">E. Les champs de texte</h2>
+<h3 id="textfield">TextField et TextFormField <span class="tag r">Priorité 1</span></h3><p><code>TextField</code> est le champ de saisie de base. <code>TextFormField</code> fait la même chose mais s'utilise dans un <code>Form</code> et possède un <code>validator</code>. <code>InputDecoration</code> règle l'apparence : <code>hintText</code> (texte grisé), <code>labelText</code> (étiquette qui flotte), <code>icon</code> ou <code>prefixIcon</code>, <code>border</code>.</p>
+<div class="pair"><div><pre><code>return Column(
+  children: [
+    const TextField(),                                   // 1. le plus simple
+    const SizedBox(height: 14),
+    const TextField(                                     // 2. hintText et icon
+      decoration: InputDecoration(hintText: 'User Name', icon: Icon(Icons.person)),
+    ),
+    const SizedBox(height: 14),
+    TextFormField(                                       // 3. labelText, prefixIcon, bordure
+      decoration: const InputDecoration(
+        labelText: 'User Name',
+        prefixIcon: Icon(Icons.person),
+        border: OutlineInputBorder(),
+      ),
+    ),
+  ],
+);</code></pre></div><div class="shots"><figure class="shot"><img src="img/textfields.png" alt="Champ simple, champ avec hintText et icon, TextFormField avec label, prefixIcon et bordure" loading="lazy"><figcaption>Champ simple, champ avec hintText et icon, TextFormField avec label, prefixIcon et bordure</figcaption></figure></div></div>
+<h3 id="textfield_options">obscureText, maxLength, maxLines <span class="tag r">Priorité 1</span></h3><p><code>obscureText: true</code> masque la saisie (mot de passe). <code>maxLength</code> limite la longueur (un compteur apparaît). <code>maxLines</code> permet plusieurs lignes. <code>keyboardType</code> choisit le clavier (nombre, e-mail, téléphone).</p>
+<div class="pair"><div><pre><code>return const Column(
+  children: [
+    TextField(                                           // mot de passe
+      obscureText: true,
+      obscuringCharacter: '*',
+      decoration: InputDecoration(labelText: 'Mot de passe', border: OutlineInputBorder()),
+    ),
+    SizedBox(height: 14),
+    TextField(                                           // longueur maximale
+      maxLength: 10,
+      decoration: InputDecoration(labelText: 'Pseudo (10 max)', border: OutlineInputBorder()),
+    ),
+    SizedBox(height: 14),
+    TextField(                                           // plusieurs lignes
+      maxLines: 3,
+      decoration: InputDecoration(labelText: 'Message', border: OutlineInputBorder()),
+    ),
+  ],
+);</code></pre></div><div class="shots"><figure class="shot"><img src="img/textfields_options.png" alt="Mot de passe masqué, compteur 4/10, champ de trois lignes" loading="lazy"><figcaption>Mot de passe masqué, compteur 4/10, champ de trois lignes</figcaption></figure></div></div>
+<h3 id="saisie">Lire la saisie : onChanged et controller <span class="tag r">Priorité 1</span></h3><p>Deux façons de lire ce que tape l'utilisateur. <code>onChanged</code> reçoit la nouvelle valeur à chaque modification. Un <code>TextEditingController</code> relié au champ permet de lire <code>controller.text</code> quand on veut (par exemple au clic sur un bouton).</p><div class="pair"><div><pre><code>// TextField : lire la saisie avec onChanged et setState
+class SaisieApp extends StatefulWidget {
+  const SaisieApp({super.key});
+
+  @override
+  State&lt;SaisieApp&gt; createState() =&gt; _SaisieAppState();
+}
+
+class _SaisieAppState extends State&lt;SaisieApp&gt; {
+  String _message = '';
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(
+        appBar: AppBar(title: const Text('TextField')),
+        body: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            children: [
+              TextField(
+                onChanged: (val) {
+                  setState(() {
+                    _message = val;
+                  });
+                },
+                decoration: const InputDecoration(
+                  labelText: 'Votre nom',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              const SizedBox(height: 20),
+              Text('Bonjour $_message', style: const TextStyle(fontSize: 22)),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}</code></pre></div><div class="shots"><figure class="shot"><img src="img/saisie.png" alt="Le texte tapé est repris dans le message grâce à onChanged et setState" loading="lazy"><figcaption>Le texte tapé est repris dans le message grâce à onChanged et setState</figcaption></figure></div></div>
+<h2 id="f">F. L'état : StatelessWidget et StatefulWidget</h2>
+<div class="tw"><table><tr><th></th><th>StatelessWidget</th><th>StatefulWidget</th></tr><tr><td>Peut changer ?</td><td>Non, identique après création</td><td>Oui, via <code>setState</code></td></tr><tr><td>Classes</td><td>Une : le widget avec <code>build()</code></td><td>Deux : le widget (avec <code>createState()</code>) et l'état <code>State</code> (avec <code>build()</code>)</td></tr><tr><td>Exemples</td><td>Text, Icon, IconButton, un titre fixe</td><td>Compteur, Checkbox, Radio, Slider, Form, TextField</td></tr></table></div>
+<h3 id="compteur">Un compteur avec setState <span class="tag r">Priorité 1</span></h3><p>Le bouton + augmente la variable, mais seul <code>setState</code> prévient Flutter de reconstruire l'écran. Les deux images montrent l'écran au départ, puis après trois clics sur +.</p><div class="pair"><div><pre><code>// Compteur : StatefulWidget, setState, deux boutons flottants (+ et -)
+class CompteurApp extends StatefulWidget {
+  const CompteurApp({super.key});
+
+  @override
+  State&lt;CompteurApp&gt; createState() =&gt; _CompteurAppState();
+}
+
+class _CompteurAppState extends State&lt;CompteurApp&gt; {
+  int _compteur = 0;
+
+  void _incrementer() {
+    setState(() {
+      _compteur++;
+    });
+  }
+
+  void _decrementer() {
+    setState(() {
+      _compteur--;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(
+        appBar: AppBar(title: const Text('Compteur')),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text('Nombre de clics :'),
+              Text('$_compteur', style: const TextStyle(fontSize: 48)),
+            ],
+          ),
+        ),
+        floatingActionButton: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            FloatingActionButton(
+              heroTag: 'moins',
+              onPressed: _decrementer,
+              child: const Icon(Icons.remove),
+            ),
+            const SizedBox(width: 12),
+            FloatingActionButton(
+              heroTag: 'plus',
+              onPressed: _incrementer,
+              child: const Icon(Icons.add),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}</code></pre></div><div class="shots"><figure class="shot"><img src="img/compteur_0.png" alt="Au départ : 0" loading="lazy"><figcaption>Au départ : 0</figcaption></figure><figure class="shot"><img src="img/compteur_3.png" alt="Après trois clics sur + : 3" loading="lazy"><figcaption>Après trois clics sur + : 3</figcaption></figure></div></div>
+<div class="box piege"><p class="t">Piège</p><p>Modifier <code>_compteur++</code> <strong>sans</strong> <code>setState</code> change la variable mais pas l'écran. Et <code>setState</code> ne s'appelle que dans une classe <code>State</code>, donc dans un <code>StatefulWidget</code>.</p></div>
+<h3 id="compteur_prof">Le compteur de votre cours (statefulwidget.txt) <span class="tag y">Priorité 2</span></h3><p>Le fichier du professeur est le compteur par défaut de Flutter. Il fonctionne tel quel, mais utilise la syntaxe courte <code>.fromSeed(...)</code> et <code>.center</code> (sans le nom de la classe).</p><div class="pair"><div><pre><code>import 'package:flutter/material.dart';
+
+void main() {
+  runApp(const MyHomePage(title:"test"));
+}
+
+
+
+class MyHomePage extends StatefulWidget {
+  const MyHomePage({super.key, required this.title});
+
+
+
+  final String title;
+
+  @override
+  State&lt;MyHomePage&gt; createState() =&gt; _MyHomePageState();
+}
+
+class _MyHomePageState extends State&lt;MyHomePage&gt; {
+  int _counter = 0;
+
+  void _incrementCounter() {
+    setState(() {
+
+      _counter++;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+
+    return MaterialApp(
+      title: 'Flutter Demo',
+      theme: ThemeData(
+
+        colorScheme: .fromSeed(seedColor: Colors.deepPurple),
+      ),
+      home: Scaffold(
+        appBar: AppBar(
+
+          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+
+          title: Text(widget.title),
+        ),
+        body: Center(
+
+          child: Column(
+            mainAxisAlignment: .center,
+            children: [
+              const Text('You have pushed the button this many times:'),
+              Text(
+                '$_counter',
+                style: Theme.of(context).textTheme.headlineMedium,
+              ),
+            ],
+          ),
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: _incrementCounter,
+          tooltip: 'Increment',
+          child: const Icon(Icons.add),
+        ),
+      ),
+    );
+  }
+}</code></pre></div><div class="shots"><figure class="shot"><img src="img/compteur_prof.png" alt="Compteur du professeur, avec le bandeau DEBUG du mode débogage" loading="lazy"><figcaption>Compteur du professeur, avec le bandeau DEBUG du mode débogage</figcaption></figure></div></div>
+<div class="box piege"><p class="t">Version de Dart</p><p>Les raccourcis <code>.fromSeed(...)</code> et <code>.center</code> demandent <strong>Dart 3.10 ou plus récent</strong>. Avec un vieux projet (<code>sdk: ^3.5.0</code> dans <code>pubspec.yaml</code>) la compilation échoue avec « This requires the experimental 'dot-shorthands' language feature ». Vérifié : ce fichier compile avec <code>sdk: ^3.10.0</code>. En cas d'erreur, écrivez <code>ColorScheme.fromSeed</code> et <code>MainAxisAlignment.center</code>.</p></div>
+<h3 id="bouton_clic">Le texte du bouton change au clic <span class="tag r">Priorité 1</span></h3><div class="pair"><div><pre><code>// Exercice du cours : le texte du bouton change au clic
+class BoutonClicApp extends StatefulWidget {
+  const BoutonClicApp({super.key});
+
+  @override
+  State&lt;BoutonClicApp&gt; createState() =&gt; _BoutonClicAppState();
+}
+
+class _BoutonClicAppState extends State&lt;BoutonClicApp&gt; {
+  String _texte = 'Cliquer ici';
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(
+        appBar: AppBar(title: const Text('Bouton')),
+        body: Center(
+          child: ElevatedButton(
+            onPressed: () {
+              setState(() {
+                _texte = 'Bouton cliqué !';
+              });
+            },
+            child: Text(_texte),
+          ),
+        ),
+      ),
+    );
+  }
+}</code></pre></div><div class="shots"><figure class="shot"><img src="img/bouton_avant.png" alt="Avant le clic" loading="lazy"><figcaption>Avant le clic</figcaption></figure><figure class="shot"><img src="img/bouton_apres.png" alt="Après le clic" loading="lazy"><figcaption>Après le clic</figcaption></figure></div></div>
+<h3 id="formulaire">Form, validator et validate() <span class="tag r">Priorité 1</span></h3><p>La <code>GlobalKey&lt;FormState&gt;</code> donne accès au formulaire. <code>validator</code> renvoie un message d'erreur (une chaîne) ou <code>null</code> si la valeur est correcte. <code>validate()</code> exécute tous les validateurs et renvoie <code>true</code> si tout est bon.</p><div class="pair"><div><pre><code>// TextFormField + Form + GlobalKey + validator
+class FormulaireApp extends StatefulWidget {
+  const FormulaireApp({super.key});
+
+  @override
+  State&lt;FormulaireApp&gt; createState() =&gt; _FormulaireAppState();
+}
+
+class _FormulaireAppState extends State&lt;FormulaireApp&gt; {
+  final _numberForm = GlobalKey&lt;FormState&gt;();
+  String _message = '';
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(
+        appBar: AppBar(title: const Text('Formulaire')),
+        body: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Form(
+            key: _numberForm,
+            child: Column(
+              children: [
+                TextFormField(
+                  decoration: const InputDecoration(
+                    labelText: 'Premier nombre',
+                    border: OutlineInputBorder(),
+                  ),
+                  validator: (val) {
+                    if (val!.isEmpty) return 'Prière de saisir une valeur';
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 16),
+                TextFormField(
+                  decoration: const InputDecoration(
+                    labelText: 'Deuxième nombre',
+                    border: OutlineInputBorder(),
+                  ),
+                  validator: (val) {
+                    if (val!.isEmpty) return 'Prière de saisir une valeur';
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: () {
+                    if (_numberForm.currentState!.validate()) {
+                      setState(() {
+                        _message = 'Formulaire validé';
+                      });
+                    } else {
+                      setState(() {
+                        _message = 'Prière de fixer les erreurs';
+                      });
+                    }
+                  },
+                  child: const Text('Valider'),
+                ),
+                const SizedBox(height: 16),
+                Text(_message, style: const TextStyle(fontSize: 18)),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}</code></pre></div><div class="shots"><figure class="shot"><img src="img/formulaire_avant.png" alt="Avant" loading="lazy"><figcaption>Avant</figcaption></figure><figure class="shot"><img src="img/formulaire_erreurs.png" alt="Champs vides : messages d'erreur" loading="lazy"><figcaption>Champs vides : messages d'erreur</figcaption></figure><figure class="shot"><img src="img/formulaire_valide.png" alt="Champs remplis : formulaire validé" loading="lazy"><figcaption>Champs remplis : formulaire validé</figcaption></figure></div></div>
+<h2 id="g">G. Hot reload, hot restart, run</h2>
+<div class="tw"><table><tr><th>Critère</th><th>Run</th><th>Hot Reload</th><th>Hot Restart</th></tr><tr><td>Lance l'application</td><td>Oui</td><td>Non, la met à jour</td><td>La redémarre</td></tr><tr><td>Conserve l'état (compteur, saisie)</td><td>Non</td><td>Oui, généralement</td><td>Non</td></tr><tr><td>Réexécute main()</td><td>Oui</td><td>Non</td><td>Oui</td></tr><tr><td>Vitesse</td><td>Plus lent</td><td>Très rapide</td><td>Rapide</td></tr></table></div><div class="box retenir"><p class="t">À retenir</p><p>Hot reload pour tester un changement d'interface sans perdre ce que vous avez saisi. Hot restart quand l'état doit repartir de zéro (par exemple après avoir changé la valeur initiale d'une variable d'état).</p></div>
+<div class="box ex">
+<p class="t">Ensuite</p>
+<p>Passez aux <a href="tp.html">TP et exercices corrigés</a>, qui assemblent ces widgets en vraies applications (IMC, Ma Bibliothèque).</p>
+</div>
+
+<div class="foot">Cours de Pr. Sanaa Mouhim et Pr. Hassan Bousnguar. Captures générées avec Flutter 3.41 et Dart 3.11.</div>
+
+</main>
+</div>
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

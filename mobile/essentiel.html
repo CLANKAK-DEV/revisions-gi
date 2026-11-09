@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Essentiel à retenir Flutter</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="shell">
+<aside class="side" id="side"></aside>
+<main>
+<h1>Essentiel à retenir</h1>
+<p class="lead">La page à lire en premier et à relire la veille du test. Les priorités sont mon estimation : le test est pratique, donc ce qui sert à construire un écran passe en premier.</p>
+<div class="box">
+<p class="t">Sommaire</p>
+<ul>
+<li><a href="#prio">Que réviser selon le temps disponible</a></li>
+<li><a href="#huit">Le module en 8 phrases</a></li>
+<li><a href="#chaines">Les chaînes logiques</a></li>
+<li><a href="#rel">Si on vous dit... pensez à...</a></li>
+<li><a href="#recette">La recette d'une application de test</a></li>
+<li><a href="#cle">Les 15 éléments à connaître par cœur</a></li>
+</ul>
+</div>
+
+<h2 id="prio">Que réviser selon le temps disponible</h2>
+<div class="tw"><table>
+<tr><th>Priorité</th><th>Notions</th><th>Pourquoi</th></tr>
+<tr><td><span class="tag r">Priorité 1</span></td><td><code>MaterialApp</code>, <code>Scaffold</code>, <code>AppBar</code> ; <code>Container</code> (margin, padding) ; <code>Column</code> et <code>Row</code> et leurs alignements ; <code>Card</code>, <code>Text</code>, <code>Image</code>, <code>ClipOval</code>, <code>Chip</code>, <code>ListTile</code> ; <code>StatefulWidget</code> et <code>setState</code> ; boutons (surtout le flottant) ; <code>TextFormField</code> et validation ; classes et listes en Dart ; null safety</td><td>Ce sont les briques du travail à rendre (Ma Bibliothèque) et des TP. Un test pratique les assemble.</td></tr>
+<tr><td><span class="tag y">Priorité 2</span></td><td><code>SafeArea</code>, <code>SizedBox</code>, <code>decoration</code> ; hot reload et hot restart ; <code>styleFrom</code> ; <code>TextEditingController</code> ; paramètres nommés ; constructeurs nommés ; héritage, abstract, interface</td><td>Apparaissent dans les exercices et en question de cours.</td></tr>
+<tr><td><span class="tag b">Priorité 3</span></td><td>Historique d'Android et d'iOS, approches de développement, arbre de décision, JIT et AOT</td><td>Culture générale du module, plutôt pour un QCM ou une question courte.</td></tr>
+</table></div>
+<div class="tw"><table>
+<tr><th>Temps</th><th>Programme</th></tr>
+<tr><td>2 heures</td><td>Cette page, puis Ma Bibliothèque refaite seul, puis la page Widgets en images (sections B et D).</td></tr>
+<tr><td>Une demi-journée</td><td>Ajouter l'IMC et le formulaire validé, le résumé du chapitre 1 (Dart) et le QCM « Lire le code ».</td></tr>
+<tr><td>Un jour ou plus</td><td>Tout le résumé, tous les TP, tous les QCM, l'examen blanc chronométré, les pièges.</td></tr>
+</table></div>
+
+<h2 id="huit">Le module en 8 phrases</h2>
+<ol class="six">
+<li>Flutter est un framework de Google qui produit des applications Android, iOS, Web et Desktop avec un seul code, écrit en Dart.</li>
+<li>Dans Flutter, tout est un widget : on décrit l'interface en code, en imbriquant des widgets.</li>
+<li>Une application commence par <code>main()</code>, qui appelle <code>runApp()</code> avec un widget racine, en général <code>MaterialApp</code> puis <code>Scaffold</code>.</li>
+<li>Un <code>Container</code> a un seul enfant (<code>child</code>) ; <code>Column</code> et <code>Row</code> en ont plusieurs (<code>children</code>).</li>
+<li><code>margin</code> est l'espace autour d'un conteneur, <code>padding</code> l'espace à l'intérieur.</li>
+<li>Un <code>StatelessWidget</code> ne change jamais ; un <code>StatefulWidget</code> change grâce à <code>setState</code>.</li>
+<li><code>onPressed</code> reçoit une fonction ; <code>validator</code> d'un <code>TextFormField</code> renvoie une erreur ou <code>null</code> ; <code>validate()</code> vérifie tout le formulaire.</li>
+<li>En Dart, un type ne peut pas être null sauf avec <code>?</code> ; on utilise <code>?.</code>, <code>??</code> et <code>!</code> pour gérer le null.</li>
+</ol>
+
+<h2 id="chaines">Les chaînes logiques</h2>
+<h3>Un clic qui change l'écran</h3>
+<div class="flow"><span class="n k">L'utilisateur clique</span><span class="n">onPressed</span><span class="n k">Une fonction modifie la variable</span><span class="n">dans setState(() {...})</span><span class="n g">Flutter appelle build()</span><span class="n">nouvel affichage</span></div>
+<h3>Un formulaire validé</h3>
+<div class="flow"><span class="n k">Form(key: _formKey)</span><span class="n">TextFormField(validator: ...)</span><span class="n k">Clic sur le bouton</span><span class="n">_formKey.currentState!.validate()</span><span class="n g">true</span><span class="n">calculer et setState</span><span class="n y">false</span><span class="n">les messages d'erreur s'affichent</span></div>
+<h3>L'arbre d'un écran de livre</h3>
+<div class="flow"><span class="n k">MaterialApp</span><span class="n k">Scaffold</span><span class="n">appBar</span><span class="n">body</span><span class="n g">Card</span><span class="n">Padding</span><span class="n">Column</span><span class="n">ClipOval, Text, Chip, Text, ElevatedButton</span><span class="n y">floatingActionButton</span></div>
+<h3>Un widget qui change : stateful</h3>
+<div class="flow"><span class="n k">class Mon extends StatefulWidget</span><span class="n">createState()</span><span class="n k">class _MonState extends State</span><span class="n">variables d'état et build()</span></div>
+
+<h2 id="rel">Si on vous dit... pensez à...</h2>
+<div class="tw"><table>
+<tr><th>Si l'énoncé dit</th><th>Pensez à</th></tr>
+<tr><td>« Afficher un titre en haut avec un menu et une recherche »</td><td><code>AppBar</code> avec <code>leading</code>, <code>title</code>, <code>actions</code></td></tr>
+<tr><td>« Image circulaire »</td><td><code>ClipOval</code> avec largeur égale à hauteur et <code>BoxFit.cover</code></td></tr>
+<tr><td>« Étiquette / catégorie »</td><td><code>Chip(label: Text(...))</code></td></tr>
+<tr><td>« Dans une carte »</td><td><code>Card</code> + <code>Padding</code> (la carte n'a pas de padding)</td></tr>
+<tr><td>« Plusieurs éléments l'un sous l'autre / côte à côte »</td><td><code>Column</code> / <code>Row</code> avec <code>children</code></td></tr>
+<tr><td>« Espace entre deux éléments »</td><td><code>SizedBox(height: ...)</code></td></tr>
+<tr><td>« Bouton en bas à droite qui flotte »</td><td><code>floatingActionButton</code> du <code>Scaffold</code></td></tr>
+<tr><td>« Quand on clique, le contenu change »</td><td><code>StatefulWidget</code> + <code>setState</code></td></tr>
+<tr><td>« Livre suivant, puis retour au premier »</td><td><code>(_index + 1) % liste.length</code></td></tr>
+<tr><td>« Vérifier que l'utilisateur a saisi une valeur »</td><td><code>validator</code> + <code>validate()</code> (ou tester <code>isEmpty</code>)</td></tr>
+<tr><td>« Lire la valeur d'un champ »</td><td><code>controller.text</code> ou <code>onChanged</code></td></tr>
+<tr><td>« Champ mot de passe »</td><td><code>obscureText: true</code></td></tr>
+<tr><td>« Clavier numérique »</td><td><code>keyboardType: TextInputType.number</code></td></tr>
+<tr><td>« Une ligne avec icône, titre, sous-titre »</td><td><code>ListTile</code></td></tr>
+<tr><td>« Liste d'objets »</td><td>une <code>List&lt;Livre&gt;</code>, ou <code>ListView</code> pour l'afficher en défilement</td></tr>
+<tr><td>« Image du projet »</td><td><code>Image.asset</code> + dossier déclaré dans <code>pubspec.yaml</code></td></tr>
+</table></div>
+
+<h2 id="recette">La recette d'une application de test</h2>
+<ol>
+<li>Écrire la <strong>classe</strong> de données (avec constructeur) et la <strong>liste</strong> d'exemples.</li>
+<li>Écrire <code>main()</code> qui appelle <code>runApp</code>, puis un <code>MaterialApp</code> avec <code>home</code>.</li>
+<li>Choisir <strong>Stateless</strong> ou <strong>Stateful</strong> : si quelque chose change au clic, Stateful.</li>
+<li>Construire l'écran dans l'ordre : <code>Scaffold</code>, <code>appBar</code>, <code>body</code>, <code>floatingActionButton</code>.</li>
+<li>Dans le <code>body</code> : <code>Card</code> ou <code>Column</code>, puis les <code>Text</code>, <code>Image</code>, <code>Chip</code>, <code>Icon</code>.</li>
+<li>Ajouter la <strong>logique</strong> : une fonction qui modifie l'état dans <code>setState</code>.</li>
+<li>Ajouter la <strong>validation</strong> s'il y a un formulaire.</li>
+<li>Tester : un hot reload après chaque étape. Vérifier les cas limites (champ vide, dernier élément de la liste).</li>
+</ol>
+
+<h2 id="cle">Les 15 éléments à connaître par cœur</h2>
+<ol class="six">
+<li>Flutter : un code, Android + iOS + Web + Desktop ; langage Dart ; pas de WebView.</li>
+<li><code>void main() { runApp(...); }</code> est le point d'entrée.</li>
+<li><code>MaterialApp(home: Scaffold(appBar: AppBar(...), body: ...))</code> est le squelette.</li>
+<li>Scaffold : <code>appBar</code>, <code>body</code>, <code>floatingActionButton</code>, <code>drawer</code>, <code>bottomNavigationBar</code>.</li>
+<li>AppBar : <code>leading</code> (gauche), <code>title</code>, <code>actions</code> (droite liste).</li>
+<li><code>child</code> pour un enfant, <code>children</code> pour plusieurs.</li>
+<li>margin dehors, padding dedans ; <code>EdgeInsets.all / only / symmetric / fromLTRB</code>.</li>
+<li>Row : axe principal horizontal ; Column : axe principal vertical ; <code>mainAxisAlignment</code> et <code>crossAxisAlignment</code>.</li>
+<li>Les 6 mainAxisAlignment : start, end, center, spaceBetween, spaceAround, spaceEvenly.</li>
+<li>Card sans padding ; ClipOval carré = cercle ; ListTile : leading, title, subtitle, trailing.</li>
+<li>Stateless ne change pas ; Stateful : deux classes, <code>createState()</code>, <code>setState</code>.</li>
+<li>Hot reload garde l'état ; hot restart le réinitialise.</li>
+<li>Elevated (principal), Outlined (secondaire), Text (faible), IconButton, FAB (un par écran).</li>
+<li>TextField : <code>decoration</code>, <code>onChanged</code>, <code>controller</code>, <code>obscureText</code>, <code>maxLength</code>, <code>keyboardType</code> ; TextFormField avec <code>validator</code> dans un <code>Form</code>.</li>
+<li>Dart : <code>var</code> déduit, <code>final</code> / <code>const</code>, <code>String?</code>, <code>?.</code>, <code>??</code>, <code>!</code>, <code>late</code>, <code>required</code>, <code>${}</code>.</li>
+</ol>
+
+<div class="box ex">
+<p class="t">Dernier tour avant le test</p>
+<ul>
+<li>Refaire <a href="tp.html#biblio">Ma Bibliothèque</a> sans regarder le corrigé.</li>
+<li>Passer l'<a href="pratique.html">examen blanc</a> en temps limité.</li>
+<li>Relire les <a href="pieges.html">pièges</a> et refaire le <a href="qcm.html">QCM</a> « Lire le code ».</li>
+</ul>
+</div>
+<div class="foot">Basé sur les cours de Pr. Sanaa Mouhim et Pr. Hassan Bousnguar, le TP3 et le travail à rendre.</div>
+</main>
+</div>
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Examen blanc Flutter</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="shell">
+<aside class="side" id="side"></aside>
+<main>
+<h1>Examen blanc pratique</h1>
+<p class="lead">Votre contrôle sera pratique : une application simple à réaliser avec les techniques de la première partie du module. Voici un sujet de 20 points dans ce style, avec un corrigé complet testé et des captures d'écran. Chronométrez-vous et écrivez le code sans regarder.</p>
+
+<div class="box">
+<p class="t">Chronomètre (durée indicative : 1 heure)</p>
+<p class="timer" id="timer">60:00</p>
+<div class="bar">
+<button class="btn" id="t-start">Démarrer</button>
+<button class="btn" id="t-stop">Pause</button>
+<button class="btn" id="t-reset">Remettre à zéro</button>
+<button class="btn" data-toggle-all="close">Refermer toutes les solutions</button>
+</div>
+<p>Je ne connais pas la durée ni le sujet réel de votre test. Ce sujet est construit à partir du cours et du travail à rendre : classe, liste, interface, bouton flottant, formulaire validé.</p>
+</div>
+
+<div class="box retenir">
+<p class="t">Préparation que le professeur a demandée</p>
+<p>Le message du professeur dit de faire <strong>le travail à rendre sur Moodle avant la prochaine séance</strong> : c'est l'application Ma Bibliothèque, corrigée sur la page <a href="tp.html#biblio">TP et exercices corrigés</a>. Refaites-la seul : le test ressemblera très probablement à ce travail.</p>
+</div>
+
+<h2>Sujet : application « Mes films » (20 points)</h2>
+<div class="exo">
+<h4>Partie 1 : Dart (4 points)</h4>
+<ol>
+<li>(2 points) Créer une classe <code>Film</code> avec les attributs <code>titre</code>, <code>realisateur</code>, <code>annee</code>, <code>note</code> (sur 10) et <code>genre</code>, et un constructeur qui initialise tous les attributs.</li>
+<li>(1 point) Créer une liste de quatre films.</li>
+<li>(1 point) Écrire une fonction <code>moyenneNotes(List&lt;Film&gt;)</code> qui renvoie la moyenne des notes (0 si la liste est vide).</li>
+</ol>
+</div>
+<div class="exo">
+<h4>Partie 2 : interface (9 points)</h4>
+<ol>
+<li>(2 points) <code>MaterialApp</code>, <code>Scaffold</code>, et une <code>AppBar</code> colorée de titre « Mes films ».</li>
+<li>(4 points) Afficher un film à la fois dans une <code>Card</code> : un <code>CircleAvatar</code> avec la première lettre du titre, le titre en gras, le réalisateur et l'année, le genre dans un <code>Chip</code>, la note avec une icône étoile.</li>
+<li>(3 points) Un <code>FloatingActionButton</code> affiche le film suivant ; après le dernier film, retour au premier.</li>
+</ol>
+</div>
+<div class="exo">
+<h4>Partie 3 : formulaire (4 points)</h4>
+<ol>
+<li>(2 points) Sous la carte, un <code>TextFormField</code> « Votre note (0 à 10) » et un bouton « Noter », dans un <code>Form</code>.</li>
+<li>(2 points) Validation : refuser une valeur vide, non numérique ou hors de 0 à 10. Si la note est valide, afficher « Merci ! Votre note : 9/10 ».</li>
+</ol>
+</div>
+<div class="exo">
+<h4>Partie 4 : questions de cours (3 points)</h4>
+<ol>
+<li>(1 point) Quelle est la différence entre <code>margin</code> et <code>padding</code> ?</li>
+<li>(1 point) Pourquoi cette application doit-elle être un <code>StatefulWidget</code> ? Que se passe-t-il si on oublie <code>setState</code> ?</li>
+<li>(1 point) Quelle est la différence entre hot reload et hot restart ?</li>
+</ol>
+</div>
+
+<h2>Corrigé</h2>
+<div class="shots"><figure class="shot"><img src="img/examen_film1.png" alt="Film 1, avant toute saisie" loading="lazy"><figcaption>Film 1, avant toute saisie</figcaption></figure><figure class="shot"><img src="img/examen_erreur.png" alt="Clic sur Noter avec le champ vide" loading="lazy"><figcaption>Clic sur Noter avec le champ vide</figcaption></figure><figure class="shot"><img src="img/examen_note.png" alt="Note valide : 9" loading="lazy"><figcaption>Note valide : 9</figcaption></figure><figure class="shot"><img src="img/examen_film2.png" alt="Après le bouton flottant : film 2, message effacé" loading="lazy"><figcaption>Après le bouton flottant : film 2, message effacé</figcaption></figure></div><div class="exo"><h4>Parties 1 à 3 : code complet</h4><details class="sol"><summary>Solution testée (examen_app.dart)</summary><div class="in"><pre><code>import 'package:flutter/material.dart';
+
+// Corrigé de l'examen blanc : application "Mes films"
+// Lancer : flutter run -t lib/main_examen.dart
+
+// ---------------------------------------------------------------- Partie 1 : Dart
+class Film {
+  final String titre;
+  final String realisateur;
+  final int annee;
+  final double note; // sur 10
+  final String genre;
+
+  const Film({
+    required this.titre,
+    required this.realisateur,
+    required this.annee,
+    required this.note,
+    required this.genre,
+  });
+}
+
+const List&lt;Film&gt; films = [
+  Film(titre: 'Inception', realisateur: 'Christopher Nolan', annee: 2010, note: 8.8, genre: 'Science-fiction'),
+  Film(titre: 'Parasite', realisateur: 'Bong Joon-ho', annee: 2019, note: 8.5, genre: 'Thriller'),
+  Film(titre: 'Le Roi Lion', realisateur: 'Roger Allers', annee: 1994, note: 8.3, genre: 'Animation'),
+  Film(titre: 'Intouchables', realisateur: 'Olivier Nakache', annee: 2011, note: 8.5, genre: 'Comédie'),
+];
+
+/// Moyenne des notes (0 si la liste est vide).
+double moyenneNotes(List&lt;Film&gt; liste) {
+  if (liste.isEmpty) return 0;
+  double somme = 0;
+  for (final f in liste) {
+    somme += f.note;
+  }
+  return somme / liste.length;
+}
+
+/// Le film le mieux noté (le premier en cas d'égalité).
+Film meilleurFilm(List&lt;Film&gt; liste) {
+  Film meilleur = liste.first;
+  for (final f in liste) {
+    if (f.note &gt; meilleur.note) meilleur = f;
+  }
+  return meilleur;
+}
+
+// ---------------------------------------------------------------- Parties 2 et 3 : interface
+class MesFilmsApp extends StatelessWidget {
+  const MesFilmsApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Mes films',
+      theme: ThemeData(colorSchemeSeed: Colors.teal),
+      home: const EcranFilms(),
+    );
+  }
+}
+
+class EcranFilms extends StatefulWidget {
+  const EcranFilms({super.key});
+
+  @override
+  State&lt;EcranFilms&gt; createState() =&gt; _EcranFilmsState();
+}
+
+class _EcranFilmsState extends State&lt;EcranFilms&gt; {
+  int _index = 0;
+  String _message = '';
+  final _formKey = GlobalKey&lt;FormState&gt;();
+  final _noteController = TextEditingController();
+
+  void _filmSuivant() {
+    setState(() {
+      _index = (_index + 1) % films.length;
+      _message = ''; // on efface le message du film précédent
+      _noteController.clear();
+    });
+  }
+
+  String? _validerNote(String? valeur) {
+    if (valeur == null || valeur.isEmpty) return 'Prière de saisir une note';
+    final double? note = double.tryParse(valeur);
+    if (note == null || note &lt; 0 || note &gt; 10) return 'La note doit être entre 0 et 10';
+    return null;
+  }
+
+  void _noter() {
+    if (_formKey.currentState!.validate()) {
+      setState(() {
+        _message = 'Merci ! Votre note : ${_noteController.text}/10';
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _noteController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final Film film = films[_index];
+
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.teal,
+        foregroundColor: Colors.white,
+        title: const Text('Mes films'),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 16),
+            child: Center(child: Text('${_index + 1}/${films.length}')),
+          ),
+        ],
+      ),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            children: [
+              Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Column(
+                    children: [
+                      CircleAvatar(
+                        radius: 40,
+                        backgroundColor: Colors.teal,
+                        child: Text(
+                          film.titre[0],
+                          style: const TextStyle(fontSize: 36, color: Colors.white),
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      Text(
+                        film.titre,
+                        style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                      ),
+                      Text('${film.realisateur}, ${film.annee}'),
+                      const SizedBox(height: 8),
+                      Chip(label: Text(film.genre)),
+                      const SizedBox(height: 8),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(Icons.star, color: Colors.amber),
+                          const SizedBox(width: 6),
+                          Text('${film.note}', style: const TextStyle(fontSize: 20)),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    TextFormField(
+                      controller: _noteController,
+                      keyboardType: TextInputType.number,
+                      decoration: const InputDecoration(
+                        labelText: 'Votre note (0 à 10)',
+                        prefixIcon: Icon(Icons.star_border),
+                        border: OutlineInputBorder(),
+                      ),
+                      validator: _validerNote,
+                    ),
+                    const SizedBox(height: 12),
+                    ElevatedButton(onPressed: _noter, child: const Text('Noter')),
+                    const SizedBox(height: 8),
+                    Text(_message, style: const TextStyle(fontSize: 16)),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _filmSuivant,
+        child: const Icon(Icons.navigate_next),
+      ),
+    );
+  }
+}</code></pre><div class="tw"><table><tr><th>Question</th><th>Points clés attendus</th></tr><tr><td>1.1</td><td>Classe <code>Film</code>, cinq attributs <code>final</code>, constructeur avec <code>this.</code> ou paramètres nommés <code>required</code>.</td></tr><tr><td>1.2 et 1.3</td><td>Liste de quatre <code>Film</code>. Moyenne = somme des notes divisée par le nombre de films, avec le cas de la liste vide (division par zéro évitée). Valeur obtenue : 8.525.</td></tr><tr><td>2.1</td><td><code>MaterialApp</code> puis <code>Scaffold</code> puis <code>AppBar(backgroundColor: ..., title: Text(...))</code>.</td></tr><tr><td>2.2</td><td><code>Card</code> contenant un <code>Padding</code> (la Card n'a pas de padding) et une <code>Column</code> : <code>CircleAvatar</code>, <code>Text</code> en gras, <code>Chip</code>, <code>Row</code> avec <code>Icon</code>.</td></tr><tr><td>2.3</td><td><code>StatefulWidget</code>, variable <code>_index</code>, <code>setState</code> et <code>(_index + 1) % films.length</code>.</td></tr><tr><td>3.1 et 3.2</td><td><code>Form</code> avec <code>GlobalKey&lt;FormState&gt;</code>, <code>TextFormField</code> avec <code>validator</code>, <code>validate()</code> au clic, <code>double.tryParse</code> pour refuser le non numérique.</td></tr></table></div></div></details></div><div class="box ex"><p class="t">Partie 4 : réponses</p><ol><li><code>margin</code> : espace autour du conteneur, à l'extérieur. <code>padding</code> : espace entre le bord du conteneur et son enfant, à l'intérieur.</li><li>Le film affiché change quand on clique : le numéro du film est un état, donc un <code>StatefulWidget</code> (un <code>StatelessWidget</code> ne change jamais après sa création). Sans <code>setState</code>, la variable change mais Flutter ne reconstruit pas l'écran : l'affichage reste le même.</li><li>Hot reload injecte le code modifié et conserve l'état (la saisie, le compteur). Hot restart redémarre l'application et réinitialise l'état. Run lance l'application depuis le début.</li></ol></div><div class="box piege"><p class="t">Barème d'auto-évaluation</p><p>Comptez vos points. En dessous de 14, refaites le travail à rendre et les widgets de la page <a href="widgets.html">Widgets en images</a>. Entre 14 et 17, relisez les <a href="pieges.html">pièges</a>. Au-dessus, passez aux <a href="qcm.html">QCM</a> du chapitre « Lire le code ».</p></div><div class="foot">Sujet créé à partir du cours et du travail à rendre. Ce n'est pas le sujet réel.</div>
+</main>
+</div>
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

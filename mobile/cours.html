@@ -1,0 +1,318 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Résumé du cours Flutter</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="shell">
+<aside class="side" id="side"></aside>
+<main>
+<h1>Résumé du cours</h1>
+<p class="lead">Les trois chapitres du module (introduction et Dart, widgets, boutons et champs de texte) en français simple. Les étiquettes disent quoi réviser en premier. Pour voir chaque widget en image, ouvrez la page <a href="widgets.html">Widgets en images</a>.</p>
+<div class="box">
+<p class="t">Sommaire</p>
+<ul>
+<li><a href="#ch1">Chapitre 1 : mobile, Flutter et le langage Dart</a></li>
+<li><a href="#ch2">Chapitre 2 : les widgets</a></li>
+<li><a href="#ch3">Chapitre 3 : boutons et champs de texte</a></li>
+</ul>
+</div>
+
+<h2 id="ch1">Chapitre 1 : mobile, Flutter et le langage Dart</h2>
+<h3>Le développement mobile <span class="tag b">Priorité 3</span></h3>
+<div class="tw"><table>
+<tr><th></th><th>Application de bureau</th><th>Application web</th><th>Application mobile</th></tr>
+<tr><td>Où</td><td>installée sur l'ordinateur</td><td>dans un navigateur</td><td>installée sur smartphone ou tablette</td></tr>
+<tr><td>Atout</td><td>intégration complète à l'OS, hors ligne</td><td>aucune installation, mises à jour automatiques</td><td>accès au GPS, à la caméra, bonne performance</td></tr>
+<tr><td>Limite</td><td>coûteuse, dépend de l'OS</td><td>interactions limitées, compatibilité navigateurs</td><td>coûteuse à développer pour chaque plateforme</td></tr>
+</table></div>
+<div class="tw"><table>
+<tr><th></th><th>Android</th><th>iOS</th></tr>
+<tr><td>Éditeur</td><td>Google (racheté en 2005), puis Open Handset Alliance (2007)</td><td>Apple, sans consortium</td></tr>
+<tr><td>Base</td><td>noyau Linux, open source</td><td>Darwin et noyau XNU, propriétaire</td></tr>
+<tr><td>Langages</td><td>Java ou Kotlin, XML</td><td>Swift ou Objective-C</td></tr>
+<tr><td>Exécution</td><td>machine virtuelle (Dalvik)</td><td>code machine natif, pas de machine virtuelle</td></tr>
+<tr><td>Magasin</td><td>Google Play</td><td>App Store</td></tr>
+</table></div>
+<p><strong>Quatre approches :</strong> natif (un code par OS, performance maximale, coût élevé), hybride (code web dans un conteneur : HTML, CSS, JavaScript avec Ionic et Capacitor), multiplateforme native (un seul code : Flutter, React Native, .NET MAUI), application web progressive. Le multiplateforme réduit les coûts et la maintenance, mais la performance et l'accès aux fonctions natives sont parfois moins bons.</p>
+
+<h3>Flutter et Dart <span class="tag y">Priorité 2</span></h3>
+<div class="box def"><p class="t">Définition : Flutter</p>
+<p>Framework open source de Google pour créer des applications Android, iOS, Web et Desktop à partir d'<strong>un seul code</strong>, écrit en <strong>Dart</strong>. Première version stable : Flutter 1.0, décembre 2018. Dart date de 2011.</p></div>
+<ul>
+<li><strong>Avantages :</strong> une base de code pour toutes les plateformes ; bonnes performances (le code Dart est compilé en code natif, compilation AOT) ; <strong>pas de WebView</strong> ; interface très personnalisable grâce aux widgets ; <strong>hot reload</strong> ; écosystème de packages.</li>
+<li><strong>Dart :</strong> langage orienté objet, typage statique. Deux modes de compilation : <strong>JIT</strong> (Just In Time, pendant le développement, ce qui permet le hot reload) et <strong>AOT</strong> (Ahead Of Time, pour l'application finale).</li>
+<li><strong>Outils :</strong> Android Studio, Visual Studio Code, Flutter DevTools (analyse des performances, débogage).</li>
+<li>Tout est un widget : les boutons comme les mises en page.</li>
+</ul>
+
+<h3>Dart : les bases <span class="tag r">Priorité 1</span></h3>
+<ul>
+<li><code>main()</code> est le point d'entrée : la première fonction appelée. Commentaires : <code>//</code>, <code>/* ... */</code> et <code>///</code> pour la documentation.</li>
+<li>Variables sensibles à la casse. Trois façons de déclarer : type explicite (<code>int age = 25;</code>), <code>var</code> (le type est déduit puis fixé), <code>dynamic</code> (le type peut changer).</li>
+<li><code>final</code> : affectée une seule fois, valeur connue à l'exécution. <code>const</code> : constante connue à la compilation.</li>
+<li>Types : <code>String</code>, <code>bool</code>, <code>int</code>, <code>double</code>, <code>num</code> (int ou double), <code>List</code>, <code>Set</code>, <code>Map</code>.</li>
+<li>Interpolation : <code>$variable</code> pour une variable, <code>${expression}</code> pour une expression. <code>"$numbers[0]"</code> n'affiche pas l'élément : écrire <code>"${numbers[0]}"</code>.</li>
+<li>Conversions : <code>toInt()</code> (supprime la partie décimale), <code>toDouble()</code>, <code>toString()</code>, <code>toList()</code>, <code>toSet()</code> (sans doublons). Lire un nombre saisi : <code>int.parse(...)</code>, <code>double.parse(...)</code>.</li>
+<li>Affichage : <code>print()</code> (avec retour à la ligne), <code>stdout.write()</code> (sans). Lecture : <code>stdin.readLineSync()</code>.</li>
+</ul>
+<pre><code>int age = 25;
+var ville = 'Agadir';          // le type String est déduit
+dynamic x = 5;
+x = 'cinq';                    // dynamic accepte un changement de type
+final nom = 'Sara';            // une seule affectation
+const pi = 3.14;               // constante connue à la compilation
+print('$nom a $age ans, ville $ville, x = $x, pi = $pi');
+print('Dans 5 ans : ${age + 5} ans');</code></pre><p class="q">Affiche</p><pre><code>Sara a 25 ans, ville Agadir, x = cinq, pi = 3.14
+Dans 5 ans : 30 ans</code></pre><pre><code>int a = 7;
+double b = a / 2;              // la division / donne toujours un double
+int c = a ~/ 2;                // ~/ : division entière
+num d = 3;                     // num : int ou double
+print('$b $c $d ${a % 2}');
+print(3.9.toInt());            // 3 : la partie décimale est supprimée</code></pre><p class="q">Affiche</p><pre><code>3.5 3 3 1
+3</code></pre>
+<h4>Listes, sets et maps</h4>
+<div class="tw"><table>
+<tr><th></th><th>Liste</th><th>Set</th><th>Map</th></tr>
+<tr><td>Écriture</td><td><code>[1, 2, 3]</code></td><td><code>{1, 2, 3}</code></td><td><code>{'a': 1}</code></td></tr>
+<tr><td>Ordre</td><td>ordonnée, accès par index</td><td>sans ordre</td><td>clés et valeurs</td></tr>
+<tr><td>Doublons</td><td>autorisés</td><td>interdits</td><td>clé unique</td></tr>
+<tr><td>Méthodes utiles</td><td><code>add</code>, <code>remove</code>, <code>removeAt</code>, <code>removeLast</code>, <code>clear</code>, <code>length</code></td><td><code>add</code>, <code>remove</code>, <code>contains</code></td><td><code>entries</code>, <code>keys</code>, <code>values</code>, <code>containsKey</code>, <code>remove</code></td></tr>
+</table></div>
+<pre><code>final fruits = ['Pomme', 'Mangue', 'Orange'];
+fruits.add('Kiwi');
+fruits.remove('Mangue');       // par valeur
+fruits.removeAt(0);            // par index
+print(fruits);
+print(fruits.length);
+print('${fruits[0]} et ${fruits[1]}');   // ${...} pour une expression</code></pre><p class="q">Affiche</p><pre><code>[Orange, Kiwi]
+2
+Orange et Kiwi</code></pre><pre><code>var nombres = {1, 2, 3};       // Set : éléments uniques, sans ordre
+nombres.add(2);                // aucun changement
+print(nombres.length);
+final notes = {'Ali': 12, 'Sara': 15};    // Map : clé et valeur
+notes['Omar'] = 9;
+for (final e in notes.entries) {
+  print('${e.key} : ${e.value}');
+}
+print(notes.keys);
+print(notes.values);</code></pre><p class="q">Affiche</p><pre><code>3
+Ali : 12
+Sara : 15
+Omar : 9
+(Ali, Sara, Omar)
+(12, 15, 9)</code></pre>
+<h4>Null safety : éviter les erreurs de valeur nulle <span class="tag r">Priorité 1</span></h4>
+<p>Depuis Dart 2.12, les types ne peuvent <strong>pas</strong> contenir <code>null</code> par défaut. On l'autorise avec <code>?</code> (<code>String? nom</code>).</p>
+<div class="tw"><table>
+<tr><th>Écriture</th><th>Sens</th></tr>
+<tr><td><code>String?</code></td><td>type nullable : peut valoir null (et vaut null par défaut)</td></tr>
+<tr><td><code>nom?.length</code></td><td>appelle seulement si nom n'est pas null, sinon donne null</td></tr>
+<tr><td><code>nom ?? 'inconnu'</code></td><td>valeur par défaut si nom est null</td></tr>
+<tr><td><code>nom!</code></td><td>« je suis sûr que ce n'est pas null » (plante sinon)</td></tr>
+<tr><td><code>late String m;</code></td><td>initialisée plus tard, mais avant son utilisation</td></tr>
+</table></div>
+<pre><code>String? prenom;                // le ? autorise null
+print(prenom?.length);         // ?. : pas d'erreur, donne null
+print(prenom ?? 'inconnu');    // ?? : valeur par défaut
+prenom = 'Ali';
+print(prenom!.length);         // ! : je suis sûr qu'il n'est pas null
+late String message;           // initialisée plus tard, jamais null
+message = 'prêt';
+print(message);</code></pre><p class="q">Affiche</p><pre><code>null
+inconnu
+3
+prêt</code></pre>
+<h4>Opérateurs, conditions et boucles <span class="tag r">Priorité 1</span></h4>
+<ul>
+<li>Opérateurs arithmétiques <code>+ - * / ~/ %</code>, comparaison <code>== != &lt; &gt; &lt;= &gt;=</code>, logiques <code>&amp;&amp; || !</code>, ternaire <code>condition ? a : b</code>, <code>??</code>.</li>
+<li>Conditions : <code>if</code>, <code>if ... else</code>, <code>if ... else if ... else</code>, <code>switch/case</code>.</li>
+<li>Boucles : <code>for</code>, <code>for ... in</code> (parcourt une collection sans compteur ; pour une Map, utiliser <code>.entries</code>, <code>.keys</code> ou <code>.values</code>), <code>while</code>, <code>do ... while</code>. <code>break</code> quitte la boucle, <code>continue</code> passe à l'itération suivante.</li>
+</ul>
+<pre><code>final prix = [10, 20, 30];
+var total = 0;
+for (var i = 0; i &lt; prix.length; i++) {
+  if (prix[i] == 20) continue;       // continue : passe au suivant
+  total += prix[i];
+}
+for (final p in prix) {
+  if (p &gt; 25) break;                 // break : quitte la boucle
+  print('prix : $p');
+}
+print('total : $total');
+var statut = total &gt; 30 ? 'cher' : 'abordable';   // opérateur ternaire
+print(statut);</code></pre><p class="q">Affiche</p><pre><code>prix : 10
+prix : 20
+total : 40
+cher</code></pre>
+<h4>Les fonctions <span class="tag r">Priorité 1</span></h4>
+<ul>
+<li>Une fonction a des <strong>paramètres</strong> (entrées) et un <strong>résultat</strong> (retour). <strong>Dart n'a pas de surcharge</strong> : deux fonctions ne peuvent pas porter le même nom.</li>
+<li>Syntaxe <strong>arrow</strong> <code>=&gt;</code> quand le corps n'a qu'une instruction (le <code>return</code> disparaît).</li>
+<li>Paramètres : obligatoires (dans l'ordre), optionnels positionnels entre crochets <code>[ ]</code>, optionnels nommés entre accolades <code>{ }</code> (obligatoires seulement avec <code>required</code>, valeur par défaut possible).</li>
+<li>Fonction <strong>lambda</strong> (anonyme) : sans nom, passée en paramètre, par exemple à <code>map</code>.</li>
+</ul>
+<pre><code>int carre(int n) =&gt; n * n;                                   // syntaxe arrow
+void saluer({required String nom, int age = 18, String? ville}) {
+  print('Nom : $nom, age : $age, ville : $ville');           // paramètres nommés
+}
+String joindre(String a, [String? b]) =&gt; b == null ? a : '$a $b';   // optionnel positionnel
+print(carre(4));
+saluer(nom: 'Ali');
+saluer(age: 25, nom: 'Sara', ville: 'Agadir');
+print(joindre('Bonjour'));
+print(joindre('Bonjour', 'Sara'));
+final doubler = (int n) =&gt; n * 2;                            // fonction lambda
+print([1, 2, 3].map(doubler).toList());</code></pre><p class="q">Affiche</p><pre><code>16
+Nom : Ali, age : 18, ville : null
+Nom : Sara, age : 25, ville : Agadir
+Bonjour
+Bonjour Sara
+[2, 4, 6]</code></pre>
+<h4>Programmation orientée objet <span class="tag r">Priorité 1</span></h4>
+<ul>
+<li>Une <strong>classe</strong> est un modèle avec des propriétés et des méthodes. Le <strong>constructeur</strong> porte le nom de la classe et n'a pas de type de retour ; <code>this.nom</code> initialise directement l'attribut. Le mot <code>new</code> est facultatif.</li>
+<li><strong>Constructeur nommé</strong> : <code>Etudiant.sansAge(...)</code>, à la place de la surcharge.</li>
+<li><strong>Getter</strong> (sans paramètre, renvoie une valeur) et <strong>setter</strong> (un paramètre, ne renvoie rien).</li>
+<li><strong>Héritage</strong> : <code>extends</code>. <strong>Classe abstraite</strong> : <code>abstract</code>, non instanciable, ses méthodes abstraites n'ont pas de corps. <strong>Interface</strong> : <code>implements</code> oblige à fournir <em>tous</em> les membres, même ceux déjà implémentés ; une classe peut implémenter plusieurs interfaces.</li>
+<li><strong>Polymorphisme</strong> : une même méthode produit un comportement différent selon l'objet.</li>
+<li><strong>Bibliothèques</strong> : <code>import 'dart:math';</code> (<code>dart:core</code> est automatique, <code>dart:io</code> pour le clavier et les fichiers, <code>dart:convert</code>, <code>dart:async</code>).</li>
+</ul>
+<pre><code>class Etudiant {
+  String nom;
+  int age;
+
+  Etudiant(this.nom, this.age);                       // constructeur
+  Etudiant.sansAge(this.nom) : age = 18;              // constructeur nommé
+
+  String get description =&gt; '$nom, $age ans';         // getter
+}
+
+class Etudiant2 extends Etudiant {                    // héritage
+  String filiere;
+  Etudiant2(super.nom, super.age, this.filiere);
+
+  @override
+  String get description =&gt; '${super.description}, $filiere';
+}</code></pre><pre><code>abstract class Animal {
+  void parler();                                      // méthode abstraite
+  void manger() =&gt; print("L'animal mange");
+}
+
+class Chien extends Animal {
+  @override
+  void parler() =&gt; print('Wouf Wouf');
+}</code></pre><pre><code>final e1 = Etudiant('Ali', 22);
+final e2 = Etudiant.sansAge('Sara');
+final e3 = Etudiant2('Omar', 21, 'GI');
+print(e1.description);   // Ali, 22 ans
+print(e2.description);   // Sara, 18 ans
+print(e3.description);   // Omar, 21 ans, GI</code></pre>
+
+<h2 id="ch2">Chapitre 2 : les widgets</h2>
+<h3>Qu'est-ce qu'un widget ? <span class="tag r">Priorité 1</span></h3>
+<div class="box def"><p class="t">Définition : widget</p>
+<p>Un widget est un objet <strong>immuable</strong> qui décrit une partie de l'interface. L'interface est écrite en code Dart (pas en XML). Les widgets s'imbriquent : une <code>Column</code> peut contenir des <code>Row</code>, qui contiennent des <code>Image</code>.</p></div>
+
+<h3>Structure d'un projet et démarrage <span class="tag y">Priorité 2</span></h3>
+<ul>
+<li><code>lib/</code> : le code Dart (<code>main.dart</code> contient <code>main()</code>). <code>pubspec.yaml</code> : nom, dépendances, images, polices. <code>test/</code> : tests. <code>build/</code> : fichiers générés. <code>android</code>, <code>ios</code>, <code>web</code>... : fichiers propres à chaque système.</li>
+<li><code>main()</code> est obligatoire et s'écrit exactement ainsi. <code>runApp(widget)</code> attache le widget racine à l'écran : sans lui, rien ne s'affiche.</li>
+<li>Pour l'APK : Build, Flutter, Build APK. Le fichier est dans <code>build/app/outputs/flutter-apk/app-release.apk</code>.</li>
+</ul>
+<h3>Les widgets de base <span class="tag r">Priorité 1</span></h3>
+<div class="tw"><table>
+<tr><th>Widget</th><th>Rôle</th><th>À retenir</th></tr>
+<tr><td><code>MaterialApp</code></td><td>racine d'une application Material</td><td><code>title</code>, <code>theme</code>, <code>home</code> (premier écran), <code>routes</code></td></tr>
+<tr><td><code>Scaffold</code></td><td>structure d'une page</td><td><code>appBar</code>, <code>body</code>, <code>floatingActionButton</code>, <code>drawer</code>, <code>bottomNavigationBar</code></td></tr>
+<tr><td><code>AppBar</code></td><td>barre du haut</td><td><code>leading</code>, <code>title</code>, <code>actions</code>, <code>bottom</code></td></tr>
+<tr><td><code>SafeArea</code></td><td>évite l'encoche et les barres système</td><td>un enfant</td></tr>
+<tr><td><code>Center</code></td><td>centre son enfant</td><td><code>child</code></td></tr>
+<tr><td><code>Text</code></td><td>texte</td><td><code>style: TextStyle(...)</code></td></tr>
+<tr><td><code>Image</code></td><td>image</td><td><code>Image.asset</code> (locale, déclarée dans <code>pubspec.yaml</code>), <code>Image.network</code></td></tr>
+<tr><td><code>ClipOval</code></td><td>découpe en ovale</td><td>largeur = hauteur : cercle ; <code>BoxFit.cover</code></td></tr>
+<tr><td><code>Container</code></td><td>boîte à un seul enfant</td><td><code>width</code>, <code>height</code>, <code>color</code>, <code>margin</code> (dehors), <code>padding</code> (dedans), <code>decoration</code>, <code>transform</code></td></tr>
+<tr><td><code>Padding</code> et <code>SizedBox</code></td><td>espace dedans / espace vide</td><td><code>EdgeInsets.all / only / symmetric / fromLTRB</code></td></tr>
+<tr><td><code>Column</code> et <code>Row</code></td><td>plusieurs enfants verticalement / horizontalement</td><td><code>children</code>, <code>mainAxisAlignment</code>, <code>crossAxisAlignment</code></td></tr>
+<tr><td><code>Card</code></td><td>carte avec ombre</td><td>pas de <code>padding</code> : mettre un <code>Padding</code></td></tr>
+<tr><td><code>Icon</code> et <code>ListTile</code></td><td>icône / ligne de liste</td><td><code>leading</code>, <code>title</code>, <code>subtitle</code>, <code>trailing</code></td></tr>
+</table></div>
+<div class="box piege"><p class="t">child ou children ?</p><p>Un widget qui a <strong>un seul</strong> enfant (Container, Center, Padding, Card, SafeArea) utilise <code>child</code>. Un widget qui en a <strong>plusieurs</strong> (Column, Row) utilise <code>children: [ ... ]</code>.</p></div>
+
+<h3>Stateless et Stateful <span class="tag r">Priorité 1</span></h3>
+<ul>
+<li><strong>StatelessWidget</strong> : ne change jamais après sa création (texte fixe, icône). Une classe avec <code>build()</code>.</li>
+<li><strong>StatefulWidget</strong> : peut changer quand l'utilisateur interagit. <strong>Deux classes</strong> : le widget (avec <code>createState()</code>) et la classe d'état qui <code>extends State&lt;...&gt;</code> et contient <code>build()</code>. Le préfixe <code>_</code> rend la classe privée au fichier.</li>
+<li>L'<strong>état</strong> est l'ensemble des données qui peuvent changer et qui influencent l'affichage (un compteur, une case cochée). On le modifie dans <code>setState(() { ... })</code> : Flutter reconstruit alors l'interface.</li>
+</ul>
+<pre><code>class _MonAppState extends State&lt;MonApp&gt; {
+  int compteur = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    return FloatingActionButton(
+      onPressed: () {
+        setState(() {       // sans setState, l'écran ne change pas
+          compteur++;
+        });
+      },
+      child: Text('$compteur'),
+    );
+  }
+}</code></pre>
+<h3>Hot reload, hot restart, run <span class="tag y">Priorité 2</span></h3>
+<p>Le <strong>hot reload</strong> injecte le code modifié et <strong>garde l'état</strong> ; le <strong>hot restart</strong> redémarre l'application et <strong>réinitialise l'état</strong> ; <strong>run</strong> lance tout depuis le début. Tableau comparatif sur la page <a href="widgets.html#g">Widgets en images</a>.</p>
+
+<h2 id="ch3">Chapitre 3 : boutons et champs de texte</h2>
+<h3>Les boutons <span class="tag r">Priorité 1</span></h3>
+<div class="tw"><table>
+<tr><th>Bouton</th><th>Importance</th><th>Usage</th></tr>
+<tr><td><code>ElevatedButton</code></td><td>la plus forte</td><td>action principale (un seul par écran en général)</td></tr>
+<tr><td><code>OutlinedButton</code></td><td>moyenne</td><td>action importante mais secondaire (bordure, sans fond)</td></tr>
+<tr><td><code>TextButton</code></td><td>faible</td><td>action secondaire (barres d'outils, boîtes de dialogue)</td></tr>
+<tr><td><code>IconButton</code></td><td>rapide</td><td>icône seule : favoris, recherche, réglages</td></tr>
+<tr><td><code>FloatingActionButton</code></td><td>action de l'écran</td><td>un seul par écran, dans le <code>Scaffold</code> ; actions positives (créer, partager, naviguer)</td></tr>
+</table></div>
+<ul>
+<li><code>onPressed</code> attend une <strong>fonction</strong> : <code>() {}</code> est une fonction vide. Avec <code>setState</code> dedans, l'écran se met à jour.</li>
+<li>Style : <code>ElevatedButton.styleFrom(backgroundColor: ..., foregroundColor: ..., elevation: ..., shape: ...)</code>. Les slides écrivent <code>primary</code> et <code>onPrimary</code> : ces noms n'existent plus.</li>
+</ul>
+<h3>Les champs de texte <span class="tag r">Priorité 1</span></h3>
+<ul>
+<li><code>TextField</code> : champ de saisie. <code>TextFormField</code> : même chose, dans un <code>Form</code>, avec <code>validator</code>.</li>
+<li><code>InputDecoration</code> : <code>labelText</code>, <code>hintText</code>, <code>icon</code>, <code>prefixIcon</code>, <code>border: OutlineInputBorder()</code>.</li>
+<li>Propriétés : <code>maxLines</code> (plusieurs lignes), <code>keyboardType</code> (clavier adapté), <code>obscureText</code> (mot de passe), <code>obscuringCharacter</code>, <code>maxLength</code>.</li>
+<li><strong>Lire la saisie :</strong> soit <code>onChanged: (val) { ... }</code>, soit un <code>TextEditingController</code> relié par <code>controller:</code> puis <code>controller.text</code>.</li>
+<li><strong>Valider :</strong> <code>Form(key: _formKey)</code> avec <code>GlobalKey&lt;FormState&gt;</code> ; chaque <code>validator</code> renvoie un message d'erreur ou <code>null</code> ; <code>_formKey.currentState!.validate()</code> renvoie <code>true</code> si tout est valide.</li>
+</ul>
+<pre><code>TextFormField(
+  validator: (val) {
+    if (val!.isEmpty) return 'prière de saisir une valeur';
+    return null;                     // null = la valeur est correcte
+  },
+)
+
+ElevatedButton(
+  onPressed: () {
+    if (_numberForm.currentState!.validate()) {
+      setState(() { message = 'Formulaire validé'; });
+    } else {
+      setState(() { message = 'Prière de fixer les erreurs'; });
+    }
+  },
+  child: const Text('Valider'),
+)</code></pre>
+<div class="box ex">
+<p class="t">Pour fixer ce résumé</p>
+<p>Lisez la page <a href="essentiel.html">Essentiel à retenir</a>, regardez chaque widget sur <a href="widgets.html">Widgets en images</a>, refaites <a href="tp.html#biblio">Ma Bibliothèque</a>, puis testez-vous avec le <a href="qcm.html">QCM</a>.</p>
+</div>
+<div class="foot">Résumé fait à partir des cours de Pr. Sanaa Mouhim et Pr. Hassan Bousnguar. Les exemples Dart ont été exécutés avec Dart 3.11 et leur affichage est celui obtenu.</div>
+</main>
+</div>
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

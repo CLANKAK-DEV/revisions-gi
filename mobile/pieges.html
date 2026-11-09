@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pièges et aide-mémoire Flutter</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="shell">
+<aside class="side" id="side"></aside>
+<main>
+<h1>Pièges et aide-mémoire</h1>
+<p class="lead">Les erreurs qui coûtent des points en test pratique : messages du compilateur, confusions entre widgets, et les endroits où les slides ne correspondent plus à Flutter actuel. Les erreurs de compilation ont été vérifiées avec Dart 3.11 et Flutter 3.41.</p>
+
+<h2>Pièges de compilation (les vrais messages)</h2>
+<div class="tw"><table>
+<tr><th>Code</th><th>Message de Dart</th><th>Correction</th></tr>
+<tr><td><code>int a = 7 / 2;</code></td><td>A value of type 'double' can't be assigned to a variable of type 'int'</td><td><code>/</code> donne un double : écrire <code>7 ~/ 2</code> ou <code>double a</code></td></tr>
+<tr><td><code>String s = null;</code></td><td>A value of type 'Null' can't be assigned to a variable of type 'String'</td><td><code>String? s</code></td></tr>
+<tr><td><code>final f = 1; f = 2;</code></td><td>The final variable 'f' can only be set once</td><td>utiliser <code>var</code></td></tr>
+<tr><td>appeler <code>saluer()</code> sans <code>required</code></td><td>The named parameter 'nom' is required, but there's no corresponding argument</td><td>passer <code>nom: ...</code></td></tr>
+<tr><td><code>String? t; t.length</code></td><td>The property 'length' can't be unconditionally accessed because the receiver can be 'null'</td><td><code>t?.length</code> ou <code>t!.length</code></td></tr>
+<tr><td><code>var v = 5; v = 'cinq';</code></td><td>A value of type 'String' can't be assigned to a variable of type 'int'</td><td><code>var</code> fixe le type : utiliser <code>dynamic</code></td></tr>
+<tr><td><code>const h = DateTime.now();</code></td><td>Const variables must be initialized with a constant value</td><td>utiliser <code>final</code></td></tr>
+<tr><td><code>ElevatedButton.styleFrom(primary: ...)</code></td><td>The named parameter 'primary' isn't defined</td><td><code>backgroundColor:</code> et <code>foregroundColor:</code></td></tr>
+<tr><td><code>colorScheme: .fromSeed(...)</code> avec un vieux <code>pubspec.yaml</code></td><td>This requires the experimental 'dot-shorthands' language feature</td><td><code>sdk: ^3.10.0</code> ou <code>ColorScheme.fromSeed</code></td></tr>
+<tr><td><code>Container(color: ..., decoration: ...)</code></td><td>assertion : on ne peut pas fournir color et decoration ensemble</td><td>mettre la couleur dans <code>BoxDecoration</code></td></tr>
+</table></div>
+
+<h2>Pièges de widgets</h2>
+<div class="box piege"><p class="t">1. child et children</p><p>Un seul enfant : <code>child</code> (Container, Center, Padding, Card, SafeArea). Plusieurs enfants : <code>children: [ ... ]</code> (Column, Row).</p></div>
+<div class="box piege"><p class="t">2. margin et padding</p><p><code>margin</code> : espace autour, à l'extérieur. <code>padding</code> : espace entre le bord et l'enfant, à l'intérieur. Sur une <code>Card</code>, il n'y a pas de <code>padding</code> : ajoutez un widget <code>Padding</code>.</p></div>
+<div class="box piege"><p class="t">3. mainAxis et crossAxis</p><p>Pour une <code>Row</code>, l'axe principal est horizontal ; pour une <code>Column</code>, vertical. <code>mainAxisAlignment</code> agit le long de l'axe, <code>crossAxisAlignment</code> en travers. Les inverser est l'erreur la plus fréquente.</p></div>
+<div class="box piege"><p class="t">4. title attend un widget</p><p><code>AppBar(title: 'Mon app')</code> est faux : écrire <code>title: Text('Mon app')</code>.</p></div>
+<div class="box piege"><p class="t">5. Oublier setState</p><p>Changer une variable sans <code>setState</code> ne reconstruit pas l'écran. <code>setState</code> n'existe que dans une classe qui étend <code>State</code>, donc un <code>StatefulWidget</code>.</p></div>
+<div class="box piege"><p class="t">6. Container sans enfant ou avec enfant</p><p>Sans enfant il remplit l'espace, avec un enfant il prend la taille de l'enfant. Pour le forcer à remplir : <code>width: double.infinity</code>.</p></div>
+<div class="box piege"><p class="t">7. Image qui ne s'affiche pas</p><p>Le dossier d'images doit être déclaré dans <code>pubspec.yaml</code> sous <code>assets:</code>, avec la bonne indentation, et l'application doit être relancée (un hot reload ne suffit pas). Le chemin dans <code>Image.asset</code> doit être exact.</p></div>
+<div class="box piege"><p class="t">8. Index hors limites</p><p><code>_index++</code> sans modulo plante après le dernier élément. Utiliser <code>(_index + 1) % liste.length</code>.</p></div>
+<div class="box piege"><p class="t">9. Plusieurs boutons flottants</p><p>Un seul par écran en général. Pour en mettre deux, un <code>Row</code> ou une <code>Column</code> et un <code>heroTag</code> différent pour chacun.</p></div>
+<div class="box piege"><p class="t">10. onPressed</p><p><code>onPressed: () {}</code> reçoit une fonction. <code>onPressed: maFonction()</code> l'<em>appelle</em> tout de suite au lieu de la donner : écrire <code>onPressed: maFonction</code> ou <code>() { maFonction(); }</code>.</p></div>
+
+<h2>Pièges Dart</h2>
+<div class="tw"><table>
+<tr><th>Piège</th><th>Règle</th></tr>
+<tr><td><code>"$numbers[0]"</code></td><td>Affiche la liste entière suivie de <code>[0]</code>. Écrire <code>"${numbers[0]}"</code>.</td></tr>
+<tr><td><code>7 / 2</code></td><td>Vaut 3.5 (double). La division entière est <code>~/</code>.</td></tr>
+<tr><td>Doublons dans un Set</td><td>Ignorés : <code>{1, 2, 2}</code> a deux éléments.</td></tr>
+<tr><td><code>{}</code> vide</td><td>Est une <code>Map</code>, pas un Set. Un Set vide : <code>&lt;int&gt;{}</code>.</td></tr>
+<tr><td>Surcharge de fonctions</td><td>N'existe pas en Dart : deux fonctions de même nom provoquent une erreur. Utiliser des paramètres optionnels ou des constructeurs nommés.</td></tr>
+<tr><td><code>implements</code></td><td>Oblige à réécrire <strong>tous</strong> les membres, même ceux déjà codés dans la classe d'origine.</td></tr>
+<tr><td>Classe abstraite</td><td>Ne s'instancie pas (<code>Animal()</code> est une erreur).</td></tr>
+<tr><td><code>late</code></td><td>Promet une initialisation avant l'usage ; lire la variable avant provoque une erreur à l'exécution.</td></tr>
+<tr><td><code>nom!</code></td><td>Plante si <code>nom</code> est null : à réserver aux cas où vous êtes sûr.</td></tr>
+</table></div>
+
+<h2>Pièges du sujet : IMC et Ma Bibliothèque</h2>
+<ul>
+<li><strong>IMC :</strong> la taille est en centimètres, il faut diviser par 100. Les bornes sont des inférieurs stricts. Le tableau laisse un trou entre 39.9 et 40. L'exemple du sujet dit « Poids normal » alors que le tableau dit « Poids idéal ».</li>
+<li><strong>Ma Bibliothèque :</strong> Chip pour la catégorie, ClipOval pour l'image, bouton flottant en bas à droite, retour au premier livre après le cinquième, toutes les informations actualisées à chaque clic.</li>
+</ul>
+
+<h2>Méthode pour un test pratique</h2>
+<ol>
+<li>Lisez tout le sujet et listez ce qui est demandé : classes, données, widgets, comportements.</li>
+<li>Faites d'abord le squelette qui s'affiche (Scaffold, AppBar, un Text) et lancez-le.</li>
+<li>Ajoutez un élément à la fois, avec un hot reload après chaque ajout.</li>
+<li>Gérez l'état en dernier, quand l'interface est correcte.</li>
+<li>Testez les cas limites : dernier élément, champ vide, valeur invalide.</li>
+<li>Relisez le sujet une dernière fois, case par case.</li>
+</ol>
+
+<div class="box retenir"><p class="t">Slides et Flutter actuel</p>
+<ul>
+<li><code>primary</code> et <code>onPrimary</code> dans <code>styleFrom</code> : supprimés. Utiliser <code>backgroundColor</code> et <code>foregroundColor</code>.</li>
+<li>Les anciens boutons <code>RaisedButton</code> et <code>FlatButton</code> ont disparu au profit d'<code>ElevatedButton</code> et <code>TextButton</code>.</li>
+<li>Le fichier <code>statefulwidget.txt</code> utilise la syntaxe courte de Dart 3.10 (<code>.fromSeed</code>, <code>.center</code>) : il compile avec un projet récent.</li>
+</ul></div>
+
+<div class="box ex">
+<p class="t">Dernier tour avant le test</p>
+<ul>
+<li>Refaire le <a href="qcm.html">QCM</a> « Lire le code » jusqu'à zéro faute.</li>
+<li>Refaire <a href="tp.html#biblio">Ma Bibliothèque</a> sans regarder.</li>
+<li>Passer l'<a href="pratique.html">examen blanc</a> en temps limité.</li>
+</ul>
+</div>
+<div class="foot">Basé sur le cours et les TP fournis. Les messages du compilateur sont les messages réels de Dart 3.11 et Flutter 3.41.</div>
+</main>
+</div>
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

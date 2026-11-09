@@ -1,0 +1,650 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TP et exercices corrigés Flutter</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="shell">
+<aside class="side" id="side"></aside>
+<main>
+<h1>TP et exercices corrigés</h1>
+<p class="lead">Le travail à rendre sur Moodle (Ma Bibliothèque), les deux exercices du TP3 (IMC et ListTile), les exercices du cours et la série Dart, avec le code complet, des captures d'écran réelles et les points à ne pas rater.</p>
+
+<div class="box retenir">
+<p class="t">Comment tout a été vérifié</p>
+<p>Le code est dans le projet <code>exemples_flutter</code> (dossier <code>mobile</code>). Il a été compilé et testé avec Flutter 3.41 : 17 tests passent (calculs d'IMC et bornes, navigation circulaire de la bibliothèque, validation des formulaires, compteurs...). Les captures sont de vrais rendus de ces applications. Les exercices Dart ont été exécutés avec <code>dart run</code>.</p>
+<p>Pour lancer une application : dans le dossier du projet, exécutez une fois <code>flutter create .</code> (il ajoute les dossiers Android et iOS), puis <code>flutter run -t lib/main_bibliotheque.dart</code>.</p>
+</div>
+
+<div class="bar">
+<button class="btn" data-toggle-all="open">Tout ouvrir</button>
+<button class="btn" data-toggle-all="close">Tout fermer</button>
+</div>
+
+<div class="box">
+<p class="t">Sommaire</p>
+<ul>
+<li><a href="#biblio">Travail à rendre : Ma Bibliothèque</a> (le plus probable pour le test)</li>
+<li><a href="#imc">TP3, exercice 1 : calculateur d'IMC</a></li>
+<li><a href="#listtile">TP3, exercice 2 : ListTile (Universiapolis)</a></li>
+<li><a href="#cours">Exercices du cours : compteur, bouton, menu restaurant</a></li>
+<li><a href="#dart">Série Dart en console</a></li>
+</ul>
+</div>
+<h2 id="biblio">Travail à rendre : Ma Bibliothèque</h2><p>Une application qui affiche un livre à la fois dans une carte. Un bouton flottant passe au livre suivant ; après le cinquième, on revient au premier.</p>
+<div class="tw"><table>
+<tr><th>Ce que demande le sujet</th><th>Où c'est dans le code</th></tr>
+<tr><td>Classe <code>Livre</code> avec id, titre, auteur, categorie, prix, image, description et un constructeur</td><td><code>livre.dart</code>, classe <code>Livre</code></td></tr>
+<tr><td>Liste de cinq livres avec image et description</td><td><code>livre.dart</code>, <code>const List&lt;Livre&gt; livres</code></td></tr>
+<tr><td>AppBar : titre « Ma Bibliothèque », icône de menu, icône de recherche</td><td><code>leading</code>, <code>title</code>, <code>actions</code></td></tr>
+<tr><td>Carte avec couverture circulaire (ClipOval), titre en gras, auteur, catégorie dans un Chip, prix en DH, description, bouton « Voir plus »</td><td><code>Card</code> contenant <code>ClipOval</code>, <code>Text</code>, <code>Chip</code>, <code>ElevatedButton</code></td></tr>
+<tr><td>FloatingActionButton en bas à droite qui affiche le livre suivant, avec retour au premier après le cinquième</td><td><code>_livreSuivant</code> : <code>(_index + 1) % livres.length</code> dans <code>setState</code></td></tr>
+</table></div>
+<div class="shots"><figure class="shot"><img src="img/biblio_livre1.png" alt="Livre 1 : Les Misérables" loading="lazy"><figcaption>Livre 1 : Les Misérables</figcaption></figure><figure class="shot"><img src="img/biblio_livre2.png" alt="Après un clic : Le Petit Prince" loading="lazy"><figcaption>Après un clic : Le Petit Prince</figcaption></figure><figure class="shot"><img src="img/biblio_livre3.png" alt="Après un deuxième clic : L'Étranger" loading="lazy"><figcaption>Après un deuxième clic : L'Étranger</figcaption></figure></div><h3>Arbre des widgets</h3><div class="flow"><span class="n k">MaterialApp</span><span class="n k">Scaffold</span><span class="n">appBar : AppBar (menu, titre, recherche)</span><span class="n g">body : SafeArea &gt; SingleChildScrollView &gt; Card &gt; Padding &gt; Column</span><span class="n y">Column : ClipOval(Image), Text, Text, Chip, Text, Divider, Text, ElevatedButton</span><span class="n">floatingActionButton</span></div><div class="exo"><h4>Solution complète, pas à pas</h4><details class="sol"><summary>Étape 1 et 2 : la classe Livre et les données (livre.dart)</summary><div class="in"><pre><code>// Partie 1 du travail à rendre : la classe Livre
+class Livre {
+  final int id;
+  final String titre;
+  final String auteur;
+  final String categorie;
+  final int prix; // en DH
+  final String image; // chemin de la couverture
+  final String description;
+
+  const Livre({
+    required this.id,
+    required this.titre,
+    required this.auteur,
+    required this.categorie,
+    required this.prix,
+    required this.image,
+    required this.description,
+  });
+}
+
+// Partie 2 : une liste de cinq livres
+const List&lt;Livre&gt; livres = [
+  Livre(
+    id: 1,
+    titre: 'Les Misérables',
+    auteur: 'Victor Hugo',
+    categorie: 'Roman',
+    prix: 120,
+    image: 'images/livre1.png',
+    description: 'Le destin de Jean Valjean dans la France du XIXe siècle.',
+  ),
+  Livre(
+    id: 2,
+    titre: 'Le Petit Prince',
+    auteur: 'Antoine de Saint-Exupéry',
+    categorie: 'Conte',
+    prix: 85,
+    image: 'images/livre2.png',
+    description: 'Un conte poétique et universel sur l\'amitié et la vie.',
+  ),
+  Livre(
+    id: 3,
+    titre: 'L\'Étranger',
+    auteur: 'Albert Camus',
+    categorie: 'Roman',
+    prix: 95,
+    image: 'images/livre3.png',
+    description: 'Meursault, un homme indifférent face à son propre procès.',
+  ),
+  Livre(
+    id: 4,
+    titre: 'Clean Code',
+    auteur: 'Robert C. Martin',
+    categorie: 'Informatique',
+    prix: 250,
+    image: 'images/livre4.png',
+    description: 'Les bonnes pratiques pour écrire du code lisible.',
+  ),
+  Livre(
+    id: 5,
+    titre: 'Flutter en pratique',
+    auteur: 'A. Martin',
+    categorie: 'Informatique',
+    prix: 180,
+    image: 'images/livre5.png',
+    description: 'Construire des applications mobiles avec Flutter et Dart.',
+  ),
+];</code></pre><p><code>const Livre(...)</code> avec des paramètres nommés <code>required</code> : chaque appel est lisible. Vous pouvez aussi écrire un constructeur positionnel <code>Livre(this.id, this.titre, ...)</code>, comme dans le cours : les deux sont acceptés.</p></div></details><details class="sol"><summary>Étape 3 : l'interface et la navigation (bibliotheque_app.dart)</summary><div class="in"><pre><code>import 'package:flutter/material.dart';
+
+import 'livre.dart';
+
+// Travail à rendre : application "Ma Bibliothèque"
+// Lancer : flutter run -t lib/main_bibliotheque.dart
+class BibliothequeApp extends StatelessWidget {
+  const BibliothequeApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Ma Bibliothèque',
+      theme: ThemeData(colorSchemeSeed: Colors.blue),
+      home: const EcranBibliotheque(),
+    );
+  }
+}
+
+// StatefulWidget : le livre affiché change quand on clique sur le bouton flottant
+class EcranBibliotheque extends StatefulWidget {
+  const EcranBibliotheque({super.key});
+
+  @override
+  State&lt;EcranBibliotheque&gt; createState() =&gt; _EcranBibliothequeState();
+}
+
+class _EcranBibliothequeState extends State&lt;EcranBibliotheque&gt; {
+  int _index = 0; // position du livre affiché
+
+  void _livreSuivant() {
+    setState(() {
+      _index = (_index + 1) % livres.length; // après le 5e, retour au 1er
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final Livre livre = livres[_index];
+
+    return Scaffold(
+      backgroundColor: Colors.grey[100],
+      appBar: AppBar(
+        backgroundColor: Colors.blue,
+        foregroundColor: Colors.white,
+        leading: IconButton(icon: const Icon(Icons.menu), onPressed: () {}),
+        title: const Text('Ma Bibliothèque'),
+        actions: [
+          IconButton(icon: const Icon(Icons.search), onPressed: () {}),
+        ],
+      ),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: Card(
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                children: [
+                  ClipOval(
+                    child: Image.asset(
+                      livre.image,
+                      width: 170,
+                      height: 170,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    livre.titre,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontSize: 26,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(livre.auteur, style: const TextStyle(fontSize: 17)),
+                  const SizedBox(height: 10),
+                  Chip(label: Text(livre.categorie)),
+                  const SizedBox(height: 6),
+                  Text(
+                    '${livre.prix} DH',
+                    style: const TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.blue,
+                    ),
+                  ),
+                  const Divider(height: 28),
+                  Text(
+                    livre.description,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(fontSize: 15),
+                  ),
+                  const SizedBox(height: 16),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () {},
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue,
+                        foregroundColor: Colors.white,
+                      ),
+                      child: const Text('Voir plus'),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _livreSuivant,
+        backgroundColor: Colors.blue,
+        foregroundColor: Colors.white,
+        child: const Icon(Icons.add),
+      ),
+    );
+  }
+}</code></pre><p><strong>Pourquoi un StatefulWidget ?</strong> L'affichage change quand on clique : le numéro du livre (<code>_index</code>) est un état. <strong>Pourquoi le modulo ?</strong> <code>(_index + 1) % livres.length</code> vaut 1, 2, 3, 4 puis 0 : retour automatique au premier livre.</p></div></details><details class="sol"><summary>Ajouter les images (pubspec.yaml)</summary><div class="in"><ol><li>Créez un dossier <code>images</code> à la racine du projet (à côté de <code>lib</code>).</li><li>Copiez-y vos cinq couvertures (ici des images de remplacement : <code>livre1.png</code> à <code>livre5.png</code>).</li><li>Déclarez le dossier dans <code>pubspec.yaml</code> :</li></ol><pre><code>flutter:
+  uses-material-design: true
+  assets:
+    - images/</code></pre><p>L'indentation compte : deux espaces avant <code>assets:</code>, quatre avant le tiret. Après modification de <code>pubspec.yaml</code>, relancez l'application (un hot reload ne suffit pas).</p></div></details></div><div class="box piege"><p class="t">Points à ne pas rater</p><ul><li>Chemin d'image faux ou dossier non déclaré dans <code>pubspec.yaml</code> : l'image ne s'affiche pas (erreur « Unable to load asset »).</li><li>Oublier <code>setState</code> : l'index change mais l'écran reste sur le même livre.</li><li>Écrire <code>_index++</code> sans modulo : après le cinquième livre, l'application plante (index hors limites).</li><li>Mettre <code>padding</code> sur un <code>Card</code> : ce paramètre n'existe pas, utilisez un widget <code>Padding</code>.</li><li><code>ClipOval</code> sans <code>width</code> égal à <code>height</code> donne une ellipse, pas un cercle.</li></ul></div><h2 id="imc">TP3, exercice 1 : calculateur d'IMC</h2><p>Formule : IMC = poids (kg) / taille (m) au carré. La taille est saisie en <strong>centimètres</strong> : il faut la diviser par 100.</p>
+<div class="tw"><table>
+<tr><th>IMC</th><th>Message</th></tr>
+<tr><td>moins de 18.6</td><td>Poids très bas</td></tr><tr><td>moins de 24.9</td><td>Poids idéal</td></tr><tr><td>moins de 29.9</td><td>Surpoids</td></tr>
+<tr><td>moins de 34.9</td><td>Obésité grade 1</td></tr><tr><td>moins de 39.9</td><td>Obésité grade 2</td></tr><tr><td>40 et plus</td><td>Obésité grade 3</td></tr></table></div>
+<div class="shots"><figure class="shot"><img src="img/imc_vide.png" alt="Écran de départ" loading="lazy"><figcaption>Écran de départ</figcaption></figure><figure class="shot"><img src="img/imc_erreurs.png" alt="Champs vides : messages de validation" loading="lazy"><figcaption>Champs vides : messages de validation</figcaption></figure><figure class="shot"><img src="img/imc_resultat.png" alt="70 kg et 175 cm : Poids idéal (IMC=22.9)" loading="lazy"><figcaption>70 kg et 175 cm : Poids idéal (IMC=22.9)</figcaption></figure></div><div class="exo"><h4>Solution</h4><details class="sol"><summary>Code complet (imc_app.dart)</summary><div class="in"><pre><code>import 'package:flutter/material.dart';
+
+// TP3, exercice 1 : calculateur d'IMC
+// Lancer : flutter run -t lib/main_imc.dart
+
+/// IMC = poids (kg) / taille (m) au carré. La taille est saisie en centimètres.
+double calculerImc(double poids, double tailleCm) {
+  final double tailleM = tailleCm / 100;
+  return poids / (tailleM * tailleM);
+}
+
+/// Message selon le tableau du TP, par exemple : "Poids idéal (IMC=23.0)".
+String getMessage(double imc) {
+  String categorie;
+  if (imc &lt; 18.6) {
+    categorie = 'Poids très bas';
+  } else if (imc &lt; 24.9) {
+    categorie = 'Poids idéal';
+  } else if (imc &lt; 29.9) {
+    categorie = 'Surpoids';
+  } else if (imc &lt; 34.9) {
+    categorie = 'Obésité grade 1';
+  } else if (imc &lt; 39.9) {
+    categorie = 'Obésité grade 2';
+  } else {
+    categorie = 'Obésité grade 3';
+  }
+  return '$categorie (IMC=${imc.toStringAsFixed(1)})';
+}
+
+class ImcApp extends StatelessWidget {
+  const ImcApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'IMC Calculator',
+      theme: ThemeData(colorSchemeSeed: Colors.deepOrange),
+      home: const EcranImc(),
+    );
+  }
+}
+
+class EcranImc extends StatefulWidget {
+  const EcranImc({super.key});
+
+  @override
+  State&lt;EcranImc&gt; createState() =&gt; _EcranImcState();
+}
+
+class _EcranImcState extends State&lt;EcranImc&gt; {
+  final _formKey = GlobalKey&lt;FormState&gt;(); // pour appeler validate()
+  final _poidsController = TextEditingController();
+  final _tailleController = TextEditingController();
+  String _message = '';
+
+  String? _valider(String? valeur) {
+    if (valeur == null || valeur.isEmpty) {
+      return 'Prière de saisir une valeur';
+    }
+    final double? nombre = double.tryParse(valeur);
+    if (nombre == null || nombre &lt;= 0) {
+      return 'Valeur invalide';
+    }
+    return null; // null = valeur correcte
+  }
+
+  void _calculer() {
+    if (_formKey.currentState!.validate()) {
+      final double poids = double.parse(_poidsController.text);
+      final double taille = double.parse(_tailleController.text);
+      setState(() {
+        _message = getMessage(calculerImc(poids, taille));
+      });
+    } else {
+      setState(() {
+        _message = '';
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _poidsController.dispose();
+    _tailleController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.deepOrange,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 16),
+                const Text(
+                  'IMC CALCULATOR',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const Text(
+                  'Contrôler votre poids',
+                  style: TextStyle(color: Colors.white70, fontSize: 16),
+                ),
+                const SizedBox(height: 32),
+                Card(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        children: [
+                          TextFormField(
+                            controller: _poidsController,
+                            keyboardType: TextInputType.number,
+                            decoration: const InputDecoration(
+                              labelText: 'Poids en Kg',
+                            ),
+                            validator: _valider,
+                          ),
+                          const SizedBox(height: 12),
+                          TextFormField(
+                            controller: _tailleController,
+                            keyboardType: TextInputType.number,
+                            decoration: const InputDecoration(
+                              labelText: 'Taille en cm',
+                            ),
+                            validator: _valider,
+                          ),
+                          const SizedBox(height: 24),
+                          ElevatedButton(
+                            onPressed: _calculer,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.deepOrange,
+                              foregroundColor: Colors.white,
+                              shape: const StadiumBorder(),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 28,
+                                vertical: 14,
+                              ),
+                            ),
+                            child: const Text('Calculer votre IMC'),
+                          ),
+                          const SizedBox(height: 16),
+                          Text(
+                            _message,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}</code></pre><ol><li><strong>Interface :</strong> deux <code>TextFormField</code> dans un <code>Form</code>, un <code>ElevatedButton</code> et un <code>Text</code> pour le message.</li><li><strong>calculerImc :</strong> convertit la taille en mètres puis divise.</li><li><strong>getMessage :</strong> une chaîne <code>if / else if</code> du plus petit seuil au plus grand, puis le format « catégorie (IMC=valeur) ».</li><li><strong>Bouton :</strong> <code>validate()</code>, puis <code>setState</code> pour afficher le message.</li><li><strong>Validation :</strong> un <code>validator</code> qui refuse une valeur vide, non numérique ou nulle.</li></ol></div></details></div><div class="box piege"><p class="t">Incohérences du sujet et pièges</p><ul><li>L'exemple du sujet dit « Poids normal (IMC=23) » mais le tableau dit « Poids idéal ». J'ai suivi le tableau.</li><li>Les bornes sont des inférieurs <strong>stricts</strong> : 18.6 est « Poids idéal », 24.9 est « Surpoids » (testé).</li><li>Le tableau laisse un trou entre 39.9 et 40 (par exemple 39.95). Mon <code>else</code> final classe ce cas en grade 3.</li><li>Oublier de diviser la taille par 100 donne un IMC de 0.007 : toujours « Poids très bas ».</li><li>Un champ vide fait planter <code>double.parse</code> : d'où la validation avant le calcul. <code>double.tryParse</code> renvoie <code>null</code> au lieu de planter.</li></ul></div><h2 id="listtile">TP3, exercice 2 : ListTile (Universiapolis)</h2><p>Créer une liste d'écoles avec <code>ListTile</code> : <code>title</code>, <code>subtitle</code>, <code>leading</code> (icône ou avatar) et <code>trailing</code> (icône à droite). Le sujet montre une application bleue « Universiapolis » avec cinq lignes colorées.</p><div class="shots"><figure class="shot"><img src="img/listtile.png" alt="Un ListTile seul : leading, title, subtitle, trailing" loading="lazy"><figcaption>Un ListTile seul : leading, title, subtitle, trailing</figcaption></figure><figure class="shot"><img src="img/listtile_app.png" alt="L'application Universiapolis" loading="lazy"><figcaption>L'application Universiapolis</figcaption></figure></div><div class="exo"><h4>Solution</h4><details class="sol"><summary>Code complet</summary><div class="in"><pre><code>// TP3, exercice 2 : ListTile (application "Universiapolis")
+class Ecole {
+  final String nom;
+  final String domaine;
+  final String sigle;
+  final Color couleur;
+  const Ecole(this.nom, this.domaine, this.sigle, this.couleur);
+}
+
+final List&lt;Ecole&gt; ecoles = [
+  Ecole('Ecole polytechnique', 'Ingénierie', 'EP', Colors.lightBlue.shade100),
+  Ecole('ISIAM', 'Business School', 'IS', Colors.green.shade200),
+  Ecole('Ecole SupH\'Droit', 'Droit et sciences politiques', 'SD', Colors.pink.shade200),
+  Ecole('Ecole Tourisme', 'Hôtellerie et communication', 'ET', Colors.orange.shade100),
+  Ecole('Faculté de santé', 'Pôle santé', 'FS', Colors.green.shade100),
+];
+
+class ListTileApp extends StatelessWidget {
+  const ListTileApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.blue,
+          foregroundColor: Colors.white,
+          title: const Text('Universiapolis'),
+        ),
+        body: ListView(
+          padding: const EdgeInsets.all(12),
+          children: [
+            for (final e in ecoles)
+              Container(
+                margin: const EdgeInsets.only(bottom: 12),
+                color: e.couleur,
+                child: ListTile(
+                  leading: CircleAvatar(
+                    backgroundColor: Colors.white,
+                    child: Text(e.sigle),
+                  ),
+                  title: Text(e.nom, style: const TextStyle(color: Colors.blue)),
+                  subtitle: Text(e.domaine),
+                  trailing: const Icon(Icons.more_vert, color: Colors.blue),
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}</code></pre><p>Les logos du sujet ne sont pas disponibles : chaque <code>CircleAvatar</code> affiche les initiales de l'école. Remplacez-les par <code>backgroundImage: AssetImage(...)</code> avec vos images. Chaque ligne est un <code>Container</code> coloré (<code>color</code>, <code>margin</code>) qui contient un <code>ListTile</code>.</p></div></details></div><h2 id="cours">Exercices du cours</h2><h3>Compteur avec deux boutons (+ et -)</h3><p>Énoncé : à partir du projet par défaut, ajouter un deuxième bouton qui décrémente le compteur. Il faut un <code>StatefulWidget</code> et deux fonctions qui appellent <code>setState</code>. Le code est celui de la page <a href="widgets.html#compteur">Widgets en images</a> (section F). Deux <code>FloatingActionButton</code> dans une <code>Row</code> doivent avoir un <code>heroTag</code> différent.</p><h3>Le texte du bouton change</h3><p>Énoncé : bouton « Cliquer ici » qui devient « Bouton cliqué ! ». Voir <a href="widgets.html#bouton_clic">la section F</a> : une variable <code>_texte</code> dans l'état, modifiée dans <code>setState</code>.</p><h3>menu_restaurant</h3><p>Deux cartes (Burger et Pizza) avec image, nom et prix, et une AppBar colorée « Menu Restaurant ».</p><div class="pair"><div><div class="exo"><details class="sol"><summary>Code complet</summary><div class="in"><pre><code>// Exercice du cours : menu_restaurant
+class MenuRestaurantApp extends StatelessWidget {
+  const MenuRestaurantApp({super.key});
+
+  Widget _plat(String image, String nom, int prix) {
+    return Card(
+      margin: const EdgeInsets.all(12),
+      child: Row(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8),
+            child: Image.asset(image, width: 90, height: 90, fit: BoxFit.cover),
+          ),
+          const SizedBox(width: 12),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(nom, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+              Text('$prix DH', style: const TextStyle(fontSize: 18, color: Colors.deepOrange)),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text('Menu Restaurant'),
+          backgroundColor: Colors.deepOrange,
+          foregroundColor: Colors.white,
+        ),
+        body: Column(
+          children: [
+            _plat('images/burger.png', 'Burger', 45),
+            _plat('images/pizza.png', 'Pizza', 60),
+          ],
+        ),
+      ),
+    );
+  }
+}</code></pre></div></details></div></div><div class="shots"><figure class="shot"><img src="img/menu_restaurant.png" alt="Menu avec deux Card" loading="lazy"><figcaption>Menu avec deux Card</figcaption></figure></div></div><p>Pour l'<strong>icône de l'application</strong> : mettez une image PNG dans <code>images/</code>, ajoutez <code>flutter_launcher_icons</code> dans <code>dev_dependencies</code> avec <code>flutter_launcher_icons: android: true, ios: false, image_path: "images/as.png"</code>, puis exécutez <code>dart run flutter_launcher_icons</code>. Pour obtenir l'APK : Build puis Flutter puis Build APK, ou <code>flutter build apk</code> ; le fichier est dans <code>build/app/outputs/flutter-apk/app-release.apk</code>.</p><h2 id="dart">Série Dart en console</h2><p>Les exercices des slides sur Dart : calculer F(x) = 5x + 8, afficher la mention d'une note, gérer un dictionnaire de contacts (ajouter, modifier, supprimer, vérifier), et le système de formes avec classe abstraite <code>Shape</code>, interface <code>Drawable</code> et classes <code>Circle</code> et <code>Rectangle</code>.</p>
+<div class="exo"><h4>Solution exécutée (dart run lib/dart_series.dart)</h4><details class="sol"><summary>Code et sortie</summary><div class="in"><pre><code>// Série 1 : exercices Dart en console. Lancer : dart run lib/dart_series.dart
+import 'dart:math';
+
+// Calculer F(x) = 5x + 8
+double f(double x) =&gt; 5 * x + 8;
+
+// Mention correspondant à une note (seuils choisis : le cours ne donne que les noms)
+String mention(double note) {
+  if (note &lt; 10) {
+    return 'Ajourné';
+  } else if (note &lt; 12) {
+    return 'Passable';
+  } else if (note &lt; 14) {
+    return 'Assez bien';
+  } else if (note &lt; 16) {
+    return 'Bien';
+  } else if (note &lt; 18) {
+    return 'Très bien';
+  } else {
+    return 'Excellent';
+  }
+}
+
+// Gestion des formes : classe abstraite, interface, classes dérivées
+abstract class Shape {
+  String color;
+  Shape(this.color);
+
+  double calculateArea();
+  void displayInfo();
+}
+
+abstract interface class Drawable {
+  void draw();
+}
+
+class Circle extends Shape implements Drawable {
+  double radius;
+  Circle(super.color, this.radius);
+
+  @override
+  double calculateArea() =&gt; pi * radius * radius;
+
+  @override
+  void displayInfo() {
+    print('Cercle $color, aire = ${calculateArea().toStringAsFixed(2)}');
+  }
+
+  @override
+  void draw() {
+    print('Je dessine un cercle $color');
+  }
+}
+
+class Rectangle extends Shape implements Drawable {
+  double largeur;
+  double hauteur;
+  Rectangle(super.color, this.largeur, this.hauteur);
+
+  @override
+  double calculateArea() =&gt; largeur * hauteur;
+
+  @override
+  void displayInfo() {
+    print('Rectangle $color, aire = ${calculateArea().toStringAsFixed(2)}');
+  }
+
+  @override
+  void draw() {
+    print('Je dessine un rectangle $color');
+  }
+}
+
+void main() {
+  // F(x)
+  print('F(2) = ${f(2)}');
+
+  // Mentions
+  for (final note in [8.0, 11.0, 13.5, 15.0, 17.0, 19.0]) {
+    print('$note -&gt; ${mention(note)}');
+  }
+
+  // Dictionnaire de contacts
+  final Map&lt;String, String&gt; contacts = {
+    'Ahmed': '0652417885',
+    'Fatine': '0654872183',
+    'Louiza': '0647852135',
+  };
+  contacts['Samira'] = '0685236987'; // ajouter
+  contacts['Ahmed'] = '0600000000'; // modifier
+  contacts.remove('Fatine'); // supprimer
+  if (contacts.containsKey('Samira')) {
+    print('Samira : ${contacts['Samira']}');
+  }
+  for (final entree in contacts.entries) {
+    print('${entree.key} : ${entree.value}');
+  }
+
+  // Formes
+  final List&lt;Shape&gt; formes = [Circle('rouge', 2), Rectangle('bleu', 3, 4)];
+  for (final forme in formes) {
+    forme.displayInfo();
+    if (forme is Drawable) {
+      (forme as Drawable).draw();
+    }
+  }
+}</code></pre><p class="q">Sortie obtenue</p><pre><code>F(2) = 18.0
+8.0 -&gt; Ajourné
+11.0 -&gt; Passable
+13.5 -&gt; Assez bien
+15.0 -&gt; Bien
+17.0 -&gt; Très bien
+19.0 -&gt; Excellent
+Samira : 0685236987
+Ahmed : 0600000000
+Louiza : 0647852135
+Samira : 0685236987
+Cercle rouge, aire = 12.57
+Je dessine un cercle rouge
+Rectangle bleu, aire = 12.00
+Je dessine un rectangle bleu</code></pre><p>Les seuils des mentions ne sont pas donnés dans le cours, seulement les noms : j'ai choisi 10, 12, 14, 16 et 18. Lire une saisie au clavier se fait avec <code>int.parse(stdin.readLineSync()!)</code> après <code>import 'dart:io';</code>.</p></div></details></div>
+<div class="box ex">
+<p class="t">Ensuite</p>
+<p>Passez l'<a href="pratique.html">examen blanc pratique</a> (un test d'une heure avec corrigé), puis les <a href="qcm.html">QCM</a>.</p>
+</div>
+
+<div class="foot">TP du module Mobile Application Development (Dr. Mouhim Sanaa) et travail à rendre sur Moodle. Les solutions sont les miennes, compilées et testées avec Flutter.</div>
+
+</main>
+</div>
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

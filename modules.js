@@ -36,5 +36,14 @@ window.MODULES = [
     desc: 'Syntaxe, tableaux et fonctions, sessions et cookies, formulaires et upload, avec les TP corrigés et le lien des quiz Wooclap.',
     href: 'php/index.html',
     stats: ['124 QCM', '33 questions de cours', '5 TP corrigés', 'Examen blanc']
+  },
+  {
+    title: 'Flutter et Dart',
+    tag: 'Mobile',
+    color: 'g',
+    meta: 'Mobile Application Development, Pr. Sanaa Mouhim et Pr. Hassan Bousnguar',
+    desc: 'Dart, widgets, boutons et champs de texte, avec des captures d\'écran réelles de chaque widget et le travail à rendre Ma Bibliothèque corrigé.',
+    href: 'mobile/index.html',
+    stats: ['116 QCM', '33 questions de cours', '45 captures', 'Examen blanc pratique']
   }
 ];
