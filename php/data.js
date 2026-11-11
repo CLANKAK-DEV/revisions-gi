@@ -180,3 +180,296 @@ window.QA = [
   {"ch":5,"q":"Qu'est-ce que le motif PRG et un message flash ?","a":"<p>Post / Redirect / Get : après un POST réussi, on redirige (<code>header('Location: ...'); exit;</code>) vers une page en GET. Recharger la page ne renvoie plus le formulaire, donc pas de doublon.</p><p>Message flash : message mis en session avant la redirection, affiché une fois par la page suivante puis supprimé avec <code>unset</code>.</p>"},
   {"ch":5,"q":"Comment sécuriser l'upload d'un fichier ?","a":"<p>Formulaire en POST avec <code>enctype=\"multipart/form-data\"</code> et <code>$_FILES</code>. Vérifications dans l'ordre :</p><ul><li>code d'erreur égal à <code>UPLOAD_ERR_OK</code> ;</li><li>taille maximale ;</li><li>type réel lu avec <code>finfo</code>, liste blanche ;</li><li>nom aléatoire, extension déduite du type réel, jamais le nom d'origine ;</li><li><code>move_uploaded_file()</code> vers le dossier définitif.</li></ul>","tip":"name et type de $_FILES sont fournis par le navigateur : falsifiables."}
 ];
+
+// ---------- 7. Test type fourni par l'étudiant (réponses vérifiées en exécutant le code)
+window.SITE.chapters[7] = 'Test type';
+Array.prototype.push.apply(window.QCM, [
+ {
+  "ch": 7,
+  "q": "Test type, question 1 : Qu'affiche ce code ? `$v = filter_var(\"0\", FILTER_VALIDATE_INT); echo !$v ? \"A\" : \"B\"; echo $v === false ? \"C\" : \"D\";`",
+  "o": [
+   "AD",
+   "BD",
+   "BC",
+   "AC"
+  ],
+  "a": 0,
+  "e": "`filter_var(\"0\", FILTER_VALIDATE_INT)` renvoie l'entier `0` : la valeur est valide. Comme `0` est « falsy », `!$v` est vrai : on affiche A. Mais `0 === false` est faux (types différents) : on affiche D."
+ },
+ {
+  "ch": 7,
+  "q": "Test type, question 2 : Qu'affiche ce code ? `$s = \"PHP\"; echo $s[0] . strlen($s) . strtolower($s);`",
+  "o": [
+   "P3PHP",
+   "p3php",
+   "PHP3php",
+   "P3php"
+  ],
+  "a": 3,
+  "e": "`$s[0]` est le premier caractère (« P »), `strlen` donne 3, `strtolower` met en minuscules (« php »). On concatène : P3php."
+ },
+ {
+  "ch": 7,
+  "q": "Test type, question 3 : Qu'affiche ce code ? `$i = 5; while ($i > 0) { $i -= 2; } echo $i;`",
+  "o": [
+   "Une boucle infinie",
+   "1",
+   "-1",
+   "0"
+  ],
+  "a": 2,
+  "e": "`$i` vaut 5, puis 3, puis 1, puis -1. À -1 la condition `$i > 0` est fausse : la boucle s'arrête et on affiche -1. Faites une trace sur papier."
+ },
+ {
+  "ch": 7,
+  "q": "Test type, question 4 : Qu'affiche ce code ? `var_dump(is_numeric(\"12.5\"), is_int(\"12\"));`",
+  "o": [
+   "bool(true) bool(false)",
+   "bool(false) bool(false)",
+   "bool(true) bool(true)",
+   "bool(false) bool(true)"
+  ],
+  "a": 0,
+  "e": "`is_numeric` teste le contenu : « 12.5 » est un nombre, donc true. `is_int` teste le type : « 12 » est une chaîne, donc false."
+ },
+ {
+  "ch": 7,
+  "q": "Test type, question 5 : Qu'affiche ce code ? `$total = 10; function ajouter($n) { $total = $n + 1; return $total; } echo ajouter(5) + $total;`",
+  "o": [
+   "12",
+   "16",
+   "21",
+   "6"
+  ],
+  "a": 1,
+  "e": "Le `$total` de la fonction est une variable locale : `ajouter(5)` renvoie 6 et ne touche pas au `$total` global (10). Résultat : 6 + 10 = 16."
+ },
+ {
+  "ch": 7,
+  "q": "Test type, question 6 : Qu'affiche ce code ? `$x = \"10\"; $y = $x + \"5.5\"; var_dump($y);`",
+  "o": [
+   "int(15)",
+   "string(6) \"105.5\"",
+   "float(15.5)",
+   "string(4) \"15.5\""
+  ],
+  "a": 2,
+  "e": "`+` additionne : les deux chaînes numériques sont converties. « 5.5 » est décimal, le résultat est donc un `float` : 15.5."
+ },
+ {
+  "ch": 7,
+  "q": "Test type, question 7 : Qu'affiche ce code ? `$notes = [\"Ali\" => 8, \"Sara\" => 15, \"Omar\" => 12]; $ok = array_filter($notes, fn($n) => $n >= 10); echo implode(\", \", array_keys($ok));`",
+  "o": [
+   "Ali",
+   "15, 12",
+   "Sara",
+   "Sara, Omar"
+  ],
+  "a": 3,
+  "e": "`array_filter` garde les notes d'au moins 10 en conservant les clés : Sara et Omar. `array_keys` donne les noms, `implode` les relie par « , »."
+ },
+ {
+  "ch": 7,
+  "q": "Test type, question 8 : Qu'affiche ce code ? `$a = \"3\"; $b = \"4\"; echo $a . $b . ($a + $b);`",
+  "o": [
+   "77",
+   "34",
+   "347",
+   "3 4 7"
+  ],
+  "a": 2,
+  "e": "`$a . $b` donne « 34 » ; `($a + $b)`, entre parenthèses, vaut 7. On concatène : 347."
+ },
+ {
+  "ch": 7,
+  "q": "Test type, question 9 : Qu'affiche ce code ? `$h = password_hash(\"Sara2026\", PASSWORD_DEFAULT); var_dump(password_verify(\"sara2026\", $h), strlen($h));`",
+  "o": [
+   "bool(false) int(60)",
+   "bool(true) int(32)",
+   "bool(false) int(8)",
+   "bool(true) int(60)"
+  ],
+  "a": 0,
+  "e": "`password_verify` distingue les majuscules : « sara2026 » n'est pas « Sara2026 », donc false. Un hachage bcrypt fait toujours 60 caractères."
+ },
+ {
+  "ch": 7,
+  "q": "Test type, question 10 : Le fichier `inc/auth.php` contient `require __DIR__ . '/config.php';`. Ce fichier est inclus depuis `index.php`, situé à la racine du site. Quel fichier est chargé ? `require __DIR__ . '/config.php';`",
+  "o": [
+   "config.php à la racine du site",
+   "inc/config.php",
+   "Aucun : __DIR__ ne fonctionne pas dans un fichier inclus",
+   "inc/inc/config.php"
+  ],
+  "a": 1,
+  "e": "`__DIR__` est le dossier du fichier qui contient l'instruction, c'est-à-dire `inc`. Le fichier chargé est donc `inc/config.php`. Vérifié : avec `__DIR__` on charge `inc/config.php` ; avec un simple `require 'config.php'`, PHP trouve celui de la racine."
+ },
+ {
+  "ch": 7,
+  "q": "Test type, question 11 : Qu'affiche ce code ? `$u = json_decode('{\"nom\": \"Sara\", \"notes\": [12, 16]}', true); echo $u[\"nom\"] . \" \" . $u[\"notes\"][1];`",
+  "o": [
+   "Une erreur : $u est un objet",
+   "Sara 16",
+   "Sara 12",
+   "nom 16"
+  ],
+  "a": 1,
+  "e": "Avec `true` en second argument, `json_decode` renvoie un tableau associatif : `$u[\"nom\"]` vaut « Sara » et `$u[\"notes\"][1]` (indice 1, le deuxième) vaut 16."
+ },
+ {
+  "ch": 7,
+  "q": "Test type, question 12 : Qu'affiche ce code ? `var_dump(filter_var(\"17\", FILTER_VALIDATE_INT, [\"options\" => [\"min_range\" => 18]]));`",
+  "o": [
+   "int(18)",
+   "int(17)",
+   "bool(false)",
+   "string(2) \"17\""
+  ],
+  "a": 2,
+  "e": "17 est inférieur à `min_range` 18 : la valeur est refusée, `filter_var` renvoie `false`."
+ },
+ {
+  "ch": 7,
+  "q": "Test type, question 14 : Quelle affirmation décrit un site dynamique ?",
+  "o": [
+   "Il ne fonctionne qu'avec une connexion HTTPS",
+   "Ses pages contiennent des animations CSS ou JavaScript",
+   "Ses pages sont produites par le serveur à chaque requête, par exemple à partir d'une base de données",
+   "Ses pages HTML sont écrites à l'avance et envoyées telles quelles"
+  ],
+  "a": 2,
+  "e": "Un site dynamique construit ses pages sur le serveur au moment de la demande (programme PHP, base de données). La dernière réponse décrit un site statique."
+ },
+ {
+  "ch": 7,
+  "q": "Test type, question 15 : Le fichier `a.txt` contient `ABC`. Que contient-il après ce code ? `file_put_contents(\"a.txt\", \"ABC\"); $f = fopen(\"a.txt\", \"a\"); fwrite($f, \"Z\"); fclose($f); echo file_get_contents(\"a.txt\");`",
+  "o": [
+   "ZABC",
+   "ZBC",
+   "Z",
+   "ABCZ"
+  ],
+  "a": 3,
+  "e": "Le mode `a` (append) ajoute à la fin sans effacer : « ABC » devient « ABCZ ». Le mode `w` aurait effacé le contenu et laissé « Z »."
+ },
+ {
+  "ch": 7,
+  "q": "Test type, question 16 : Qu'affiche ce code ? `foreach ([1, 2, 3, 4, 5] as $v) { if ($v == 2) continue; if ($v == 4) break; echo $v; }`",
+  "o": [
+   "1345",
+   "135",
+   "1",
+   "13"
+  ],
+  "a": 3,
+  "e": "À 1 : affiché. À 2 : `continue` saute l'affichage. À 3 : affiché. À 4 : `break` quitte la boucle. Résultat : 13."
+ },
+ {
+  "ch": 7,
+  "q": "Test type, question 17 : Qu'affiche ce code ? `$t = [\"a\" => 1, \"b\" => 2]; foreach ($t as $k => $v) { echo $k . $v; }`",
+  "o": [
+   "a1b2",
+   "1a2b",
+   "ab12",
+   "12"
+  ],
+  "a": 0,
+  "e": "`foreach ($t as $k => $v)` donne d'abord la clé, puis la valeur : « a » puis 1, « b » puis 2. On affiche `$k . $v` : a1b2."
+ },
+ {
+  "ch": 7,
+  "q": "Test type, question 19 : Qu'affiche ce code ? `$note = 10; if ($note > 10) { echo \"A\"; } elseif ($note >= 10) { echo \"B\"; } else { echo \"C\"; }`",
+  "o": [
+   "AB",
+   "C",
+   "A",
+   "B"
+  ],
+  "a": 3,
+  "e": "`10 > 10` est faux (strict). Le `elseif` teste `10 >= 10`, vrai : on affiche B, et seul ce bloc s'exécute."
+ },
+ {
+  "ch": 7,
+  "q": "Test type, question 20 : Le formulaire a envoyé `$_POST = [\"options\" => [\"repas\", \"attestation\"]]`. Qu'affiche ce code ? `$_POST = [\"options\" => [\"repas\", \"attestation\"]]; $o = $_POST[\"options\"] ?? []; echo count($o) . (in_array(\"repas\", $o) ? \"oui\" : \"non\");`",
+  "o": [
+   "1oui",
+   "2oui",
+   "2non",
+   "Une erreur : options est une chaîne"
+  ],
+  "a": 1,
+  "e": "Les cases à cocher partageant un `name` terminé par `[]` arrivent sous forme de tableau : `count` vaut 2 et `in_array(\"repas\", ...)` est vrai : 2oui."
+ },
+ {
+  "ch": 7,
+  "q": "Test type, question 21 : Qu'affiche ce code ? `$e = [ [\"nom\" => \"Ali\", \"notes\" => [12, 15]], [\"nom\" => \"Sara\", \"notes\" => [18]], ]; echo $e[1][\"nom\"] . $e[0][\"notes\"][1];`",
+  "o": [
+   "Ali15",
+   "Sara12",
+   "Sara15",
+   "Ali18"
+  ],
+  "a": 2,
+  "e": "`$e[1][\"nom\"]` : deuxième étudiant (indice 1), « Sara ». `$e[0][\"notes\"][1]` : premier étudiant, deuxième note, 15. Résultat : Sara15."
+ },
+ {
+  "ch": 7,
+  "q": "Test type, question 22 : Lorsqu'un navigateur demande `http://localhost/tp1/index.php`, qui transmet le fichier `index.php` à l'interpréteur PHP ?",
+  "o": [
+   "Le serveur web Apache",
+   "Le navigateur",
+   "Le système d'exploitation du client",
+   "Le serveur MySQL"
+  ],
+  "a": 0,
+  "e": "Le navigateur envoie la requête ; Apache trouve le fichier dans `htdocs` et, voyant l'extension `.php`, le confie à l'interpréteur PHP. Le navigateur ne reçoit que le HTML produit."
+ },
+ {
+  "ch": 7,
+  "q": "Test type, question 23 : Le fichier inclus n'existe pas. Quelle est la différence entre `include` et `require` ?",
+  "o": [
+   "require provoque une erreur fatale et arrête le script ; include affiche un avertissement et continue",
+   "Les deux arrêtent le script",
+   "include provoque une erreur fatale ; require affiche un avertissement et continue",
+   "Aucune : les deux ignorent le fichier manquant"
+  ],
+  "a": 0,
+  "e": "`include` : avertissement (Warning), le script continue. `require` : erreur fatale, le script s'arrête. Vérifié : avec `include` la ligne suivante s'exécute, avec `require` elle n'est jamais atteinte."
+ },
+ {
+  "ch": 7,
+  "q": "Test type, question 24 : Qu'affiche ce code ? `file_put_contents(\"t.txt\", \"un\\ndeux\\ntrois\"); $f = fopen(\"t.txt\", \"r\"); fgets($f); echo fgets($f); fclose($f);`",
+  "o": [
+   "trois",
+   "un",
+   "deux",
+   "undeux"
+  ],
+  "a": 2,
+  "e": "Chaque `fgets` lit la ligne suivante. Le premier appel lit « un » (résultat ignoré), le second lit « deux » : c'est lui qu'on affiche."
+ },
+ {
+  "ch": 7,
+  "q": "Test type, question 27 : Qu'affiche ce code ? `$jour = \"sam\"; switch ($jour) { case \"sam\": case \"dim\": echo \"week-end\"; break; default: echo \"semaine\"; }`",
+  "o": [
+   "week-end",
+   "week-endsemaine",
+   "Rien",
+   "semaine"
+  ],
+  "a": 0,
+  "e": "« sam » correspond au premier `case`, qui est vide : l'exécution « tombe » dans le `case` suivant, jusqu'au `break`. On affiche week-end, sans passer par `default`."
+ },
+ {
+  "ch": 7,
+  "q": "Test type, question 30 : Qu'affiche ce code ? (le tableau est absent du texte reçu : `$t =;`) `$t = [3, 10, 7]; usort($t, fn($a, $b) => $b <=> $a); echo implode(\",\", $t);`",
+  "o": [
+   "3,10,7",
+   "10,7,3",
+   "7,10,3",
+   "3,7,10"
+  ],
+  "a": 1,
+  "e": "`fn($a, $b) => $b  $a` compare à l'envers : tri décroissant. Le tableau manque dans le texte, mais les quatre réponses ne contiennent que 3, 7 et 10 : testé avec les six ordres possibles, le résultat est toujours 10,7,3."
+ }
+]);

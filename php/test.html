@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Test type corrigé PHP</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="shell">
+<aside class="side" id="side"></aside>
+<main>
+<h1>Test type corrigé</h1>
+<p class="lead">Un test de PHP en 24 questions à choix multiple (plus une question sans numéro), avec la bonne réponse, ce que PHP affiche vraiment, l'explication et la notion à retenir. Répondez d'abord sur papier, puis ouvrez la correction.</p>
+
+<div class="box retenir">
+<p class="t">Ce que j'ai reçu, et ce que j'ai vérifié</p>
+<ul>
+<li>Le texte collé contient 24 questions numérotées de 1 à 30 : les <strong>numéros 13, 18, 25, 26, 28 et 29 manquent</strong>. Je n'ai pas inventé les questions absentes.</li>
+<li>À la <strong>question 30</strong>, le tableau a disparu du texte (<code>$t =;</code>). Les quatre réponses ne contiennent que 3, 7 et 10 : j'ai testé les six ordres possibles du tableau, la réponse est toujours la même.</li>
+<li>Le texte se termine par un extrait sur <code>$_SESSION["flash"]</code> sans numéro, sans énoncé et sans options. Je lui ai donné sa réponse en fin de page.</li>
+<li>Le texte collé ne contenait pas les réponses. Chaque extrait a été <strong>exécuté avec PHP 8.0 (XAMPP) et PHP 8.5</strong> et donne le même résultat : les réponses viennent de l'exécution, pas d'un raisonnement seul.</li>
+<li>J'ai retiré du texte les mentions « Utilisez le code avec précaution », qui viennent d'un copier-coller.</li>
+</ul>
+</div>
+
+<div class="bar">
+<button class="btn" data-toggle-all="open">Tout ouvrir</button>
+<button class="btn" data-toggle-all="close">Tout fermer</button>
+</div>
+
+<div class="box">
+<p class="t">Sommaire</p>
+<ul>
+<li><a href="#notions">Les notions testées</a></li>
+<li><a href="#questions">Les questions</a></li>
+<li><a href="#flash">La question sans numéro : le message flash</a></li>
+<li><a href="#bilan">Bilan : les pièges de ce test</a></li>
+</ul>
+</div>
+
+<h2 id="notions">Les notions testées</h2>
+<p>Presque tout le test porte sur ce que <strong>PHP affiche</strong> : il faut savoir exécuter un code dans sa tête. Voici les notions, avec la question et le chapitre à revoir.</p>
+<div class="tw"><table>
+<tr><th>Notion</th><th>Questions</th><th>À revoir</th></tr>
+<tr><td><ul style="margin:0;padding-left:18px"><li>Question 2 : chaînes : indice, strlen, strtolower</li><li>Question 4 : is_numeric et is_int</li><li>Question 6 : chaînes numériques dans un calcul</li><li>Question 8 : concaténation et addition</li><li>Question 11 : json_decode(..., true)</li><li>Question 14 : site statique et site dynamique</li><li>Question 22 : architecture client-serveur</li><li>Question 23 : include et require</li><li>Question 27 : switch avec cas groupés</li></ul></td><td>2, 4, 6, 8, 11, 14, 22, 23, 27</td><td><a href="cours.html#ch1">Chapitre 1</a></td></tr>
+<tr><td><ul style="margin:0;padding-left:18px"><li>Question 3 : boucle while</li><li>Question 20 : cases à cocher name="options[]", ??, in_array</li><li>Question 30 : usort et l'opérateur <=></li></ul></td><td>3, 20, 30</td><td><a href="cours.html#ch2">Chapitre 2</a></td></tr>
+<tr><td><ul style="margin:0;padding-left:18px"><li>Question 5 : portée d'une variable</li><li>Question 7 : array_filter, array_keys, implode</li><li>Question 21 : tableau de tableaux</li><li>Question 24 : fgets, lecture ligne par ligne</li></ul></td><td>5, 7, 21, 24</td><td><a href="cours.html#ch3">Chapitre 3</a></td></tr>
+<tr><td><ul style="margin:0;padding-left:18px"><li>Question 9 : password_hash et password_verify</li><li>Question 10 : __DIR__ et chemins d'inclusion</li><li>Question 15 : modes de fopen</li><li>Question 16 : break et continue</li><li>Question 17 : foreach avec clé et valeur</li><li>Question 19 : if, elseif, else</li></ul></td><td>9, 10, 15, 16, 17, 19</td><td><a href="cours.html#ch4">Chapitre 4</a></td></tr>
+<tr><td><ul style="margin:0;padding-left:18px"><li>Question 1 : filter_var et === false</li><li>Question 12 : filter_var avec min_range</li></ul></td><td>1, 12</td><td><a href="cours.html#ch5">Chapitre 5</a></td></tr>
+</table></div>
+<h2 id="questions">Les questions</h2>
+<div class="exo"><h4>Question 1</h4><p>Qu'affiche ce code ?</p><pre><code>$v = filter_var("0", FILTER_VALIDATE_INT);
+echo !$v ? "A" : "B";
+echo $v === false ? "C" : "D";</code></pre><ol type="a"><li>AD</li><li>BD</li><li>BC</li><li>AC</li></ol><details class="sol"><summary>Correction</summary><div class="in"><p><strong>Réponse : a. </strong>AD</p><p class="q">Affichage obtenu avec PHP</p><pre><code>AD</code></pre><p><code>filter_var("0", FILTER_VALIDATE_INT)</code> renvoie l'entier <code>0</code> : la valeur est valide. Comme <code>0</code> est « falsy », <code>!$v</code> est vrai : on affiche A. Mais <code>0 === false</code> est faux (types différents) : on affiche D.</p><div class="box piege"><p class="t">À retenir</p><p>C'est exactement pourquoi on teste <code>=== false</code> et non <code>!$v</code> : 0 est un entier valide.</p></div><p><small>Notion : filter_var et === false. À revoir : <a href="cours.html#ch5">Chapitre 5</a>.</small></p></div></details></div>
+<div class="exo"><h4>Question 2</h4><p>Qu'affiche ce code ?</p><pre><code>$s = "PHP";
+echo $s[0] . strlen($s) . strtolower($s);</code></pre><ol type="a"><li>P3PHP</li><li>p3php</li><li>PHP3php</li><li>P3php</li></ol><details class="sol"><summary>Correction</summary><div class="in"><p><strong>Réponse : d. </strong>P3php</p><p class="q">Affichage obtenu avec PHP</p><pre><code>P3php</code></pre><p><code>$s[0]</code> est le premier caractère (« P »), <code>strlen</code> donne 3, <code>strtolower</code> met en minuscules (« php »). On concatène : P3php.</p><div class="box piege"><p class="t">À retenir</p><p>Notion hors cours : accéder à un caractère avec <code>$s[0]</code>, comme dans un tableau.</p></div><p><small>Notion : chaînes : indice, strlen, strtolower. À revoir : <a href="cours.html#ch1">Chapitre 1</a>.</small></p></div></details></div>
+<div class="exo"><h4>Question 3</h4><p>Qu'affiche ce code ?</p><pre><code>$i = 5;
+while ($i &gt; 0) {
+    $i -= 2;
+}
+echo $i;</code></pre><ol type="a"><li>Une boucle infinie</li><li>1</li><li>-1</li><li>0</li></ol><details class="sol"><summary>Correction</summary><div class="in"><p><strong>Réponse : c. </strong>-1</p><p class="q">Affichage obtenu avec PHP</p><pre><code>-1</code></pre><p><code>$i</code> vaut 5, puis 3, puis 1, puis -1. À -1 la condition <code>$i > 0</code> est fausse : la boucle s'arrête et on affiche -1. Faites une trace sur papier.</p><p><small>Notion : boucle while. À revoir : <a href="cours.html#ch2">Chapitre 2</a>.</small></p></div></details></div>
+<div class="exo"><h4>Question 4</h4><p>Qu'affiche ce code ?</p><pre><code>var_dump(is_numeric("12.5"), is_int("12"));</code></pre><ol type="a"><li>bool(true) bool(false)</li><li>bool(false) bool(false)</li><li>bool(true) bool(true)</li><li>bool(false) bool(true)</li></ol><details class="sol"><summary>Correction</summary><div class="in"><p><strong>Réponse : a. </strong>bool(true) bool(false)</p><p class="q">Affichage obtenu avec PHP</p><pre><code>bool(true)
+bool(false)</code></pre><p><code>is_numeric</code> teste le <em>contenu</em> : « 12.5 » est un nombre, donc true. <code>is_int</code> teste le <em>type</em> : « 12 » est une chaîne, donc false.</p><div class="box piege"><p class="t">À retenir</p><p>Une chaîne numérique n'est pas un entier.</p></div><p><small>Notion : is_numeric et is_int. À revoir : <a href="cours.html#ch1">Chapitre 1</a>.</small></p></div></details></div>
+<div class="exo"><h4>Question 5</h4><p>Qu'affiche ce code ?</p><pre><code>$total = 10;
+function ajouter($n) {
+    $total = $n + 1;
+    return $total;
+}
+echo ajouter(5) + $total;</code></pre><ol type="a"><li>12</li><li>16</li><li>21</li><li>6</li></ol><details class="sol"><summary>Correction</summary><div class="in"><p><strong>Réponse : b. </strong>16</p><p class="q">Affichage obtenu avec PHP</p><pre><code>16</code></pre><p>Le <code>$total</code> de la fonction est une variable <strong>locale</strong> : <code>ajouter(5)</code> renvoie 6 et ne touche pas au <code>$total</code> global (10). Résultat : 6 + 10 = 16.</p><div class="box piege"><p class="t">À retenir</p><p>Une fonction ne voit pas les variables globales, et ne les modifie pas non plus.</p></div><p><small>Notion : portée d'une variable. À revoir : <a href="cours.html#ch3">Chapitre 3</a>.</small></p></div></details></div>
+<div class="exo"><h4>Question 6</h4><p>Qu'affiche ce code ?</p><pre><code>$x = "10";
+$y = $x + "5.5";
+var_dump($y);</code></pre><ol type="a"><li>int(15)</li><li>string(6) "105.5"</li><li>float(15.5)</li><li>string(4) "15.5"</li></ol><details class="sol"><summary>Correction</summary><div class="in"><p><strong>Réponse : c. </strong>float(15.5)</p><p class="q">Affichage obtenu avec PHP</p><pre><code>float(15.5)</code></pre><p><code>+</code> additionne : les deux chaînes numériques sont converties. « 5.5 » est décimal, le résultat est donc un <code>float</code> : 15.5.</p><div class="box piege"><p class="t">À retenir</p><p>Avec <code>.</code> on aurait obtenu la chaîne « 105.5 » : ne pas confondre + et .</p></div><p><small>Notion : chaînes numériques dans un calcul. À revoir : <a href="cours.html#ch1">Chapitre 1</a>.</small></p></div></details></div>
+<div class="exo"><h4>Question 7</h4><p>Qu'affiche ce code ?</p><pre><code>$notes = ["Ali" =&gt; 8, "Sara" =&gt; 15, "Omar" =&gt; 12];
+$ok = array_filter($notes, fn($n) =&gt; $n &gt;= 10);
+echo implode(", ", array_keys($ok));</code></pre><ol type="a"><li>Ali</li><li>15, 12</li><li>Sara</li><li>Sara, Omar</li></ol><details class="sol"><summary>Correction</summary><div class="in"><p><strong>Réponse : d. </strong>Sara, Omar</p><p class="q">Affichage obtenu avec PHP</p><pre><code>Sara, Omar</code></pre><p><code>array_filter</code> garde les notes d'au moins 10 <strong>en conservant les clés</strong> : Sara et Omar. <code>array_keys</code> donne les noms, <code>implode</code> les relie par « , ».</p><div class="box piege"><p class="t">À retenir</p><p>Les clés sont conservées : on obtient les noms avec <code>array_keys</code>, pas les notes.</p></div><p><small>Notion : array_filter, array_keys, implode. À revoir : <a href="cours.html#ch3">Chapitre 3</a>.</small></p></div></details></div>
+<div class="exo"><h4>Question 8</h4><p>Qu'affiche ce code ?</p><pre><code>$a = "3";
+$b = "4";
+echo $a . $b . ($a + $b);</code></pre><ol type="a"><li>77</li><li>34</li><li>347</li><li>3 4 7</li></ol><details class="sol"><summary>Correction</summary><div class="in"><p><strong>Réponse : c. </strong>347</p><p class="q">Affichage obtenu avec PHP</p><pre><code>347</code></pre><p><code>$a . $b</code> donne « 34 » ; <code>($a + $b)</code>, entre parenthèses, vaut 7. On concatène : 347.</p><div class="box piege"><p class="t">À retenir</p><p>Le point concatène, le plus additionne : <code>.</code> ne calcule jamais.</p></div><p><small>Notion : concaténation et addition. À revoir : <a href="cours.html#ch1">Chapitre 1</a>.</small></p></div></details></div>
+<div class="exo"><h4>Question 9</h4><p>Qu'affiche ce code ?</p><pre><code>$h = password_hash("Sara2026", PASSWORD_DEFAULT);
+var_dump(password_verify("sara2026", $h), strlen($h));</code></pre><ol type="a"><li>bool(false) int(60)</li><li>bool(true) int(32)</li><li>bool(false) int(8)</li><li>bool(true) int(60)</li></ol><details class="sol"><summary>Correction</summary><div class="in"><p><strong>Réponse : a. </strong>bool(false) int(60)</p><p class="q">Affichage obtenu avec PHP</p><pre><code>bool(false)
+int(60)</code></pre><p><code>password_verify</code> distingue les majuscules : « sara2026 » n'est pas « Sara2026 », donc false. Un hachage bcrypt fait toujours 60 caractères.</p><p><small>Notion : password_hash et password_verify. À revoir : <a href="cours.html#ch4">Chapitre 4</a>.</small></p></div></details></div>
+<div class="exo"><h4>Question 10</h4><p>Le fichier <code>inc/auth.php</code> contient <code>require __DIR__ . '/config.php';</code>. Ce fichier est inclus depuis <code>index.php</code>, situé à la racine du site. Quel fichier est chargé ?</p><pre><code>// inc/auth.php
+require __DIR__ . '/config.php';</code></pre><ol type="a"><li>config.php à la racine du site</li><li>inc/config.php</li><li>Aucun : __DIR__ ne fonctionne pas dans un fichier inclus</li><li>inc/inc/config.php</li></ol><details class="sol"><summary>Correction</summary><div class="in"><p><strong>Réponse : b. </strong>inc/config.php</p><p><code>__DIR__</code> est le dossier du fichier <strong>qui contient l'instruction</strong>, c'est-à-dire <code>inc</code>. Le fichier chargé est donc <code>inc/config.php</code>. Vérifié : avec <code>__DIR__</code> on charge <code>inc/config.php</code> ; avec un simple <code>require 'config.php'</code>, PHP trouve celui de la racine.</p><div class="box piege"><p class="t">À retenir</p><p>Sans <code>__DIR__</code>, le chemin relatif est lu depuis le premier script appelé, pas depuis le fichier courant.</p></div><p><small>Notion : __DIR__ et chemins d'inclusion. À revoir : <a href="cours.html#ch4">Chapitre 4</a>.</small></p></div></details></div>
+<div class="exo"><h4>Question 11</h4><p>Qu'affiche ce code ?</p><pre><code>$u = json_decode('{"nom": "Sara", "notes": [12, 16]}', true);
+echo $u["nom"] . " " . $u["notes"][1];</code></pre><ol type="a"><li>Une erreur : $u est un objet</li><li>Sara 16</li><li>Sara 12</li><li>nom 16</li></ol><details class="sol"><summary>Correction</summary><div class="in"><p><strong>Réponse : b. </strong>Sara 16</p><p class="q">Affichage obtenu avec PHP</p><pre><code>Sara 16</code></pre><p>Avec <code>true</code> en second argument, <code>json_decode</code> renvoie un <strong>tableau associatif</strong> : <code>$u["nom"]</code> vaut « Sara » et <code>$u["notes"][1]</code> (indice 1, le deuxième) vaut 16.</p><div class="box piege"><p class="t">À retenir</p><p>Sans <code>true</code>, on obtiendrait un objet et il faudrait écrire <code>$u->nom</code>.</p></div><p><small>Notion : json_decode(..., true). À revoir : <a href="cours.html#ch1">Chapitre 1</a>.</small></p></div></details></div>
+<div class="exo"><h4>Question 12</h4><p>Qu'affiche ce code ?</p><pre><code>var_dump(filter_var("17", FILTER_VALIDATE_INT,
+    ["options" =&gt; ["min_range" =&gt; 18]]));</code></pre><ol type="a"><li>int(18)</li><li>int(17)</li><li>bool(false)</li><li>string(2) "17"</li></ol><details class="sol"><summary>Correction</summary><div class="in"><p><strong>Réponse : c. </strong>bool(false)</p><p class="q">Affichage obtenu avec PHP</p><pre><code>bool(false)</code></pre><p>17 est inférieur à <code>min_range</code> 18 : la valeur est refusée, <code>filter_var</code> renvoie <code>false</code>.</p><div class="box piege"><p class="t">À retenir</p><p>Une valeur valide serait renvoyée sous forme d'entier ; une valeur refusée donne <code>false</code>.</p></div><p><small>Notion : filter_var avec min_range. À revoir : <a href="cours.html#ch5">Chapitre 5</a>.</small></p></div></details></div>
+<div class="exo"><h4>Question 14</h4><p>Quelle affirmation décrit un site dynamique ?</p><ol type="a"><li>Il ne fonctionne qu'avec une connexion HTTPS</li><li>Ses pages contiennent des animations CSS ou JavaScript</li><li>Ses pages sont produites par le serveur à chaque requête, par exemple à partir d'une base de données</li><li>Ses pages HTML sont écrites à l'avance et envoyées telles quelles</li></ol><details class="sol"><summary>Correction</summary><div class="in"><p><strong>Réponse : c. </strong>Ses pages sont produites par le serveur à chaque requête, par exemple à partir d'une base de données</p><p>Un site dynamique construit ses pages <strong>sur le serveur au moment de la demande</strong> (programme PHP, base de données). La dernière réponse décrit un site statique.</p><div class="box piege"><p class="t">À retenir</p><p>Dynamique ne veut pas dire « animé » : ce mot concerne le serveur, pas les animations.</p></div><p><small>Notion : site statique et site dynamique. À revoir : <a href="cours.html#ch1">Chapitre 1</a>.</small></p></div></details></div>
+<div class="exo"><h4>Question 15</h4><p>Le fichier <code>a.txt</code> contient <code>ABC</code>. Que contient-il après ce code ?</p><pre><code>file_put_contents("a.txt", "ABC");
+$f = fopen("a.txt", "a");
+fwrite($f, "Z");
+fclose($f);
+echo file_get_contents("a.txt");</code></pre><ol type="a"><li>ZABC</li><li>ZBC</li><li>Z</li><li>ABCZ</li></ol><details class="sol"><summary>Correction</summary><div class="in"><p><strong>Réponse : d. </strong>ABCZ</p><p class="q">Affichage obtenu avec PHP</p><pre><code>ABCZ</code></pre><p>Le mode <code>a</code> (append) ajoute à la <strong>fin</strong> sans effacer : « ABC » devient « ABCZ ». Le mode <code>w</code> aurait effacé le contenu et laissé « Z ».</p><div class="box piege"><p class="t">À retenir</p><p>w efface, a ajoute.</p></div><p><small>Notion : modes de fopen. À revoir : <a href="cours.html#ch4">Chapitre 4</a>.</small></p></div></details></div>
+<div class="exo"><h4>Question 16</h4><p>Qu'affiche ce code ?</p><pre><code>foreach ([1, 2, 3, 4, 5] as $v) {
+    if ($v == 2) continue;
+    if ($v == 4) break;
+    echo $v;
+}</code></pre><ol type="a"><li>1345</li><li>135</li><li>1</li><li>13</li></ol><details class="sol"><summary>Correction</summary><div class="in"><p><strong>Réponse : d. </strong>13</p><p class="q">Affichage obtenu avec PHP</p><pre><code>13</code></pre><p>À 1 : affiché. À 2 : <code>continue</code> saute l'affichage. À 3 : affiché. À 4 : <code>break</code> quitte la boucle. Résultat : 13.</p><div class="box piege"><p class="t">À retenir</p><p><code>continue</code> passe au tour suivant, <code>break</code> sort de la boucle : le 5 n'est jamais atteint.</p></div><p><small>Notion : break et continue. À revoir : <a href="cours.html#ch4">Chapitre 4</a>.</small></p></div></details></div>
+<div class="exo"><h4>Question 17</h4><p>Qu'affiche ce code ?</p><pre><code>$t = ["a" =&gt; 1, "b" =&gt; 2];
+foreach ($t as $k =&gt; $v) {
+    echo $k . $v;
+}</code></pre><ol type="a"><li>a1b2</li><li>1a2b</li><li>ab12</li><li>12</li></ol><details class="sol"><summary>Correction</summary><div class="in"><p><strong>Réponse : a. </strong>a1b2</p><p class="q">Affichage obtenu avec PHP</p><pre><code>a1b2</code></pre><p><code>foreach ($t as $k => $v)</code> donne d'abord la clé, puis la valeur : « a » puis 1, « b » puis 2. On affiche <code>$k . $v</code> : a1b2.</p><p><small>Notion : foreach avec clé et valeur. À revoir : <a href="cours.html#ch4">Chapitre 4</a>.</small></p></div></details></div>
+<div class="exo"><h4>Question 19</h4><p>Qu'affiche ce code ?</p><pre><code>$note = 10;
+if ($note &gt; 10) {
+    echo "A";
+} elseif ($note &gt;= 10) {
+    echo "B";
+} else {
+    echo "C";
+}</code></pre><ol type="a"><li>AB</li><li>C</li><li>A</li><li>B</li></ol><details class="sol"><summary>Correction</summary><div class="in"><p><strong>Réponse : d. </strong>B</p><p class="q">Affichage obtenu avec PHP</p><pre><code>B</code></pre><p><code>10 > 10</code> est faux (strict). Le <code>elseif</code> teste <code>10 >= 10</code>, vrai : on affiche B, et seul ce bloc s'exécute.</p><div class="box piege"><p class="t">À retenir</p><p>Un seul bloc est exécuté : jamais « AB ».</p></div><p><small>Notion : if, elseif, else. À revoir : <a href="cours.html#ch4">Chapitre 4</a>.</small></p></div></details></div>
+<div class="exo"><h4>Question 20</h4><p>Le formulaire a envoyé <code>$_POST = ["options" => ["repas", "attestation"]]</code>. Qu'affiche ce code ?</p><pre><code>$_POST = ["options" =&gt; ["repas", "attestation"]];
+$o = $_POST["options"] ?? [];
+echo count($o) . (in_array("repas", $o) ? "oui" : "non");</code></pre><ol type="a"><li>1oui</li><li>2oui</li><li>2non</li><li>Une erreur : options est une chaîne</li></ol><details class="sol"><summary>Correction</summary><div class="in"><p><strong>Réponse : b. </strong>2oui</p><p class="q">Affichage obtenu avec PHP</p><pre><code>2oui</code></pre><p>Les cases à cocher partageant un <code>name</code> terminé par <code>[]</code> arrivent sous forme de <strong>tableau</strong> : <code>count</code> vaut 2 et <code>in_array("repas", ...)</code> est vrai : 2oui.</p><div class="box piege"><p class="t">À retenir</p><p>Une case non cochée est absente de <code>$_POST</code> : d'où le <code>?? []</code>.</p></div><p><small>Notion : cases à cocher name="options[]", ??, in_array. À revoir : <a href="cours.html#ch2">Chapitre 2</a>.</small></p></div></details></div>
+<div class="exo"><h4>Question 21</h4><p>Qu'affiche ce code ?</p><pre><code>$e = [
+    ["nom" =&gt; "Ali", "notes" =&gt; [12, 15]],
+    ["nom" =&gt; "Sara", "notes" =&gt; [18]],
+];
+echo $e[1]["nom"] . $e[0]["notes"][1];</code></pre><ol type="a"><li>Ali15</li><li>Sara12</li><li>Sara15</li><li>Ali18</li></ol><details class="sol"><summary>Correction</summary><div class="in"><p><strong>Réponse : c. </strong>Sara15</p><p class="q">Affichage obtenu avec PHP</p><pre><code>Sara15</code></pre><p><code>$e[1]["nom"]</code> : deuxième étudiant (indice 1), « Sara ». <code>$e[0]["notes"][1]</code> : premier étudiant, deuxième note, 15. Résultat : Sara15.</p><div class="box piege"><p class="t">À retenir</p><p>Les indices commencent à 0.</p></div><p><small>Notion : tableau de tableaux. À revoir : <a href="cours.html#ch3">Chapitre 3</a>.</small></p></div></details></div>
+<div class="exo"><h4>Question 22</h4><p>Lorsqu'un navigateur demande <code>http://localhost/tp1/index.php</code>, qui transmet le fichier <code>index.php</code> à l'interpréteur PHP ?</p><ol type="a"><li>Le serveur web Apache</li><li>Le navigateur</li><li>Le système d'exploitation du client</li><li>Le serveur MySQL</li></ol><details class="sol"><summary>Correction</summary><div class="in"><p><strong>Réponse : a. </strong>Le serveur web Apache</p><p>Le navigateur envoie la requête ; <strong>Apache</strong> trouve le fichier dans <code>htdocs</code> et, voyant l'extension <code>.php</code>, le confie à l'interpréteur PHP. Le navigateur ne reçoit que le HTML produit.</p><p><small>Notion : architecture client-serveur. À revoir : <a href="cours.html#ch1">Chapitre 1</a>.</small></p></div></details></div>
+<div class="exo"><h4>Question 23</h4><p>Le fichier inclus n'existe pas. Quelle est la différence entre <code>include</code> et <code>require</code> ?</p><pre><code>include "absent.php";   // ou require "absent.php";
+echo "suite";</code></pre><ol type="a"><li>require provoque une erreur fatale et arrête le script ; include affiche un avertissement et continue</li><li>Les deux arrêtent le script</li><li>include provoque une erreur fatale ; require affiche un avertissement et continue</li><li>Aucune : les deux ignorent le fichier manquant</li></ol><details class="sol"><summary>Correction</summary><div class="in"><p><strong>Réponse : a. </strong>require provoque une erreur fatale et arrête le script ; include affiche un avertissement et continue</p><p><code>include</code> : avertissement (Warning), le script continue. <code>require</code> : erreur fatale, le script s'arrête. Vérifié : avec <code>include</code> la ligne suivante s'exécute, avec <code>require</code> elle n'est jamais atteinte.</p><div class="box piege"><p class="t">À retenir</p><p>Le mot « require » dit « indispensable » : sans le fichier, on s'arrête.</p></div><p><small>Notion : include et require. À revoir : <a href="cours.html#ch1">Chapitre 1</a>.</small></p></div></details></div>
+<div class="exo"><h4>Question 24</h4><p>Qu'affiche ce code ?</p><pre><code>file_put_contents("t.txt", "un\ndeux\ntrois");
+$f = fopen("t.txt", "r");
+fgets($f);
+echo fgets($f);
+fclose($f);</code></pre><ol type="a"><li>trois</li><li>un</li><li>deux</li><li>undeux</li></ol><details class="sol"><summary>Correction</summary><div class="in"><p><strong>Réponse : c. </strong>deux</p><p class="q">Affichage obtenu avec PHP</p><pre><code>deux</code></pre><p>Chaque <code>fgets</code> lit la ligne suivante. Le premier appel lit « un » (résultat ignoré), le second lit « deux » : c'est lui qu'on affiche.</p><div class="box piege"><p class="t">À retenir</p><p><code>fgets</code> garde le retour à la ligne en fin de chaîne ; on le retire avec <code>trim</code>.</p></div><p><small>Notion : fgets, lecture ligne par ligne. À revoir : <a href="cours.html#ch3">Chapitre 3</a>.</small></p></div></details></div>
+<div class="exo"><h4>Question 27</h4><p>Qu'affiche ce code ?</p><pre><code>$jour = "sam";
+switch ($jour) {
+    case "sam":
+    case "dim":
+        echo "week-end";
+        break;
+    default:
+        echo "semaine";
+}</code></pre><ol type="a"><li>week-end</li><li>week-endsemaine</li><li>Rien</li><li>semaine</li></ol><details class="sol"><summary>Correction</summary><div class="in"><p><strong>Réponse : a. </strong>week-end</p><p class="q">Affichage obtenu avec PHP</p><pre><code>week-end</code></pre><p>« sam » correspond au premier <code>case</code>, qui est vide : l'exécution « tombe » dans le <code>case</code> suivant, jusqu'au <code>break</code>. On affiche week-end, sans passer par <code>default</code>.</p><div class="box piege"><p class="t">À retenir</p><p>Sans <code>break</code>, l'exécution continue dans le cas suivant : c'est ici voulu pour grouper deux jours.</p></div><p><small>Notion : switch avec cas groupés. À revoir : <a href="cours.html#ch1">Chapitre 1</a>.</small></p></div></details></div>
+<div class="exo"><h4>Question 30</h4><p>Qu'affiche ce code ? (le tableau est absent du texte reçu : <code>$t =;</code>)</p><pre><code>$t = [3, 10, 7];
+usort($t, fn($a, $b) =&gt; $b &lt;=&gt; $a);
+echo implode(",", $t);</code></pre><ol type="a"><li>3,10,7</li><li>10,7,3</li><li>7,10,3</li><li>3,7,10</li></ol><details class="sol"><summary>Correction</summary><div class="in"><p><strong>Réponse : b. </strong>10,7,3</p><p class="q">Affichage obtenu avec PHP</p><pre><code>10,7,3</code></pre><p><code>fn($a, $b) => $b <=> $a</code> compare à l'envers : tri <strong>décroissant</strong>. Le tableau manque dans le texte, mais les quatre réponses ne contiennent que 3, 7 et 10 : testé avec les six ordres possibles, le résultat est toujours 10,7,3.</p><div class="box piege"><p class="t">À retenir</p><p><code>$a <=> $b</code> trie par ordre croissant, <code>$b <=> $a</code> par ordre décroissant.</p></div><p><small>Notion : usort et l'opérateur <=>. À revoir : <a href="cours.html#ch2">Chapitre 2</a>.</small></p></div></details></div>
+<h2 id="flash">La question sans numéro : le message flash</h2>
+<div class="exo"><h4>Question sans énoncé</h4>
+<p>Le texte se termine par ce code, sans question ni options. La question est probablement : « Qu'affiche ce code ? »</p>
+<pre><code>session_start();
+$_SESSION["flash"] = "OK";
+echo $_SESSION["flash"] ?? "";
+unset($_SESSION["flash"]);
+echo $_SESSION["flash"] ?? "vide";</code></pre><details class="sol"><summary>Correction</summary><div class="in"><p><strong>Réponse : OKvide</strong></p><p class="q">Affichage obtenu avec PHP</p><pre><code>OKvide</code></pre><p><code>session_start()</code> ouvre la session. On range « OK » dans <code>$_SESSION["flash"]</code> et on l'affiche : OK. Puis <code>unset</code> supprime la clé : le second <code>echo</code> utilise <code>??</code>, qui donne la valeur par défaut « vide » quand la clé n'existe plus. C'est le principe du <strong>message flash</strong> : affiché une seule fois, puis supprimé.</p><div class="box piege"><p class="t">À retenir</p><p><code>session_start()</code> doit être appelé avant tout affichage. Lire une clé supprimée sans <code>??</code> provoque un avertissement « Undefined array key ».</p></div><p><small>Notion : session et message flash. À revoir : <a href="cours.html#ch4">Chapitre 4</a> et <a href="cours.html#ch5">chapitre 5</a>.</small></p></div></details></div>
+<h2 id="bilan">Bilan : les pièges de ce test</h2>
+<div class="tw"><table>
+<tr><th>Piège</th><th>Question</th><th>Règle</th></tr>
+<tr><td>0 est « faux » mais n'est pas <code>false</code></td><td>1</td><td>tester <code>=== false</code></td></tr>
+<tr><td>Chaîne numérique et entier</td><td>4, 6</td><td><code>is_numeric</code> teste le contenu, <code>is_int</code> le type ; <code>+</code> convertit</td></tr>
+<tr><td>Portée</td><td>5</td><td>variable locale de la fonction, différente de la globale</td></tr>
+<tr><td>Point et plus</td><td>8</td><td><code>.</code> concatène, <code>+</code> additionne ; parenthèses d'abord</td></tr>
+<tr><td>Clés conservées</td><td>7</td><td><code>array_filter</code> garde les clés ; <code>array_keys</code> les récupère</td></tr>
+<tr><td>Respect de la casse</td><td>9</td><td><code>password_verify</code> distingue majuscules et minuscules ; hachage bcrypt = 60 caractères</td></tr>
+<tr><td>Indices à partir de 0</td><td>11, 21</td><td>le deuxième élément est l'indice 1</td></tr>
+<tr><td>Mode d'ouverture</td><td>15</td><td><code>a</code> ajoute, <code>w</code> efface</td></tr>
+<tr><td>break et continue</td><td>16</td><td>continue saute le tour, break quitte la boucle</td></tr>
+<tr><td>Un seul bloc if</td><td>19</td><td>le premier <code>elseif</code> vrai s'exécute, pas les suivants</td></tr>
+<tr><td>Cases à cocher multiples</td><td>20</td><td><code>name="options[]"</code> envoie un tableau</td></tr>
+<tr><td>include et require</td><td>23</td><td>warning contre erreur fatale</td></tr>
+<tr><td>switch sans break</td><td>27</td><td>l'exécution tombe dans le cas suivant</td></tr>
+<tr><td>Ordre de <code>&lt;=&gt;</code></td><td>30</td><td><code>$b &lt;=&gt; $a</code> : décroissant</td></tr>
+</table></div>
+<div class="box ex">
+<p class="t">Pour aller plus loin</p>
+<p>Refaites ces questions dans le <a href="qcm.html">QCM</a> (chapitre « Test type »), puis les séries « Prédire la sortie ». Passez ensuite l'<a href="pratique.html">examen blanc</a> et relisez les <a href="pieges.html">pièges</a>.</p>
+</div>
+<div class="foot">Test fourni par l'étudiant. Les réponses, explications et vérifications sont les miennes : chaque extrait a été exécuté avec PHP 8.0 et 8.5.</div>
+</main>
+</div>
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

@@ -35,7 +35,7 @@ window.MODULES = [
     meta: 'INF4041, Prof. Baqach Adil, chapitres 1 à 5, TP 1 à 5',
     desc: 'Syntaxe, tableaux et fonctions, sessions et cookies, formulaires et upload, avec les TP corrigés et le lien des quiz Wooclap.',
     href: 'php/index.html',
-    stats: ['124 QCM', '33 questions de cours', '5 TP corrigés', 'Examen blanc']
+    stats: ['148 QCM', '33 questions de cours', '5 TP corrigés', 'Test type corrigé', 'Examen blanc']
   },
   {
     title: 'Flutter et Dart',

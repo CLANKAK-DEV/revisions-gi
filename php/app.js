@@ -7,6 +7,7 @@
     ['exercices.html', 'Exercices du cours'],
     ['tp.html', 'TP corrigés'],
     ['qcm.html', 'QCM'],
+    ['test.html', 'Test type corrigé'],
     ['questions.html', 'Questions de cours'],
     ['pratique.html', 'Examen blanc pratique'],
     ['pieges.html', 'Pièges et aide-mémoire'],
