@@ -473,3 +473,740 @@ Array.prototype.push.apply(window.QCM, [
   "e": "`fn($a, $b) => $b  $a` compare à l'envers : tri décroissant. Le tableau manque dans le texte, mais les quatre réponses ne contiennent que 3, 7 et 10 : testé avec les six ordres possibles, le résultat est toujours 10,7,3."
  }
 ]);
+
+// ---------- 8. QCM complet (code exécuté sur PHP 8.0 et 8.5, cours)
+window.SITE.chapters[8] = 'QCM complet';
+Array.prototype.push.apply(window.QCM, [
+ {
+  "ch": 8,
+  "q": "Qu'affiche ce code ? `echo strlen(\"Éa\");`",
+  "o": [
+   "1",
+   "4",
+   "2",
+   "3"
+  ],
+  "a": 3,
+  "e": "`strlen` compte les octets, pas les caractères. Dans un fichier en UTF-8, « É » occupe 2 octets et « a » 1 : on obtient 3. Pour compter les caractères, il faut `mb_strlen` (extension mbstring)."
+ },
+ {
+  "ch": 8,
+  "q": "Qu'affiche ce code ? `echo ucfirst(strtolower(\"SARA\")) . strrev(\"abc\");`",
+  "o": [
+   "Saracba",
+   "Saraabc",
+   "sARAcba",
+   "SARAcba"
+  ],
+  "a": 0,
+  "e": "`strtolower` donne « sara », `ucfirst` met la première lettre en majuscule (« Sara »), `strrev` inverse « abc » en « cba ». Concaténation : Saracba."
+ },
+ {
+  "ch": 8,
+  "q": "Qu'affiche ce code ? `echo str_replace(\"a\", \"o\", \"banane\");`",
+  "o": [
+   "bonone",
+   "bonane",
+   "banone",
+   "bonona"
+  ],
+  "a": 0,
+  "e": "`str_replace` remplace toutes les occurrences, pas seulement la première : « banane » devient « bonone »."
+ },
+ {
+  "ch": 8,
+  "q": "Qu'affiche ce code ? `echo substr(\"abcdef\", 2, 3) . substr(\"abcdef\", -2);`",
+  "o": [
+   "cdefe",
+   "cdeab",
+   "cdeef",
+   "bcdef"
+  ],
+  "a": 2,
+  "e": "`substr($s, 2, 3)` part à l'indice 2 et prend 3 caractères : « cde ». Un indice négatif compte depuis la fin : `substr($s, -2)` donne « ef »."
+ },
+ {
+  "ch": 8,
+  "q": "Qu'affiche ce code ? `echo json_encode(strpos(\"abc\", \"a\") == false);`",
+  "o": [
+   "0",
+   "null",
+   "false",
+   "true"
+  ],
+  "a": 3,
+  "e": "`strpos` renvoie la position 0, qui est égale à `false` avec `==`. Il faut comparer avec `strpos(...) === false` pour savoir si le texte est absent."
+ },
+ {
+  "ch": 8,
+  "q": "Qu'affiche ce code ? `echo count(explode(\",\", \"a,b,,c\"));`",
+  "o": [
+   "5",
+   "3",
+   "4",
+   "2"
+  ],
+  "a": 2,
+  "e": "`explode` garde les morceaux vides : « a », « b », « » (vide) et « c » donnent 4 éléments."
+ },
+ {
+  "ch": 8,
+  "q": "Qu'affiche ce code ? `printf(\"%05.1f|%s\", 3.14159, \"x\");`",
+  "o": [
+   "3.1|x",
+   "3.14|x",
+   "003.1|x",
+   "00003.1|x"
+  ],
+  "a": 2,
+  "e": "`%05.1f` demande un nombre à 1 décimale sur 5 caractères au total, complété par des zéros à gauche : 003.1."
+ },
+ {
+  "ch": 8,
+  "q": "Qu'affiche ce code ? `echo number_format(1234567.891, 2, \",\", \" \");`",
+  "o": [
+   "1 234 567,89",
+   "1 234 568",
+   "1,234,567.89",
+   "1234567,89"
+  ],
+  "a": 0,
+  "e": "Les arguments sont : nombre, décimales, séparateur décimal, séparateur des milliers. Ici « , » pour les décimales et « » (espace) pour les milliers."
+ },
+ {
+  "ch": 8,
+  "q": "Qu'affiche ce code ? `echo round(2.5) . round(-2.5) . round(3.14159, 2);`",
+  "o": [
+   "2-23.14",
+   "3-33.14",
+   "3-23.14",
+   "33.14"
+  ],
+  "a": 1,
+  "e": "`round` arrondit « au plus loin de zéro » quand on est pile au milieu : 2.5 donne 3 et -2.5 donne -3. Le second argument fixe le nombre de décimales : 3.14. Concaténé : 3, -3, 3.14."
+ },
+ {
+  "ch": 8,
+  "q": "Qu'affiche ce code ? `echo intdiv(17, 5) . 17 % 5 . 17 / 5;`",
+  "o": [
+   "3217",
+   "3.423",
+   "323.4",
+   "3.42"
+  ],
+  "a": 2,
+  "e": "`intdiv(17, 5)` vaut 3, `17 % 5` vaut 2, `17 / 5` vaut 3.4. Les opérateurs arithmétiques passent avant le point en PHP 8, donc on assemble 3, 2 et 3.4."
+ },
+ {
+  "ch": 8,
+  "q": "Qu'affiche ce code ? `echo max([3, 9, 2]) . min(4, 1, 8) . array_sum([1, 2, 3]);`",
+  "o": [
+   "926",
+   "916",
+   "9186",
+   "316"
+  ],
+  "a": 1,
+  "e": "`max` donne 9, `min` donne 1, `array_sum` donne 6 : 9 puis 1 puis 6."
+ },
+ {
+  "ch": 8,
+  "q": "Qu'affiche ce code ? `$t = [1, 2, 3]; $t[] = 4; array_pop($t); array_unshift($t, 0); echo implode(\",\", $t);`",
+  "o": [
+   "1,2,3",
+   "1,2,3,4",
+   "0,1,2,3",
+   "0,1,2,3,4"
+  ],
+  "a": 2,
+  "e": "On ajoute 4 à la fin, `array_pop` le retire, puis `array_unshift` insère 0 au début : 0,1,2,3."
+ },
+ {
+  "ch": 8,
+  "q": "Qu'affiche ce code ? `echo implode(\",\", array_slice([10, 20, 30, 40], 1, 2));`",
+  "o": [
+   "20,30",
+   "20,30,40",
+   "10,20",
+   "10,20,30"
+  ],
+  "a": 0,
+  "e": "`array_slice($t, 1, 2)` part de l'indice 1 et prend 2 éléments : 20 et 30."
+ },
+ {
+  "ch": 8,
+  "q": "Qu'affiche ce code ? `echo count([1, [2, 3]]) . count([1, [2, 3]], COUNT_RECURSIVE);`",
+  "o": [
+   "22",
+   "44",
+   "23",
+   "24"
+  ],
+  "a": 3,
+  "e": "Sans option, `count` compte les éléments du premier niveau : 2. Avec `COUNT_RECURSIVE`, il compte aussi le contenu du sous-tableau : 1, le sous-tableau et ses 2 éléments, soit 4."
+ },
+ {
+  "ch": 8,
+  "q": "Qu'affiche ce code ? `$a = [\"a\" => 1] + [\"a\" => 2, \"b\" => 3]; echo implode(\",\", $a);`",
+  "o": [
+   "3",
+   "1,2,3",
+   "2,3",
+   "1,3"
+  ],
+  "a": 3,
+  "e": "L'opérateur `+` entre deux tableaux garde la valeur du tableau de gauche quand la clé existe déjà : a vaut 1. Avec `array_merge`, la valeur de droite écraserait : 2,3."
+ },
+ {
+  "ch": 8,
+  "q": "Qu'affiche ce code ? `echo implode(\",\", array_unique([1, \"1\", 2, 2.0, \"a\", \"A\"]));`",
+  "o": [
+   "1,2,a,A",
+   "1,1,2,2,a,A",
+   "1,2,a",
+   "1,2"
+  ],
+  "a": 0,
+  "e": "`array_unique` compare comme des chaînes : 1 et « 1 » sont identiques, 2 et 2.0 aussi. Les lettres « a » et « A » restent différentes (casse)."
+ },
+ {
+  "ch": 8,
+  "q": "Qu'affiche ce code ? `echo json_encode(in_array(\"abc\", [0]));`",
+  "o": [
+   "false",
+   "true",
+   "0",
+   "1"
+  ],
+  "a": 0,
+  "e": "Depuis PHP 8, `\"abc\" == 0` est faux, donc `in_array` renvoie `false`. En PHP 7, le résultat était `true` : une différence de version à connaître."
+ },
+ {
+  "ch": 8,
+  "q": "Qu'affiche ce code ? `[$a, $b] = [1, 2]; [$a, $b] = [$b, $a]; echo $a . $b;`",
+  "o": [
+   "12",
+   "22",
+   "11",
+   "21"
+  ],
+  "a": 3,
+  "e": "La destructuration affecte plusieurs variables d'un coup. `[$a, $b] = [$b, $a]` échange les valeurs : `$a` vaut 2 et `$b` vaut 1."
+ },
+ {
+  "ch": 8,
+  "q": "Qu'affiche ce code ? `function f(...$n) { return array_sum($n); } echo f(1, 2, 3) . f(...[4, 5]);`",
+  "o": [
+   "96",
+   "6",
+   "69",
+   "15"
+  ],
+  "a": 2,
+  "e": "`...$n` regroupe les arguments en tableau. `f(1, 2, 3)` donne 6. Avec `f(...[4, 5])`, l'opérateur `...` éclate le tableau en arguments : 9."
+ },
+ {
+  "ch": 8,
+  "q": "Qu'affiche ce code ? `echo implode(\",\", array_column([[\"id\" => 1, \"n\" => \"A\"], [\"id\" => 2, \"n\" => \"B\"]], \"n\"));`",
+  "o": [
+   "A",
+   "A,B",
+   "1,2",
+   "id,n"
+  ],
+  "a": 1,
+  "e": "`array_column($lignes, 'n')` extrait la colonne « n » de chaque sous-tableau : A et B."
+ },
+ {
+  "ch": 8,
+  "q": "Qu'affiche ce code ? `$t = [\"b\" => 2, \"a\" => 3, \"c\" => 1]; asort($t); echo implode(\",\", array_keys($t));`",
+  "o": [
+   "a,b,c",
+   "c,a,b",
+   "c,b,a",
+   "a,c,b"
+  ],
+  "a": 2,
+  "e": "`asort` trie par valeur croissante en gardant les clés : 1 (c), 2 (b), 3 (a). Les clés dans cet ordre : c,b,a. `ksort` aurait trié par clé."
+ },
+ {
+  "ch": 8,
+  "q": "Qu'affiche ce code ? `$x = null; $x ??= \"def\"; echo $x . ($y ?? \"non\");`",
+  "o": [
+   "defnon",
+   "defdef",
+   "non",
+   "nullnon"
+  ],
+  "a": 0,
+  "e": "`??=` affecte seulement si la variable est `null` ou absente : `$x` devient « def ». `$y` n'existe pas, `??` donne « non » sans erreur."
+ },
+ {
+  "ch": 8,
+  "q": "Qu'affiche ce code ? `echo \"5\" + \"5\" . \"5\";`",
+  "o": [
+   "105",
+   "555",
+   "10",
+   "15"
+  ],
+  "a": 0,
+  "e": "Depuis PHP 8, l'addition passe avant la concaténation : `\"5\" + \"5\"` donne 10, puis `10 . \"5\"` donne « 105 ». Pour obtenir 555, il faut écrire `\"5\" . \"5\" . \"5\"`."
+ },
+ {
+  "ch": 8,
+  "q": "Qu'affiche ce code ? `echo json_encode([\"abc\" == 0, null == false, \"0\" == false]);`",
+  "o": [
+   "[false,true,true]",
+   "[true,true,true]",
+   "[false,true,false]",
+   "[false,false,true]"
+  ],
+  "a": 0,
+  "e": "En PHP 8, `\"abc\" == 0` est faux (le texte n'est plus converti en 0). `null == false` est vrai et `\"0\" == false` est vrai (la chaîne « 0 » est falsy). Utilisez `===` pour éviter ces surprises."
+ },
+ {
+  "ch": 8,
+  "q": "Qu'affiche ce code ? `$s = \"Sara\"; echo 'Bonjour $s ' . \"Bonjour $s\";`",
+  "o": [
+   "Bonjour $s Bonjour $s",
+   "Bonjour $s Bonjour Sara",
+   "Bonjour Sara Bonjour Sara",
+   "Bonjour Sara Bonjour $s"
+  ],
+  "a": 1,
+  "e": "Les guillemets simples n'interprètent pas les variables : `$s` reste écrit tel quel. Les guillemets doubles remplacent `$s` par sa valeur."
+ },
+ {
+  "ch": 8,
+  "q": "Qu'affiche ce code ? `const A = 2; echo A ** 3, defined(\"A\") ? \"d\" : \"n\";`",
+  "o": [
+   "9d",
+   "8d",
+   "6d",
+   "8n"
+  ],
+  "a": 1,
+  "e": "`const A = 2;` crée une constante, sans `$`. `2 ** 3` vaut 8 et `defined(\"A\")` renvoie `true`, donc « d »."
+ },
+ {
+  "ch": 8,
+  "q": "Qu'affiche ce code ? `$i = 0; do { echo $i; } while ($i++ < 2);`",
+  "o": [
+   "0123",
+   "01",
+   "12",
+   "012"
+  ],
+  "a": 3,
+  "e": "`do ... while` affiche d'abord, teste ensuite. Le test `$i++ < 2` compare puis incrémente : on affiche 0, 1, 2 et on s'arrête quand 2 < 2 est faux."
+ },
+ {
+  "ch": 8,
+  "q": "Qu'affiche ce code ? `for ($i = 0, $j = 10; $i < $j; $i += 3, $j -= 3) echo $i . $j . \" \";`",
+  "o": [
+   "010",
+   "010 37",
+   "010 37 64",
+   "37 010"
+  ],
+  "a": 1,
+  "e": "Tour 1 : i=0, j=10 affiche 010. Tour 2 : i=3, j=7 affiche 37. Tour 3 : i=6, j=4, la condition `6 < 4` est fausse : fin."
+ },
+ {
+  "ch": 8,
+  "q": "Qu'affiche ce code ? `echo match(true) { 15 >= 18 => \"majeur\", 15 >= 12 => \"ado\", default => \"enfant\" };`",
+  "o": [
+   "ado",
+   "majeur",
+   "ado enfant",
+   "enfant"
+  ],
+  "a": 0,
+  "e": "`match(true)` cherche la première condition vraie. `15 >= 18` est faux, `15 >= 12` est vrai : « ado »."
+ },
+ {
+  "ch": 8,
+  "q": "Qu'affiche ce code ? `function fib($n) { return $n < 2 ? $n : fib($n - 1) + fib($n - 2); } echo fib(7);`",
+  "o": [
+   "13",
+   "21",
+   "8",
+   "7"
+  ],
+  "a": 0,
+  "e": "Suite de Fibonacci : 0, 1, 1, 2, 3, 5, 8, 13. Avec `fib(0)=0` et `fib(1)=1`, `fib(7)` vaut 13."
+ },
+ {
+  "ch": 8,
+  "q": "Qu'affiche ce code ? `$c = function () { static $n = 0; return ++$n; }; $c(); echo $c();`",
+  "o": [
+   "1",
+   "2",
+   "0",
+   "3"
+  ],
+  "a": 1,
+  "e": "Une variable `static` garde sa valeur entre les appels de la même fonction. Premier appel : 1, second appel : 2."
+ },
+ {
+  "ch": 8,
+  "q": "Qu'affiche ce code ? `echo implode(\",\", array_map(fn($a, $b) => $a . $b, [\"a\", \"b\"], [1, 2]));`",
+  "o": [
+   "a1,b2",
+   "a1b2",
+   "ab,12",
+   "a,b,1,2"
+  ],
+  "a": 0,
+  "e": "`array_map` avec deux tableaux appelle la fonction avec les éléments de même rang : (a, 1) puis (b, 2)."
+ },
+ {
+  "ch": 8,
+  "q": "Qu'affiche ce code ? `echo json_encode(array_filter([1, 2, 3, 4], fn($x) => $x % 2 == 0));`",
+  "o": [
+   "[1,3]",
+   "{\"0\":2,\"1\":4}",
+   "[2,4]",
+   "{\"1\":2,\"3\":4}"
+  ],
+  "a": 3,
+  "e": "`array_filter` garde les clés d'origine (1 et 3). Un tableau dont les clés ne sont pas 0, 1, 2... devient un objet en JSON. Pour obtenir `[2,4]`, il faut `array_values(...)`."
+ },
+ {
+  "ch": 8,
+  "q": "Qu'affiche ce code ? `echo json_encode([\"a\" => 1, \"b\" => [1, 2]]) . json_encode([1, 2]);`",
+  "o": [
+   "{\"a\":1,\"b\":{\"0\":1,\"1\":2}}[1,2]",
+   "[\"a\",1]",
+   "{\"a\":1,\"b\":[1,2]}[1,2]",
+   "{\"a\":1,\"b\":[1,2]}{\"0\":1,\"1\":2}"
+  ],
+  "a": 2,
+  "e": "Un tableau associatif devient un objet JSON `{...}`, un tableau indexé devient une liste `[...]`."
+ },
+ {
+  "ch": 8,
+  "q": "Qu'affiche ce code ? `echo json_encode(\"é\");`",
+  "o": [
+   "é",
+   "\"é\"",
+   "\"\\u00e9\"",
+   "\"e\""
+  ],
+  "a": 2,
+  "e": "Par défaut, `json_encode` échappe les caractères non ASCII en `\\uXXXX`. L'option `JSON_UNESCAPED_UNICODE` garde « é »."
+ },
+ {
+  "ch": 8,
+  "q": "Qu'affiche ce code ? `echo htmlspecialchars('<a href=\"x\">T&C</a>');`",
+  "o": [
+   "&lt;a href=\"x\"&gt;T&C&lt;/a&gt;",
+   "&lt;a href=&quot;x&quot;&gt;T&amp;C&lt;/a&gt;",
+   "<a href=\"x\">T&amp;C</a>",
+   "T&amp;C"
+  ],
+  "a": 1,
+  "e": "`htmlspecialchars` transforme `<`, `>`, `&` et les guillemets doubles en entités HTML : le navigateur affiche le texte au lieu de l'interpréter. C'est la défense contre le XSS."
+ },
+ {
+  "ch": 8,
+  "q": "Qu'affiche ce code ? `echo json_encode([filter_var(\"a@b.ma\", FILTER_VALIDATE_EMAIL) !== false, filter_var(\"a@b\", FILTER_VALIDATE_EMAIL) !== false]);`",
+  "o": [
+   "[true,false]",
+   "[false,true]",
+   "[false,false]",
+   "[true,true]"
+  ],
+  "a": 0,
+  "e": "`FILTER_VALIDATE_EMAIL` accepte « a@b.ma » mais refuse « a@b » (pas de point dans le domaine). On compare avec `!== false` car la fonction renvoie `false` en cas d'échec."
+ },
+ {
+  "ch": 8,
+  "q": "Qu'affiche ce code ? `echo json_encode([(bool)\"0\", (bool)\"0.0\", (bool)[], (bool)[0]]);`",
+  "o": [
+   "[false,true,true,true]",
+   "[false,true,false,true]",
+   "[true,true,false,true]",
+   "[false,false,false,true]"
+  ],
+  "a": 1,
+  "e": "Sont `false` : `\"0\"`, `\"\"`, `0`, `0.0`, `[]`, `null`. La chaîne « 0.0 » est vraie (seule « 0 » est fausse), et un tableau non vide est vrai même s'il contient 0."
+ },
+ {
+  "ch": 8,
+  "q": "Qu'affiche ce code ? `echo date(\"Y-m-d\", mktime(0, 0, 0, 13, 1, 2025));`",
+  "o": [
+   "2025-12-01",
+   "2025-13-01",
+   "2026-13-01",
+   "2026-01-01"
+  ],
+  "a": 3,
+  "e": "`mktime` normalise les valeurs hors limites : le mois 13 de 2025 devient janvier 2026."
+ },
+ {
+  "ch": 8,
+  "q": "Qu'affiche ce code ? `file_put_contents(\"d.csv\", \"a;1\nb;2\n\"); $s = 0; foreach (file(\"d.csv\", FILE_IGNORE_NEW_LINES) as $l) { $s += explode(\";\", $l)[1]; } echo $s;`",
+  "o": [
+   "12",
+   "2",
+   "ab",
+   "3"
+  ],
+  "a": 3,
+  "e": "`file` avec `FILE_IGNORE_NEW_LINES` donne un tableau de lignes sans retour à la ligne. `explode(\";\", $l)` découpe chaque ligne selon le séparateur du CSV : on additionne les secondes colonnes, 1 + 2 = 3."
+ },
+ {
+  "ch": 8,
+  "q": "Qu'affiche ce code ? `file_put_contents(\"l.txt\", \"a\\nb\\nc\"); echo count(file(\"l.txt\")) . strlen(file(\"l.txt\")[0]);`",
+  "o": [
+   "12",
+   "33",
+   "32",
+   "31"
+  ],
+  "a": 2,
+  "e": "`file` renvoie un tableau de lignes, retours à la ligne compris : 3 lignes, et la première (« a\\n ») fait 2 caractères. Avec `FILE_IGNORE_NEW_LINES`, elle ferait 1."
+ },
+ {
+  "ch": 8,
+  "q": "Qu'affiche ce code ? `file_put_contents(\"c.txt\", \"1\"); file_put_contents(\"c.txt\", \"2\", FILE_APPEND); file_put_contents(\"c.txt\", \"3\"); echo file_get_contents(\"c.txt\");`",
+  "o": [
+   "3",
+   "123",
+   "13",
+   "12"
+  ],
+  "a": 0,
+  "e": "Sans `FILE_APPEND`, `file_put_contents` écrase le contenu. Le dernier appel remplace tout par « 3 »."
+ },
+ {
+  "ch": 8,
+  "q": "Qu'affiche ce code ? `echo str_pad(\"7\", 3, \"0\", STR_PAD_LEFT) . ucwords(\"ali ben omar\");`",
+  "o": [
+   "007Ali ben omar",
+   "007ali ben omar",
+   "007Ali Ben Omar",
+   "700Ali ben omar"
+  ],
+  "a": 2,
+  "e": "`str_pad` complète à gauche avec des 0 jusqu'à 3 caractères : 007. `ucwords` met la première lettre de chaque mot en majuscule."
+ },
+ {
+  "ch": 8,
+  "q": "Qu'affiche ce code ? `echo trim(\"  x  \") . \"|\" . rtrim(\"x\\n\") . \"|\" . ltrim(\"007\", \"0\");`",
+  "o": [
+   "  x  |x|7",
+   "x|x|7",
+   "x|x|007",
+   "x|x\\n|7"
+  ],
+  "a": 1,
+  "e": "`trim` enlève les espaces des deux côtés, `rtrim` ceux de droite (retour à la ligne compris), `ltrim` avec un second argument enlève ce caractère à gauche : 007 devient 7."
+ },
+ {
+  "ch": 8,
+  "q": "Qu'affiche ce code ? `echo strcmp(\"a\", \"b\") . (\"10\" <=> \"9\") . (\"10\" <=> \"9a\");`",
+  "o": [
+   "1-11",
+   "-11-1",
+   "111",
+   "-111"
+  ],
+  "a": 1,
+  "e": "`strcmp(\"a\", \"b\")` donne -1. `\"10\" <=> \"9\"` compare comme deux nombres : 1. `\"10\" <=> \"9a\"` : « 9a » n'est pas numérique, la comparaison se fait comme du texte et « 1 » vient avant « 9 » : -1."
+ },
+ {
+  "ch": 8,
+  "q": "Qu'affiche ce code ? `$a = [\"x\" => [\"y\" => 1]]; echo ($a[\"x\"][\"z\"] ?? \"absent\") . (isset($a[\"x\"][\"y\"]) ? \"ok\" : \"ko\");`",
+  "o": [
+   "Warning",
+   "okko",
+   "absentok",
+   "absentko"
+  ],
+  "a": 2,
+  "e": "`??` et `isset` ne génèrent pas d'avertissement quand une clé n'existe pas. `z` est absent donc « absent », `y` existe donc « ok »."
+ },
+ {
+  "ch": 8,
+  "q": "Qu'affiche ce code ? `$x = 10; function t() { global $x; $x++; } t(); t(); echo $x . $GLOBALS[\"x\"];`",
+  "o": [
+   "1111",
+   "12",
+   "1212",
+   "1010"
+  ],
+  "a": 2,
+  "e": "`global $x` lie la variable locale à la globale : chaque appel incrémente la vraie `$x`. Après 2 appels, elle vaut 12, et `$GLOBALS[\"x\"]` aussi."
+ },
+ {
+  "ch": 8,
+  "q": "Qu'affiche ce code ? `$a = 1; $b = &$a; $b++; unset($b); $b = 5; echo $a;`",
+  "o": [
+   "5",
+   "2",
+   "1",
+   "6"
+  ],
+  "a": 1,
+  "e": "`$b = &$a` crée une référence : `$b++` modifie `$a` (2). `unset($b)` supprime seulement le lien : la nouvelle `$b = 5` n'a plus aucun rapport avec `$a`, qui reste à 2."
+ },
+ {
+  "ch": 8,
+  "q": "Qu'affiche ce code ? `$t = [1, 2, 3]; foreach ($t as &$v) { $v *= 2; } unset($v); echo implode(\",\", $t);`",
+  "o": [
+   "2,4,3",
+   "2,4,6",
+   "2,4,4",
+   "1,2,3"
+  ],
+  "a": 1,
+  "e": "Avec `&$v`, la boucle travaille sur les éléments eux-mêmes : le tableau devient 2,4,6. Le `unset($v)` évite qu'une réutilisation ultérieure de `$v` modifie le dernier élément."
+ },
+ {
+  "ch": 8,
+  "q": "Quelle superglobale permet de savoir si la page a été demandée en GET ou en POST ?",
+  "o": [
+   "`$_REQUEST['type']`",
+   "`$_ENV['METHOD']`",
+   "`$_GET['method']`",
+   "`$_SERVER['REQUEST_METHOD']`"
+  ],
+  "a": 3,
+  "e": "`$_SERVER['REQUEST_METHOD']` contient « GET » ou « POST ». C'est la base du test `if ($_SERVER['REQUEST_METHOD'] === 'POST')` pour séparer affichage et traitement du formulaire."
+ },
+ {
+  "ch": 8,
+  "q": "Comment supprimer un cookie existant ?",
+  "o": [
+   "`session_destroy()`",
+   "`delete_cookie('nom')`",
+   "`unset($_COOKIE['nom'])` seul",
+   "Appeler `setcookie()` avec le même nom et une date d'expiration dans le passé"
+  ],
+  "a": 3,
+  "e": "Le cookie est stocké chez le client : seul le navigateur peut l'effacer. On lui envoie le même cookie avec une expiration passée (par exemple `time() - 3600`). `unset($_COOKIE[...])` ne supprime que la copie lue par le script en cours."
+ },
+ {
+  "ch": 8,
+  "q": "Quelle durée de vie a un cookie créé sans date d'expiration ?",
+  "o": [
+   "Trente jours",
+   "Un jour",
+   "Il ne disparaît jamais",
+   "Il disparaît à la fermeture du navigateur"
+  ],
+  "a": 3,
+  "e": "Sans `expires`, c'est un cookie de session (au sens du navigateur) : il est supprimé quand le navigateur se ferme."
+ },
+ {
+  "ch": 8,
+  "q": "Comment réaliser une déconnexion complète avec les sessions ?",
+  "o": [
+   "Vider `$_SESSION`, appeler `session_destroy()` et supprimer le cookie de session",
+   "Appeler seulement `session_start()`",
+   "Appeler `session_id(0)`",
+   "Supprimer le fichier PHP de connexion"
+  ],
+  "a": 0,
+  "e": "`session_destroy()` supprime les données côté serveur mais ne vide pas `$_SESSION` dans le script en cours ni le cookie du navigateur : on fait donc les trois étapes."
+ },
+ {
+  "ch": 8,
+  "q": "Quelle est la différence entre `unset($_SESSION['user'])` et `session_destroy()` ?",
+  "o": [
+   "`unset` détruit la session, `session_destroy()` retire une variable",
+   "`unset` retire une seule variable de session, `session_destroy()` détruit toute la session côté serveur",
+   "Aucune, c'est la même chose",
+   "`unset` supprime le cookie du navigateur"
+  ],
+  "a": 1,
+  "e": "`unset` ne touche qu'une clé. `session_destroy()` supprime les données de la session sur le serveur. Pour une déconnexion complète, on combine les deux approches."
+ },
+ {
+  "ch": 8,
+  "q": "Quelle condition vérifie qu'un fichier a bien été envoyé sans erreur ?",
+  "o": [
+   "`$_FILES['photo']['type'] === 'image/png'`",
+   "`$_FILES['photo']['error'] === UPLOAD_ERR_OK`",
+   "`isset($_FILES)` seul",
+   "`file_exists($_FILES['photo']['name'])`"
+  ],
+  "a": 1,
+  "e": "`UPLOAD_ERR_OK` vaut 0 : aucune erreur. Les autres valeurs indiquent un fichier trop gros, partiel ou absent. Le nom et le type envoyés par le client ne prouvent rien."
+ },
+ {
+  "ch": 8,
+  "q": "Où doit se trouver `declare(strict_types=1);` ?",
+  "o": [
+   "À la fin du fichier",
+   "Tout en haut du fichier, avant toute autre instruction",
+   "Dans le fichier `php.ini` uniquement",
+   "N'importe où dans le fichier"
+  ],
+  "a": 1,
+  "e": "Cette directive doit être la première instruction du fichier (juste après `<?php`). Elle active le typage strict pour les appels de fonctions faits depuis ce fichier."
+ },
+ {
+  "ch": 8,
+  "q": "Quelle est la différence entre `echo` et `print` ?",
+  "o": [
+   "`echo` accepte plusieurs arguments et ne renvoie rien, `print` renvoie 1",
+   "`print` accepte plusieurs arguments, `echo` renvoie 1",
+   "`echo` est réservé aux nombres",
+   "Aucune, mais `print` est interdit en PHP 8"
+  ],
+  "a": 0,
+  "e": "`echo` est une construction du langage sans valeur de retour. `print` renvoie toujours 1, donc on peut l'utiliser dans une expression. En pratique, on utilise `echo`."
+ },
+ {
+  "ch": 8,
+  "q": "Que fait la balise `<?= $x ?>` dans un fichier PHP mélangé à du HTML ?",
+  "o": [
+   "Elle déclare la variable `$x`",
+   "Elle affiche la valeur de `$x`, comme `<?php echo $x; ?>`",
+   "Elle importe un fichier",
+   "Elle ouvre un commentaire"
+  ],
+  "a": 1,
+  "e": "`<?=` est la forme courte de `<?php echo`. Elle est pratique dans les gabarits HTML, mais la valeur doit être protégée avec `htmlspecialchars` si elle vient de l'utilisateur."
+ },
+ {
+  "ch": 8,
+  "q": "Pourquoi un formulaire qui supprime ou modifie des données doit-il utiliser POST et non GET ?",
+  "o": [
+   "POST est toujours chiffré",
+   "GET est plus lent que POST",
+   "GET ne peut pas contenir de texte",
+   "Une URL GET peut être rejouée, mise en favori ou préchargée sans que l'utilisateur le veuille"
+  ],
+  "a": 3,
+  "e": "GET sert à lire. Une action qui change des données ne doit pas être déclenchée par une simple URL, car elle serait répétée à chaque rechargement, lien ou robot. POST n'est pas chiffré pour autant : HTTPS reste nécessaire."
+ },
+ {
+  "ch": 8,
+  "q": "Que renvoie `file_put_contents()` ?",
+  "o": [
+   "Toujours `true`",
+   "Le contenu du fichier",
+   "Rien (`void`)",
+   "Le nombre d'octets écrits, ou `false` en cas d'échec"
+  ],
+  "a": 3,
+  "e": "On peut donc tester `=== false` pour détecter un échec d'écriture (droits, dossier absent). Le nombre d'octets peut valoir 0 sans que ce soit une erreur."
+ },
+ {
+  "ch": 8,
+  "q": "Pourquoi dit-on que PHP est un langage à typage dynamique ?",
+  "o": [
+   "Il faut déclarer le type de chaque variable",
+   "PHP refuse toute conversion de type",
+   "Les variables ne peuvent pas changer de valeur",
+   "Le type d'une variable est déterminé par la valeur qu'elle contient et peut changer en cours de script"
+  ],
+  "a": 3,
+  "e": "On écrit `$x = 5;` puis `$x = \"cinq\";` sans erreur. Les déclarations de type sur les paramètres sont optionnelles et deviennent strictes seulement avec `strict_types`."
+ }
+]);
